@@ -6,9 +6,16 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
+import { MantineProvider, ColorSchemeScript, createTheme } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 
 import type { Route } from "./+types/root";
 import "./app.css";
+
+const theme = createTheme({
+  fontFamily:
+    "Inter, ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji",
+});
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -25,15 +32,19 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" data-mantine-color-scheme="light">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <ColorSchemeScript defaultColorScheme="light" />
         <Meta />
         <Links />
       </head>
       <body>
-        {children}
+        <MantineProvider theme={theme} defaultColorScheme="light">
+          <Notifications position="top-right" />
+          {children}
+        </MantineProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
