@@ -5,3 +5,7 @@
 # React Router
 /.react-router/
 /build/
+
+# Generated
+/app/generated/
+/app/db/database-types.ts
