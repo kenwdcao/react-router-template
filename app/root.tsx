@@ -6,8 +6,19 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-import { MantineProvider, ColorSchemeScript, createTheme } from "@mantine/core";
+import {
+  AppShell,
+  Button,
+  ColorSchemeScript,
+  createTheme,
+  Group,
+  MantineProvider,
+  Menu,
+  Text,
+} from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
+import { LogOut, User } from "lucide-react";
+import { useSession, signOut } from "~/lib/auth/client";
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -43,12 +54,64 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <MantineProvider theme={theme} defaultColorScheme="light">
           <Notifications position="top-right" />
-          {children}
+          <AppShell header={{ height: 60 }} padding="md">
+            <AppShell.Header>
+              <Group h="100%" px="md" justify="space-between">
+                <Text fw={700} size="lg">
+                  React Router Template
+                </Text>
+                <AuthHeader />
+              </Group>
+            </AppShell.Header>
+            <AppShell.Main>{children}</AppShell.Main>
+          </AppShell>
         </MantineProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
     </html>
+  );
+}
+
+function AuthHeader() {
+  const { data: session, isPending } = useSession();
+
+  if (isPending) {
+    return null;
+  }
+
+  if (session) {
+    return (
+      <Menu shadow="md" width={200}>
+        <Menu.Target>
+          <Button variant="subtle" leftSection={<User size={16} />}>
+            {session.user.name || session.user.email}
+          </Button>
+        </Menu.Target>
+        <Menu.Dropdown>
+          <Menu.Item
+            leftSection={<LogOut size={14} />}
+            onClick={() => {
+              signOut();
+              window.location.href = "/";
+            }}
+          >
+            Sign out
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
+    );
+  }
+
+  return (
+    <Group>
+      <Button variant="subtle" component="a" href="/login">
+        Sign in
+      </Button>
+      <Button component="a" href="/register">
+        Register
+      </Button>
+    </Group>
   );
 }
 
