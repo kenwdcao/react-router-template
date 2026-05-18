@@ -1,4 +1,13 @@
-import { Container, Center, Paper, Stack, Text, Anchor, Group, Image } from "@mantine/core";
+import {
+  Anchor,
+  Center,
+  Container,
+  Group,
+  Image,
+  Paper,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { BookOpen, MessagesSquare } from "lucide-react";
 import logoDark from "./logo-dark.svg";
 import logoLight from "./logo-light.svg";
@@ -38,7 +47,7 @@ export function Welcome() {
           <Paper shadow="sm" radius="md" p="lg" withBorder>
             <Stack gap="md">
               <Text ta="center" fw={500}>
-                What's next?
+                What&apos;s next?
               </Text>
               {resources.map(({ href, text, icon }) => (
                 <Anchor

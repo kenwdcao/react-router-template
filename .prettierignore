@@ -1,0 +1,6 @@
+build/
+node_modules/
+.react-router/
+pnpm-lock.yaml
+app/generated/
+app/db/database-types.ts

@@ -1,19 +1,19 @@
-import { data, redirect } from "react-router";
 import {
+  Anchor,
+  Button,
   Container,
   Paper,
-  TextInput,
   PasswordInput,
-  Button,
   Stack,
-  Title,
   Text,
-  Anchor,
+  TextInput,
+  Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { auth } from "~/lib/auth/server";
+import { redirect } from "react-router";
 import { authClient } from "~/lib/auth/client";
+import { auth } from "~/lib/auth/server";
 import type { Route } from "./+types/login";
 
 export function meta() {
@@ -55,6 +55,7 @@ export default function Login() {
       return;
     }
 
+    // eslint-disable-next-line react-hooks/immutability
     window.location.href = "/";
   };
 

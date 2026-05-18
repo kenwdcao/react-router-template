@@ -1,19 +1,19 @@
-import { redirect } from "react-router";
 import {
+  Anchor,
+  Button,
   Container,
   Paper,
-  TextInput,
   PasswordInput,
-  Button,
   Stack,
-  Title,
   Text,
-  Anchor,
+  TextInput,
+  Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { auth } from "~/lib/auth/server";
+import { redirect } from "react-router";
 import { authClient } from "~/lib/auth/client";
+import { auth } from "~/lib/auth/server";
 import type { Route } from "./+types/register";
 
 export function meta() {
@@ -37,7 +37,11 @@ export default function Register() {
     validate: {
       name: (val) => (!val ? "Name is required" : null),
       email: (val) =>
-        !val ? "Email is required" : !val.includes("@") ? "Invalid email" : null,
+        !val
+          ? "Email is required"
+          : !val.includes("@")
+            ? "Invalid email"
+            : null,
       password: (val) =>
         val.length < 8 ? "Password must be at least 8 characters" : null,
       confirmPassword: (val, values) =>
@@ -71,6 +75,7 @@ export default function Register() {
       message: "Please sign in with your new account",
       color: "green",
     });
+    // eslint-disable-next-line react-hooks/immutability
     window.location.href = "/login";
   };
 

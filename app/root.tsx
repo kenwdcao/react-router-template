@@ -1,12 +1,4 @@
 import {
-  isRouteErrorResponse,
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "react-router";
-import {
   AppShell,
   Button,
   ColorSchemeScript,
@@ -18,7 +10,15 @@ import {
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { LogOut, User } from "lucide-react";
-import { useSession, signOut } from "~/lib/auth/client";
+import {
+  isRouteErrorResponse,
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+} from "react-router";
+import { signOut, useSession } from "~/lib/auth/client";
 
 import type { Route } from "./+types/root";
 import "./app.css";
