@@ -1,15 +1,17 @@
 import {
+  ActionIcon,
   AppShell,
+  Avatar,
   Button,
   ColorSchemeScript,
   createTheme,
   Group,
   MantineProvider,
-  Menu,
   Text,
+  useMantineColorScheme,
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import { LogOut, User } from "lucide-react";
+import { LogOut, Moon, Sun } from "lucide-react";
 import {
   isRouteErrorResponse,
   Links,
@@ -52,15 +54,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <MantineProvider theme={theme} defaultColorScheme="light">
+        <MantineProvider theme={theme} defaultColorScheme="auto">
           <Notifications position="top-right" />
-          <AppShell header={{ height: 60 }} padding="md">
+          <AppShell header={{ height: 56 }} padding="md">
             <AppShell.Header>
               <Group h="100%" px="md" justify="space-between">
-                <Text fw={700} size="lg">
+                <Text fw={600} size="lg">
                   React Router Template
                 </Text>
-                <AuthHeader />
+                <Group gap="sm">
+                  <ThemeToggle />
+                  <AuthHeader />
+                </Group>
               </Group>
             </AppShell.Header>
             <AppShell.Main>{children}</AppShell.Main>
@@ -73,6 +78,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+function ThemeToggle() {
+  const { colorScheme, setColorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === "dark";
+
+  return (
+    <ActionIcon
+      variant="subtle"
+      size="lg"
+      onClick={() => setColorScheme(isDark ? "light" : "dark")}
+      aria-label="Toggle theme"
+    >
+      {isDark ? <Sun size={18} /> : <Moon size={18} />}
+    </ActionIcon>
+  );
+}
+
 function AuthHeader() {
   const { data: session, isPending } = useSession();
 
@@ -81,25 +102,28 @@ function AuthHeader() {
   }
 
   if (session) {
+    const initial = getAvatarInitial(session.user.name, session.user.email);
+
     return (
-      <Menu shadow="md" width={200}>
-        <Menu.Target>
-          <Button variant="subtle" leftSection={<User size={16} />}>
-            {session.user.name || session.user.email}
-          </Button>
-        </Menu.Target>
-        <Menu.Dropdown>
-          <Menu.Item
-            leftSection={<LogOut size={14} />}
-            onClick={() => {
-              signOut();
-              window.location.href = "/";
-            }}
-          >
-            Sign out
-          </Menu.Item>
-        </Menu.Dropdown>
-      </Menu>
+      <>
+        <Avatar size="sm" radius="xl">
+          {initial}
+        </Avatar>
+        <Text size="sm" visibleFrom="sm">
+          {session.user.name || session.user.email}
+        </Text>
+        <Button
+          variant="subtle"
+          size="compact-sm"
+          leftSection={<LogOut size={16} />}
+          onClick={async () => {
+            await signOut();
+            window.location.href = "/";
+          }}
+        >
+          Sign Out
+        </Button>
+      </>
     );
   }
 
@@ -113,6 +137,11 @@ function AuthHeader() {
       </Button>
     </Group>
   );
+}
+
+function getAvatarInitial(name?: string | null, email?: string | null): string {
+  const source = (name ?? "").trim() || (email ?? "").trim() || "?";
+  return source.charAt(0).toUpperCase();
 }
 
 export default function App() {
