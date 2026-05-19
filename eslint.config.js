@@ -3,6 +3,7 @@ import prettierConfig from "eslint-config-prettier";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import tseslint from "typescript-eslint";
+import localRules from "./eslint-rules/index.js";
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -12,6 +13,7 @@ export default tseslint.config(
     plugins: {
       react: reactPlugin,
       "react-hooks": reactHooksPlugin,
+      "local-rules": localRules,
     },
     settings: {
       react: {
@@ -26,6 +28,7 @@ export default tseslint.config(
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
+      "local-rules/no-inline-styles": "error",
     },
   },
   {

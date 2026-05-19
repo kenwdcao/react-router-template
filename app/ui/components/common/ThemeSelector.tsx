@@ -132,11 +132,7 @@ export function ThemeSelector({
                 <Box
                   className={classes.colorSwatch}
                   data-active={isActive}
-                  style={
-                    {
-                      "--swatch-color": swatchColor,
-                    } as React.CSSProperties
-                  }
+                  bg={swatchColor}
                 />
               }
               rightSection={isActive ? <Check size={16} /> : null}
