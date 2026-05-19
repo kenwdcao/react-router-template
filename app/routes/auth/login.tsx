@@ -32,7 +32,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function Login() {
   const form = useForm({
-    mode: "uncontrolled",
+    mode: "controlled",
     initialValues: { email: "", password: "" },
     validate: {
       email: (val) => (!val ? "Email is required" : null),
@@ -76,14 +76,12 @@ export default function Login() {
               label="Email"
               placeholder="you@example.com"
               required
-              key={form.key("email")}
               {...form.getInputProps("email")}
             />
             <PasswordInput
               label="Password"
               placeholder="Your password"
               required
-              key={form.key("password")}
               {...form.getInputProps("password")}
             />
           </Stack>
