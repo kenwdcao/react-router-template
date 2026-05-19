@@ -56,6 +56,7 @@ export function Welcome() {
                   target="_blank"
                   rel="noreferrer"
                   underline="hover"
+                  aria-label={text}
                 >
                   <Group gap="sm">
                     {icon}

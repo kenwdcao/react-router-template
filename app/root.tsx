@@ -140,6 +140,7 @@ function AuthHeader() {
           variant="subtle"
           size="compact-sm"
           leftSection={<LogOut size={16} />}
+          aria-label="Sign out"
           onClick={async () => {
             await signOut();
             window.location.href = "/";
