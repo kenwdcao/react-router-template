@@ -1,34 +1,41 @@
 import {
-  ActionIcon,
   AppShell,
   Avatar,
   Button,
   ColorSchemeScript,
-  createTheme,
   Group,
   MantineProvider,
   Text,
+  useComputedColorScheme,
   useMantineColorScheme,
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import { LogOut, Moon, Sun } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { useEffect } from "react";
 import {
-  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  data,
+  isRouteErrorResponse,
+  useRouteLoaderData,
 } from "react-router";
 import { signOut, useSession } from "~/lib/auth/client";
+import {
+  DEFAULT_COLOR_SCHEME,
+  DEFAULT_PRIMARY_COLOR,
+  buildResolvedColorSchemeCookie,
+  parseColorSchemeCookie,
+  parsePrimaryColorCookie,
+  parseResolvedColorSchemeCookie,
+} from "~/lib/utils/theme";
+import { ThemeSelector } from "~/ui/components/common/ThemeSelector";
+import { createAppTheme } from "~/ui/theme";
 
 import type { Route } from "./+types/root";
 import "./app.css";
-
-const theme = createTheme({
-  fontFamily:
-    "Inter, ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji",
-});
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -43,18 +50,51 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+export async function loader({ request }: { request: Request }) {
+  const cookieHeader = request.headers.get("cookie");
+
+  return data({
+    primaryColor: parsePrimaryColorCookie(cookieHeader),
+    colorScheme: parseColorSchemeCookie(cookieHeader),
+    resolvedColorScheme: parseResolvedColorSchemeCookie(cookieHeader),
+  });
+}
+
+function ResolvedColorSchemeCookieSync() {
+  const { colorScheme } = useMantineColorScheme();
+  const resolvedColorScheme = useComputedColorScheme("light", {
+    getInitialValueInEffect: false,
+  });
+
+  useEffect(() => {
+    const nextResolvedColorScheme =
+      colorScheme === "auto" ? resolvedColorScheme : colorScheme;
+
+    document.cookie = buildResolvedColorSchemeCookie(nextResolvedColorScheme);
+  }, [colorScheme, resolvedColorScheme]);
+
+  return null;
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  const rootLoaderData = useRouteLoaderData<typeof loader>("root");
+  const savedPrimaryColor =
+    rootLoaderData?.primaryColor ?? DEFAULT_PRIMARY_COLOR;
+  const savedColorScheme = rootLoaderData?.colorScheme ?? DEFAULT_COLOR_SCHEME;
+  const theme = createAppTheme(savedPrimaryColor);
+
   return (
     <html lang="en" data-mantine-color-scheme="light">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <ColorSchemeScript defaultColorScheme="light" />
+        <ColorSchemeScript defaultColorScheme={savedColorScheme} />
         <Meta />
         <Links />
       </head>
       <body>
-        <MantineProvider theme={theme} defaultColorScheme="auto">
+        <MantineProvider defaultColorScheme={savedColorScheme} theme={theme}>
+          <ResolvedColorSchemeCookieSync />
           <Notifications position="top-right" />
           <AppShell header={{ height: 56 }} padding="md">
             <AppShell.Header>
@@ -63,7 +103,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   React Router Template
                 </Text>
                 <Group gap="sm">
-                  <ThemeToggle />
+                  <ThemeSelector />
                   <AuthHeader />
                 </Group>
               </Group>
@@ -75,22 +115,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
-  );
-}
-
-function ThemeToggle() {
-  const { colorScheme, setColorScheme } = useMantineColorScheme();
-  const isDark = colorScheme === "dark";
-
-  return (
-    <ActionIcon
-      variant="subtle"
-      size="lg"
-      onClick={() => setColorScheme(isDark ? "light" : "dark")}
-      aria-label="Toggle theme"
-    >
-      {isDark ? <Sun size={18} /> : <Moon size={18} />}
-    </ActionIcon>
   );
 }
 

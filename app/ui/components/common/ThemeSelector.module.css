@@ -1,0 +1,11 @@
+.colorSwatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--swatch-color);
+  border: 2px solid transparent;
+}
+
+.colorSwatch[data-active="true"] {
+  border-color: var(--mantine-color-text);
+}
