@@ -34,7 +34,7 @@ export default tseslint.config(
       "node_modules/**",
       ".react-router/**",
       "app/generated/**",
-      "app/db/database-types.ts",
+      "app/lib/db/database-types.ts",
     ],
   },
   prettierConfig,
