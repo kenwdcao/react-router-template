@@ -33,7 +33,6 @@ export default tseslint.config(
       "build/**",
       "node_modules/**",
       ".react-router/**",
-      "app/generated/**",
       "app/lib/db/database-types.ts",
     ],
   },
