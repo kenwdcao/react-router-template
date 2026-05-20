@@ -1,7 +1,6 @@
 import {
   Anchor,
   Button,
-  Container,
   Paper,
   PasswordInput,
   Stack,
@@ -9,123 +8,162 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { notifications } from "@mantine/notifications";
-import { redirect } from "react-router";
-import { authClient } from "~/lib/auth/client";
+import {
+  Form,
+  Link,
+  data,
+  redirect,
+  useActionData,
+  useNavigation,
+} from "react-router";
 import { auth } from "~/lib/auth/server";
 import type { Route } from "./+types/register";
+
+type RegisterActionData = {
+  errors?: {
+    name?: string;
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
+    form?: string;
+  };
+  values?: {
+    name: string;
+    email: string;
+  };
+};
 
 export function meta() {
   return [{ title: "Create Account" }];
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const session = await auth.api.getSession({
-    headers: request.headers,
-  });
-  if (session) {
-    return redirect("/");
+export async function action({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const name = String(formData.get("name") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+  const confirmPassword = String(formData.get("confirmPassword") ?? "");
+  const errors: NonNullable<RegisterActionData["errors"]> = {};
+
+  if (!name) {
+    errors.name = "Name is required";
   }
-  return {};
+
+  if (!email) {
+    errors.email = "Email is required";
+  } else if (!email.includes("@")) {
+    errors.email = "Invalid email";
+  }
+
+  if (password.length < 8) {
+    errors.password = "Password must be at least 8 characters";
+  }
+
+  if (confirmPassword !== password) {
+    errors.confirmPassword = "Passwords do not match";
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return data<RegisterActionData>(
+      { errors, values: { name, email } },
+      { status: 400 },
+    );
+  }
+
+  try {
+    const result = await auth.api.signUpEmail({
+      body: { name, email, password },
+      headers: request.headers,
+      returnHeaders: true,
+    });
+    return redirect("/dashboard", {
+      headers: result.headers ?? undefined,
+    });
+  } catch (error) {
+    return data<RegisterActionData>(
+      {
+        errors: {
+          form: getAuthErrorMessage(error, "Could not create account"),
+        },
+        values: { name, email },
+      },
+      { status: 400 },
+    );
+  }
 }
 
 export default function Register() {
-  const form = useForm({
-    mode: "uncontrolled",
-    initialValues: { name: "", email: "", password: "", confirmPassword: "" },
-    validate: {
-      name: (val) => (!val ? "Name is required" : null),
-      email: (val) =>
-        !val
-          ? "Email is required"
-          : !val.includes("@")
-            ? "Invalid email"
-            : null,
-      password: (val) =>
-        val.length < 8 ? "Password must be at least 8 characters" : null,
-      confirmPassword: (val, values) =>
-        val !== values.password ? "Passwords do not match" : null,
-    },
-  });
-
-  const handleSubmit = async (values: {
-    name: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-  }) => {
-    const result = await authClient.signUp.email({
-      name: values.name,
-      email: values.email,
-      password: values.password,
-    });
-
-    if (result.error) {
-      notifications.show({
-        title: "Registration failed",
-        message: result.error.message || "Could not create account",
-        color: "red",
-      });
-      return;
-    }
-
-    notifications.show({
-      title: "Account created",
-      message: "Please sign in with your new account",
-      color: "green",
-    });
-    // eslint-disable-next-line react-hooks/immutability
-    window.location.href = "/login";
-  };
+  const actionData = useActionData<typeof action>();
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
 
   return (
-    <Container size={420} my={40}>
+    <Stack gap="lg" mt="xl">
       <Title ta="center">Create an account</Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
         Already have an account?{" "}
-        <Anchor size="sm" href="/login">
+        <Anchor size="sm" component={Link} to="/login">
           Sign in
         </Anchor>
       </Text>
 
-      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <form onSubmit={form.onSubmit(handleSubmit)}>
+      <Paper withBorder shadow="md" p={30} radius="md">
+        <Form method="post" replace>
           <Stack>
             <TextInput
               label="Name"
+              name="name"
               placeholder="Your name"
+              defaultValue={actionData?.values?.name}
+              error={actionData?.errors?.name}
               required
-              key={form.key("name")}
-              {...form.getInputProps("name")}
             />
             <TextInput
               label="Email"
+              name="email"
               placeholder="you@example.com"
+              defaultValue={actionData?.values?.email}
+              error={actionData?.errors?.email}
               required
-              key={form.key("email")}
-              {...form.getInputProps("email")}
             />
             <PasswordInput
               label="Password"
+              name="password"
               placeholder="At least 8 characters"
+              error={actionData?.errors?.password}
               required
-              key={form.key("password")}
-              {...form.getInputProps("password")}
             />
             <PasswordInput
               label="Confirm Password"
+              name="confirmPassword"
               placeholder="Repeat your password"
+              error={actionData?.errors?.confirmPassword}
               required
-              key={form.key("confirmPassword")}
-              {...form.getInputProps("confirmPassword")}
             />
+            {actionData?.errors?.form && (
+              <Text c="red" size="sm">
+                {actionData.errors.form}
+              </Text>
+            )}
           </Stack>
-          <Button type="submit" fullWidth mt="xl">
+          <Button type="submit" fullWidth mt="xl" loading={isSubmitting}>
             Create account
           </Button>
-        </form>
+        </Form>
       </Paper>
-    </Container>
+    </Stack>
   );
+}
+
+function getAuthErrorMessage(error: unknown, fallback: string) {
+  if (
+    error &&
+    typeof error === "object" &&
+    "message" in error &&
+    typeof error.message === "string"
+  ) {
+    return error.message;
+  }
+
+  return fallback;
 }

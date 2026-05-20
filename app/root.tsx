@@ -1,17 +1,13 @@
 import {
-  AppShell,
-  Avatar,
-  Button,
+  Center,
   ColorSchemeScript,
-  Group,
+  Loader,
   MantineProvider,
-  Text,
   useComputedColorScheme,
   useMantineColorScheme,
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import { LogOut } from "lucide-react";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import {
   Links,
   Meta,
@@ -22,7 +18,6 @@ import {
   isRouteErrorResponse,
   useRouteLoaderData,
 } from "react-router";
-import { signOut, useSession } from "~/lib/auth/client";
 import {
   DEFAULT_COLOR_SCHEME,
   DEFAULT_PRIMARY_COLOR,
@@ -31,7 +26,7 @@ import {
   parsePrimaryColorCookie,
   parseResolvedColorSchemeCookie,
 } from "~/lib/utils/theme";
-import { ThemeSelector } from "~/ui/components/common/ThemeSelector";
+import { RouteProgress } from "~/ui/components/common/RouteProgress";
 import { createAppTheme } from "~/ui/theme";
 
 import type { Route } from "./+types/root";
@@ -81,10 +76,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const savedPrimaryColor =
     rootLoaderData?.primaryColor ?? DEFAULT_PRIMARY_COLOR;
   const savedColorScheme = rootLoaderData?.colorScheme ?? DEFAULT_COLOR_SCHEME;
+  const savedResolvedColorScheme =
+    rootLoaderData?.resolvedColorScheme ?? "light";
   const theme = createAppTheme(savedPrimaryColor);
 
   return (
-    <html lang="en" data-mantine-color-scheme="light">
+    <html lang="en" data-mantine-color-scheme={savedResolvedColorScheme}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -96,20 +93,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <MantineProvider defaultColorScheme={savedColorScheme} theme={theme}>
           <ResolvedColorSchemeCookieSync />
           <Notifications position="top-right" />
-          <AppShell header={{ height: 56 }} padding="md">
-            <AppShell.Header>
-              <Group h="100%" px="md" justify="space-between">
-                <Text fw={600} size="lg">
-                  React Router Template
-                </Text>
-                <Group gap="sm">
-                  <ThemeSelector />
-                  <AuthHeader />
-                </Group>
-              </Group>
-            </AppShell.Header>
-            <AppShell.Main>{children}</AppShell.Main>
-          </AppShell>
+          <RouteProgress />
+          <Suspense fallback={<PageFallback />}>{children}</Suspense>
         </MantineProvider>
         <ScrollRestoration />
         <Scripts />
@@ -118,55 +103,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-function AuthHeader() {
-  const { data: session, isPending } = useSession();
-
-  if (isPending) {
-    return null;
-  }
-
-  if (session) {
-    const initial = getAvatarInitial(session.user.name, session.user.email);
-
-    return (
-      <>
-        <Avatar size="sm" radius="xl">
-          {initial}
-        </Avatar>
-        <Text size="sm" visibleFrom="sm">
-          {session.user.name || session.user.email}
-        </Text>
-        <Button
-          variant="subtle"
-          size="compact-sm"
-          leftSection={<LogOut size={16} />}
-          aria-label="Sign out"
-          onClick={async () => {
-            await signOut();
-            window.location.href = "/";
-          }}
-        >
-          Sign Out
-        </Button>
-      </>
-    );
-  }
-
+function PageFallback() {
   return (
-    <Group>
-      <Button variant="subtle" component="a" href="/login">
-        Sign in
-      </Button>
-      <Button component="a" href="/register">
-        Register
-      </Button>
-    </Group>
+    <Center mih="100vh">
+      <Loader aria-label="Loading page" />
+    </Center>
   );
-}
-
-function getAvatarInitial(name?: string | null, email?: string | null): string {
-  const source = (name ?? "").trim() || (email ?? "").trim() || "?";
-  return source.charAt(0).toUpperCase();
 }
 
 export default function App() {

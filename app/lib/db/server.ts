@@ -1,11 +1,12 @@
 import { Kysely, PostgresDialect } from "kysely";
 import { Pool } from "pg";
 import type { DB } from "~/lib/db/database-types";
+import { env } from "~/lib/env.server";
 
 const globalForDb = globalThis as unknown as { pool: Pool | undefined };
 
 const pool =
-  globalForDb.pool ?? new Pool({ connectionString: process.env.DATABASE_URL });
+  globalForDb.pool ?? new Pool({ connectionString: env.DATABASE_URL });
 
 if (process.env.NODE_ENV !== "production") {
   globalForDb.pool = pool;

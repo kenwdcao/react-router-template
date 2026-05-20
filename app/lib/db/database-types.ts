@@ -5,10 +5,9 @@
 
 import type { ColumnType } from "kysely";
 
-export type Generated<T> =
-  T extends ColumnType<infer S, infer I, infer U>
-    ? ColumnType<S, I | undefined, U>
-    : ColumnType<T, T | undefined, T>;
+export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
+  ? ColumnType<S, I | undefined, U>
+  : ColumnType<T, T | undefined, T>;
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
@@ -37,6 +36,16 @@ export interface Account {
   scope: string | null;
   updatedAt: Timestamp;
   userId: string;
+}
+
+export interface Project {
+  createdAt: Generated<Timestamp>;
+  description: string | null;
+  id: string;
+  name: string;
+  ownerId: string;
+  status: Generated<string>;
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface Session {
@@ -72,6 +81,7 @@ export interface Verification {
 export interface DB {
   _prisma_migrations: _PrismaMigrations;
   account: Account;
+  project: Project;
   session: Session;
   user: User;
   verification: Verification;
