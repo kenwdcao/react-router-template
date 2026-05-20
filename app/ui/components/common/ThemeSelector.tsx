@@ -9,7 +9,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { Check, Monitor, Moon, Palette, Sun } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useRevalidator, useRouteLoaderData } from "react-router";
 import type { ColorScheme, PrimaryColor } from "~/lib/types/theme";
 import {
@@ -50,16 +50,8 @@ export function ThemeSelector({
   const mantineTheme = useMantineTheme();
   const rootLoaderData = useRouteLoaderData<typeof loader>("root");
 
-  const serverPrimaryColor =
-    rootLoaderData?.primaryColor ?? initialPrimaryColor;
-  const [localPrimaryColor, setLocalPrimaryColor] =
-    useState<PrimaryColor>(serverPrimaryColor);
-
-  // Use server value when it differs (after revalidation)
   const currentPrimaryColor =
-    serverPrimaryColor === localPrimaryColor
-      ? localPrimaryColor
-      : (setLocalPrimaryColor(serverPrimaryColor), serverPrimaryColor);
+    rootLoaderData?.primaryColor ?? initialPrimaryColor;
 
   const handleColorSchemeChange = useCallback(
     (scheme: ColorScheme) => {
@@ -79,7 +71,6 @@ export function ThemeSelector({
         return;
       }
 
-      setLocalPrimaryColor(color);
       document.cookie = buildPrimaryColorCookie(color);
       revalidate();
     },

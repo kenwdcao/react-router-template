@@ -26,6 +26,24 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 - Run `pnpm format` or the narrower Prettier command before committing when
   formatting may have changed.
 
+## Template Initialization
+
+- When adapting this template for a real product, use the local
+  `.agents/skills/initialize` skill first.
+- Gather the product name, package name, purpose, user roles, initial route map,
+  auth requirements, core domain entities, branding basics, deployment target,
+  and required environment variables before broad edits.
+- Replace template placeholders such as `react-router-template`,
+  `React Router Template`, the welcome copy, and the sample `project` domain
+  with project-specific names and workflows.
+- Update root `AGENTS.md` during initialization so future agents receive the
+  actual product context, domain vocabulary, route/auth/data rules, and
+  validation expectations instead of generic template instructions.
+- Update `README.md`, `.env.example`, route titles, navigation labels, tests,
+  and sample data together so the initialized project is internally consistent.
+- Decide explicitly whether the sample project CRUD should be deleted, renamed
+  into a real domain entity, or kept as a documented example.
+
 ## Architecture
 
 - Keep route modules in `app/routes` thin. Route modules should wire React Router

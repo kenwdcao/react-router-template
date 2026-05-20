@@ -28,6 +28,22 @@ pnpm dev
 
 The application runs at `http://localhost:5173`.
 
+## Initializing A Real Project
+
+This repository is intended to be copied and then adapted before feature work
+starts. When using an Agent, start with the local `.agents/skills/initialize`
+skill so it gathers product-specific details and updates the template in one
+coherent pass.
+
+The initialization pass should cover:
+
+- Project name, package name, product purpose, primary user roles, and route map.
+- Auth requirements, deployment target, environment variables, and branding.
+- Whether the sample project CRUD should be removed, renamed into the real
+  domain, or kept as an example.
+- Updates to `AGENTS.md`, `README.md`, `.env.example`, route titles, navigation,
+  tests, and sample domain code.
+
 ## Included Patterns
 
 - `app/routes.ts` demonstrates layout routes for marketing, auth, and protected dashboard sections.

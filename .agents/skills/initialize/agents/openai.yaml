@@ -1,0 +1,4 @@
+interface:
+  display_name: "Initialize Project"
+  short_description: "Turn this template into a project-specific starter."
+  default_prompt: "Initialize this template for my new project."

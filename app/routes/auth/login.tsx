@@ -11,71 +11,20 @@ import {
 import {
   Form,
   Link,
-  data,
-  redirect,
   useActionData,
   useNavigation,
   useSearchParams,
 } from "react-router";
+import { handleLoginAction } from "~/lib/auth/login-action.server";
 import { getSafeRedirectTo } from "~/lib/auth/redirects";
-import { auth } from "~/lib/auth/server";
 import type { Route } from "./+types/login";
-
-type LoginActionData = {
-  errors?: {
-    email?: string;
-    password?: string;
-    form?: string;
-  };
-  values?: {
-    email: string;
-  };
-};
 
 export function meta() {
   return [{ title: "Sign In" }];
 }
 
 export async function action({ request }: Route.ActionArgs) {
-  const formData = await request.formData();
-  const email = String(formData.get("email") ?? "").trim();
-  const password = String(formData.get("password") ?? "");
-  const redirectTo = getSafeRedirectTo(formData.get("redirectTo"));
-  const errors: NonNullable<LoginActionData["errors"]> = {};
-
-  if (!email) {
-    errors.email = "Email is required";
-  }
-
-  if (!password) {
-    errors.password = "Password is required";
-  }
-
-  if (Object.keys(errors).length > 0) {
-    return data<LoginActionData>(
-      { errors, values: { email } },
-      { status: 400 },
-    );
-  }
-
-  try {
-    const result = await auth.api.signInEmail({
-      body: { email, password },
-      headers: request.headers,
-      returnHeaders: true,
-    });
-    return redirect(redirectTo, {
-      headers: result.headers ?? undefined,
-    });
-  } catch (error) {
-    return data<LoginActionData>(
-      {
-        errors: { form: getAuthErrorMessage(error, "Invalid credentials") },
-        values: { email },
-      },
-      { status: 400 },
-    );
-  }
+  return handleLoginAction(request);
 }
 
 export default function Login() {
@@ -132,17 +81,4 @@ export default function Login() {
       </Paper>
     </Stack>
   );
-}
-
-function getAuthErrorMessage(error: unknown, fallback: string) {
-  if (
-    error &&
-    typeof error === "object" &&
-    "message" in error &&
-    typeof error.message === "string"
-  ) {
-    return error.message;
-  }
-
-  return fallback;
 }
