@@ -16,6 +16,32 @@ layout routes.
 - Keep route components readable. Extract route-local subcomponents in the same
   file when they are small; move reusable presentational components to
   `app/ui`.
+- Form submissions must go through React Router actions. Do not use local
+  `useState` plus manual `fetch` calls for normal route mutations.
+
+## Route Organization
+
+- Represent URL hierarchy with nested folders instead of long flat filenames
+  when a route group grows.
+- Use `layout.tsx` for parent routes that own a URL segment, load shared data, or
+  provide `<Outlet />` context to child routes.
+- Use `index.tsx` for a route group's default child page.
+- Use `$paramName` folder or file names for dynamic URL segments.
+- Keep standalone root-level pages, such as `home.tsx`, at the route root until
+  they have a shared URL prefix.
+- Update `app/routes.ts` when moving route files.
+- Run `pnpm typecheck` after route reorganization so React Router regenerates and
+  verifies route types.
+
+## Layout Boundaries
+
+- URL-bearing layouts belong under `app/routes/.../layout.tsx`.
+- Pathless shared shells can use React Router `layout(...)` in `app/routes.ts`
+  and should stay pure UI unless they intentionally become route modules.
+- Route layouts must load their own required data instead of relying on props or
+  parent loader side effects.
+- Child routes should access parent layout contracts through typed outlet context
+  when needed.
 
 ## Loading Data
 
@@ -32,6 +58,8 @@ layout routes.
 - Use server `action` functions for route mutations.
 - Move non-trivial mutation logic, validation helpers, and persistence code into
   focused functions under `app/lib`.
+- Validate action inputs before mutation. Prefer a schema when validation grows
+  beyond simple field presence or finite enum checks.
 - Use `<Form method="get">` for search/filter forms that should update URL
   search params.
 - Use `<Form method="post">` when the mutation should navigate or redirect after

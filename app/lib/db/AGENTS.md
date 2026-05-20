@@ -21,6 +21,12 @@ by Kysely.
   `executeTakeFirstOrThrow()` when the caller needs the changed row.
 - Update `updatedAt` explicitly during updates when the schema does not provide a
   database-level trigger.
+- Wrap multi-step mutations in a Kysely transaction when the steps must succeed
+  or fail together.
+- Put authorization, archive/status checks, and the mutation they guard in the
+  same transaction when a race could otherwise change the result.
+- Use `Promise.all` for independent database reads that do not depend on each
+  other.
 
 ## Boundaries
 

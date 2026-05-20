@@ -15,6 +15,17 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
   needed: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, and
   `pnpm test:e2e`.
 
+## Workflow
+
+- Create a working branch before making code changes. Do not work directly on
+  `main`.
+- Keep `main` history linear. Prefer fast-forward or squash-style integration
+  and avoid local merge commits on `main`.
+- Use concise conventional commit messages such as `feat:`, `fix:`, `docs:`,
+  `refactor:`, and `test:` when creating commits.
+- Run `pnpm format` or the narrower Prettier command before committing when
+  formatting may have changed.
+
 ## Architecture
 
 - Keep route modules in `app/routes` thin. Route modules should wire React Router
@@ -54,6 +65,10 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 - Use `import type` for type-only imports.
 - Preserve discriminated unions and literal constants for form intents, statuses,
   and other finite option sets.
+- Use `unknown` plus narrowing or type guards instead of `any`.
+- Avoid type assertions. When an assertion is necessary, keep it narrow and add a
+  short comment explaining why it is safe.
+- Handle nullable values explicitly with optional chaining or `??` fallbacks.
 - Validate untrusted inputs at the boundary. Existing examples use Zod for
   environment validation and explicit form parsing for route actions.
 - Do not hand-edit generated files such as `.react-router/**` or
@@ -69,6 +84,8 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 - Use `lucide-react` for icons. Do not add another icon library.
 - Icon-only controls need accessible names through visible labels or
   `aria-label`.
+- Browser-native `alert`, `confirm`, and `prompt` are forbidden for product UI
+  flows. Use Mantine modal/dialog patterns instead.
 
 ## Data And Auth
 
@@ -78,6 +95,8 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 - better-auth owns the authentication tables in the Prisma schema. Be careful
   when changing `user`, `session`, `account`, and `verification`.
 - Keep server-only database and auth code out of client components.
+- Do not expose password hashes, raw provider tokens, or other server-only
+  internals through loader data or action responses.
 
 ## Testing
 

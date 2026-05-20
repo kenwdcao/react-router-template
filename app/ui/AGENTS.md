@@ -27,6 +27,19 @@ UI-specific tests.
   Avoid mixing Tailwind deeply into reusable component internals unless it is the
   clearest local pattern.
 - Do not use inline styles.
+- CSS custom properties passed through the `style` prop are allowed only for
+  truly dynamic values. Keep the styling logic in a CSS module and pass only the
+  variable value, for example `style={{ "--swatch": color }}` with
+  `background: var(--swatch)` in the CSS module.
+- Browser-native `alert`, `confirm`, and `prompt` are forbidden for product UI
+  flows. Use Mantine `Modal`, `Dialog`, or an equivalent app-level confirmation
+  pattern instead.
+- Prefer shared theme customization in `app/ui/theme` for cross-app Mantine
+  primitive styling. Use local component overrides only for intentional one-off
+  behavior.
+- Keep similar UI elements at the same abstraction level. Do not mix raw Mantine
+  controls with wrapped domain controls in the same action group unless the
+  distinction is intentional and clear.
 
 ## Icons And Accessibility
 
@@ -34,6 +47,8 @@ UI-specific tests.
 - Add icons inside buttons through Mantine slots such as `leftSection` or
   `rightSection` when text is present.
 - Icon-only buttons must have `aria-label`.
+- Disclosure and toggle buttons that control hidden content should expose
+  `aria-expanded` when applicable.
 - Form controls need visible labels whenever practical. Use `aria-label` only
   when a visible label would be redundant or visually inappropriate.
 - Preserve keyboard access, focus states, semantic headings, and meaningful

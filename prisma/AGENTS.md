@@ -21,6 +21,8 @@ This directory owns database schema and migrations.
   product decisions that need clear intent.
 - Use PostgreSQL-compatible types and preserve existing `@db.Timestamptz(6)`
   timestamp precision unless there is a reason to change it.
+- Commit schema changes, generated migration folders, and regenerated database
+  types together.
 
 ## Auth Tables
 
@@ -34,8 +36,22 @@ This directory owns database schema and migrations.
 ## Migration Hygiene
 
 - Review generated SQL before committing it.
+- Do not hand-write `migration.sql`. Let `pnpm db:migrate` generate migration
+  SQL from `schema.prisma`.
 - Do not manually edit migration history to hide mistakes after it has been
-  shared. Add a new corrective migration instead.
+  shared or applied. Add a new corrective migration instead.
+- Do not modify migration SQL in response to review feedback. Fix
+  `schema.prisma` and generate a forward migration instead.
+- Do not use `prisma db push` on the main development database; it bypasses
+  migration history and causes drift.
 - Keep migrations deterministic and environment-independent.
 - Validate DB changes with at least `pnpm db:migrate`, `pnpm db:generate`, and
   `pnpm typecheck`.
+
+## Recovery
+
+- For local-only, not-yet-shared migrations, it is acceptable to delete the
+  migration folder and reset the local database before regenerating.
+- Never reset shared, staging, or production databases to repair migration drift.
+- Use Prisma migration status/resolve commands only after verifying the database
+  schema actually matches the migration state.
