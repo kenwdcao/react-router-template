@@ -19,7 +19,8 @@ commands, and Agent-facing guardrails.
    names such as `react-router-template`, `React Router Template`, the welcome page, and the sample `project` domain.
 3. Gather missing product details before editing. If the user already supplied
    enough context, proceed without asking.
-4. Update project identity and documentation first, then code and schema.
+4. Update project identity and documentation first, then code, schema, seed
+   data, and tests.
 5. Remove, rename, or adapt sample CRUD only after the replacement domain is
    clear.
 6. Validate with the narrowest useful commands, then broaden as needed.
@@ -34,6 +35,8 @@ Ask only for details that are missing:
 - Auth choice: email/password only, OAuth providers, or no auth.
 - Core domain entities and whether the sample `project` model should be
   removed, renamed, or kept as an example.
+- Whether demo seed data should be removed, renamed into the replacement
+  domain, or kept for local onboarding.
 - Branding basics: app title, primary color, tone, and any known navigation
   labels.
 - Deployment target and required environment variables.
@@ -55,8 +58,12 @@ Update these files when relevant:
 - `app/lib/auth/server.ts`: `appName` and provider/plugin configuration.
 - `app/routes/**`: route names, titles, navigation, and placeholder pages.
 - `app/ui/**`: brand text, theme defaults, reusable components, and copy.
+- `app/lib/projects.ts` and `app/lib/projects.server.ts`: rename the sample
+  domain consistently, keeping shared constants separate from Kysely-derived
+  result types.
 - `prisma/schema.prisma`: domain models and relations, followed by migrations
   and regenerated Kysely types.
+- `prisma/seed.ts`: remove, rename, or adapt demo users and sample domain data.
 - `e2e/**` and `app/**/*.test.*`: update tests to match the initialized
   product behavior.
 
@@ -73,6 +80,11 @@ product decisions:
   kept as an example.
 - The sample CRUD decision is recorded: deleted, renamed into a real domain
   entity, or retained as documented example code.
+- The seed-data decision is recorded and `pnpm db:seed` either matches the real
+  domain or is removed from docs and package scripts.
+- Domain result types have one source of truth. For the sample project domain,
+  `ProjectSummary` is derived from `app/lib/projects.server.ts`; do not recreate
+  a parallel interface in the shared constants module.
 - CI, Docker, migration commands, and generated-type checks still match the
   chosen database and deployment path.
 - Prisma migration ownership, Kysely runtime-query ownership, React Router route
@@ -108,6 +120,7 @@ After schema changes, run:
 ```bash
 pnpm db:migrate
 pnpm db:generate
+pnpm db:seed
 pnpm typecheck
 ```
 

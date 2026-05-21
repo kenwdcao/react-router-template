@@ -4,7 +4,11 @@ import {
   handleProjectsAction,
   loadProjectsPage,
 } from "~/lib/projects-page.server";
-import { createProject, listProjectsForUser } from "~/lib/projects.server";
+import {
+  createProject,
+  listProjectsForUser,
+  updateProject,
+} from "~/lib/projects.server";
 
 vi.mock("~/lib/auth/require-auth.server", () => ({
   requireAuth: vi.fn(),
@@ -21,6 +25,7 @@ vi.mock("~/lib/projects.server", () => ({
 const requireAuthMock = vi.mocked(requireAuth);
 const listProjectsForUserMock = vi.mocked(listProjectsForUser);
 const createProjectMock = vi.mocked(createProject);
+const updateProjectMock = vi.mocked(updateProject);
 
 describe("loadProjectsPage", () => {
   beforeEach(() => {
@@ -79,6 +84,33 @@ describe("handleProjectsAction", () => {
     expect(response.init?.status).toBe(400);
     expect(response.data).toMatchObject({
       errors: { name: "Project name is required" },
+    });
+  });
+
+  it("returns validation errors for unsupported project statuses", async () => {
+    const body = new URLSearchParams({
+      _intent: "update",
+      projectId: "project-id",
+      name: "Project",
+      description: "Description",
+      status: "archivd",
+    });
+    const response = await handleProjectsAction(
+      new Request("http://localhost:5173/dashboard/projects", {
+        method: "POST",
+        body,
+      }),
+    );
+
+    expect(updateProjectMock).not.toHaveBeenCalled();
+    expect(response).not.toBeInstanceOf(Response);
+    if (response instanceof Response) {
+      throw new Error("Expected validation data");
+    }
+    expect(response.init?.status).toBe(400);
+    expect(response.data).toMatchObject({
+      errors: { status: "Project status must be active or archived" },
+      values: { projectId: "project-id" },
     });
   });
 });

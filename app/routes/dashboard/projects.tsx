@@ -20,12 +20,13 @@ import {
   useNavigation,
   useRouteError,
 } from "react-router";
-import { PROJECT_STATUS, type ProjectSummary } from "~/lib/projects";
+import { PROJECT_STATUS } from "~/lib/projects";
 import {
   handleProjectsAction,
   loadProjectsPage,
   type ProjectsActionData,
 } from "~/lib/projects-page.server";
+import type { ProjectSummary } from "~/lib/projects.server";
 import type { Route } from "./+types/projects";
 
 export function meta() {
@@ -132,7 +133,7 @@ function ProjectEditor({
   isSubmitting: boolean;
   actionData?: ProjectsActionData;
 }) {
-  const hasProjectError = actionData?.errors?.projectId === project.id;
+  const hasProjectError = actionData?.values?.projectId === project.id;
 
   return (
     <Paper withBorder p="md" radius="sm">
@@ -169,6 +170,7 @@ function ProjectEditor({
               { value: PROJECT_STATUS.active, label: "Active" },
               { value: PROJECT_STATUS.archived, label: "Archived" },
             ]}
+            error={hasProjectError ? actionData?.errors?.status : undefined}
             allowDeselect={false}
           />
           <Group align="flex-end" gap="xs">

@@ -1,6 +1,7 @@
 import { data, redirect } from "react-router";
+import { z } from "zod";
 import { requireAuth } from "~/lib/auth/require-auth.server";
-import { PROJECT_STATUS, type ProjectStatus } from "~/lib/projects";
+import { PROJECT_STATUS } from "~/lib/projects";
 import {
   createProject,
   deleteProject,
@@ -13,12 +14,35 @@ export type ProjectsActionData = {
     form?: string;
     name?: string;
     projectId?: string;
+    status?: string;
   };
   values?: {
     description: string;
     name: string;
+    projectId?: string;
+    status?: string;
   };
 };
+
+const projectStatusSchema = z.enum(
+  [PROJECT_STATUS.active, PROJECT_STATUS.archived],
+  {
+    error: "Project status must be active or archived",
+  },
+);
+
+const projectFieldsSchema = z.object({
+  description: z
+    .string()
+    .trim()
+    .transform((value) => (value.length > 0 ? value : null)),
+  name: z.string().trim().min(1, "Project name is required"),
+});
+
+const projectUpdateSchema = projectFieldsSchema.extend({
+  projectId: z.string().trim().min(1, "Project id is required"),
+  status: projectStatusSchema,
+});
 
 export async function loadProjectsPage(request: Request) {
   const session = await requireAuth(request);
@@ -58,42 +82,55 @@ export async function handleProjectsAction(request: Request) {
 }
 
 async function handleCreateProject(formData: FormData, ownerId: string) {
-  const { name, description } = readProjectFields(formData);
+  const formValues = readProjectFormValues(formData);
+  const parsed = projectFieldsSchema.safeParse(formValues);
 
-  if (!name) {
+  if (!parsed.success) {
     return data<ProjectsActionData>(
       {
-        errors: { name: "Project name is required" },
-        values: { name, description: description ?? "" },
+        errors: {
+          name: parsed.error.flatten().fieldErrors.name?.[0],
+        },
+        values: {
+          name: formValues.name,
+          description: formValues.description,
+        },
       },
       { status: 400 },
     );
   }
 
+  const { name, description } = parsed.data;
   await createProject({ ownerId, name, description });
 
   return redirect("/dashboard/projects");
 }
 
 async function handleUpdateProject(formData: FormData, ownerId: string) {
-  const projectId = String(formData.get("projectId") ?? "");
-  const { name, description } = readProjectFields(formData);
-  const status = readProjectStatus(formData);
+  const formValues = readProjectFormValues(formData);
+  const parsed = projectUpdateSchema.safeParse(formValues);
 
-  if (!projectId) {
+  if (!parsed.success) {
+    const fieldErrors = parsed.error.flatten().fieldErrors;
     return data<ProjectsActionData>(
-      { errors: { projectId: "Project id is required" } },
+      {
+        errors: {
+          name: fieldErrors.name?.[0],
+          projectId: fieldErrors.projectId?.[0],
+          status: fieldErrors.status?.[0],
+        },
+        values: {
+          name: formValues.name,
+          description: formValues.description,
+          projectId: formValues.projectId,
+          status: formValues.status,
+        },
+      },
       { status: 400 },
     );
   }
 
-  if (!name) {
-    return data<ProjectsActionData>(
-      { errors: { name: "Project name is required", projectId } },
-      { status: 400 },
-    );
-  }
-
+  const { projectId, name, description, status } = parsed.data;
   const project = await updateProject({
     ownerId,
     projectId,
@@ -110,7 +147,7 @@ async function handleUpdateProject(formData: FormData, ownerId: string) {
 }
 
 async function handleDeleteProject(formData: FormData, ownerId: string) {
-  const projectId = String(formData.get("projectId") ?? "");
+  const projectId = readFormString(formData, "projectId");
 
   if (!projectId) {
     return data<ProjectsActionData>(
@@ -128,22 +165,17 @@ async function handleDeleteProject(formData: FormData, ownerId: string) {
   return redirect("/dashboard/projects");
 }
 
-function readProjectFields(formData: FormData) {
-  const name = String(formData.get("name") ?? "").trim();
-  const rawDescription = String(formData.get("description") ?? "").trim();
-
+function readProjectFormValues(formData: FormData) {
   return {
-    name,
-    description: rawDescription.length > 0 ? rawDescription : null,
+    description: readFormString(formData, "description"),
+    name: readFormString(formData, "name"),
+    projectId: readFormString(formData, "projectId"),
+    status: readFormString(formData, "status") || PROJECT_STATUS.active,
   };
 }
 
-function readProjectStatus(formData: FormData): ProjectStatus {
-  const status = String(formData.get("status") ?? PROJECT_STATUS.active);
+function readFormString(formData: FormData, key: string) {
+  const value = formData.get(key);
 
-  if (status === PROJECT_STATUS.archived) {
-    return PROJECT_STATUS.archived;
-  }
-
-  return PROJECT_STATUS.active;
+  return typeof value === "string" ? value.trim() : "";
 }

@@ -2,8 +2,14 @@ name: CI
 
 on:
   pull_request:
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
   push:
     branches: [main]
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
 
 jobs:
   checks:
@@ -25,6 +31,7 @@ jobs:
     env:
       BETTER_AUTH_SECRET: ci-secret-at-least-thirty-two-characters
       BETTER_AUTH_URL: http://127.0.0.1:5173
+      BETTER_AUTH_TRUSTED_ORIGINS: http://127.0.0.1:5173
       DATABASE_URL: postgresql://app:password@localhost:5432/app_test
     steps:
       - uses: actions/checkout@v5
@@ -36,6 +43,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # The CI Postgres service is disposable; migrate deploy validates the committed migration set.
       - run: pnpm db:migrate:deploy
       - run: pnpm db:generate
       - run: git diff --exit-code app/lib/db/database-types.ts
@@ -45,4 +53,6 @@ jobs:
       - run: pnpm build
       - run: docker build -t react-router-template-ci .
       - run: pnpm exec playwright install --with-deps chromium
+      # Reset immediately before browser tests so future E2E cases do not inherit unit/build state.
+      - run: pnpm exec prisma migrate reset --force --skip-seed
       - run: pnpm test:e2e

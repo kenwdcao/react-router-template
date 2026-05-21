@@ -6,6 +6,7 @@ This directory owns database schema and migrations.
 
 - Prisma owns the schema in `schema.prisma` and migration files in
   `migrations/**`.
+- `seed.ts` owns local/demo seed data and must stay idempotent.
 - Kysely owns runtime queries outside this directory.
 - Do not hand-edit generated runtime types in `app/lib/db/database-types.ts`.
   Regenerate them with `pnpm db:generate`.
@@ -23,6 +24,16 @@ This directory owns database schema and migrations.
   timestamp precision unless there is a reason to change it.
 - Commit schema changes, generated migration folders, and regenerated database
   types together.
+
+## Seed Data
+
+- Keep `pnpm db:seed` safe to run multiple times against disposable local or
+  preview databases.
+- Do not put production credentials, customer data, or long-lived real secrets
+  in seed files.
+- If the sample `project` domain is renamed or removed during initialization,
+  update or remove the seed data and related README instructions in the same
+  change.
 
 ## Auth Tables
 

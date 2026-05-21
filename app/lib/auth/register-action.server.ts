@@ -1,4 +1,5 @@
 import { data, redirect } from "react-router";
+import { z } from "zod";
 import { getAuthErrorMessage } from "~/lib/auth/errors.server";
 import { auth } from "~/lib/auth/server";
 
@@ -16,6 +17,8 @@ export type RegisterActionData = {
   };
 };
 
+const emailSchema = z.email();
+
 export async function handleRegisterAction(request: Request) {
   const formData = await request.formData();
   const name = String(formData.get("name") ?? "").trim();
@@ -30,7 +33,7 @@ export async function handleRegisterAction(request: Request) {
 
   if (!email) {
     errors.email = "Email is required";
-  } else if (!email.includes("@")) {
+  } else if (!emailSchema.safeParse(email).success) {
     errors.email = "Invalid email";
   }
 

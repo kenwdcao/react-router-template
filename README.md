@@ -23,10 +23,14 @@ Paste the generated secret into `BETTER_AUTH_SECRET`, then start PostgreSQL and 
 pnpm db:up
 pnpm db:migrate
 pnpm db:generate
+pnpm db:seed
 pnpm dev
 ```
 
-The application runs at `http://localhost:5173`.
+The application runs at `http://localhost:5173`. The seed creates
+`demo@example.com` with password `DemoPassword123!` and a pair of sample
+projects. Override the seed account with `SEED_USER_EMAIL`, `SEED_USER_NAME`,
+and `SEED_USER_PASSWORD` when needed.
 
 ## Initializing A Real Project
 
@@ -51,6 +55,7 @@ The initialization pass should cover:
 - `app/routes/auth/login.tsx` and `app/routes/auth/register.tsx` use React Router actions for form submission.
 - `app/routes/dashboard/projects.tsx` shows a protected loader, action mutations, route-level errors, and Kysely-backed CRUD.
 - `app/lib/env.server.ts` validates required server environment variables with Zod before DB or auth setup.
+- `prisma/seed.ts` creates an idempotent better-auth demo account and sample owner-scoped projects.
 - `.github/workflows/ci.yml` runs migrations, generated types, lint, typecheck, unit tests, build, and Playwright.
 
 ## Routing Layouts
@@ -105,6 +110,7 @@ pnpm db:down              # Stop local PostgreSQL
 pnpm db:migrate           # Create/apply development migrations
 pnpm db:migrate:deploy    # Apply migrations in CI/production
 pnpm db:generate          # Generate Kysely database types
+pnpm db:seed              # Seed a demo user and sample projects
 ```
 
 ## Docker
@@ -126,3 +132,9 @@ The compose app service uses the internal `postgres` hostname. For standalone
 `docker run`, set `DATABASE_URL` to an external database reachable from inside
 the container, such as a managed Postgres instance or a host database exposed to
 Docker.
+
+## Deploying To Production
+
+See [docs/deployment.md](docs/deployment.md) for required environment variables,
+HTTPS and proxy guidance, migration order, health checks, and database backup
+expectations.

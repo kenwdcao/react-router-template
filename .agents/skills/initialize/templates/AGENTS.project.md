@@ -1,29 +1,55 @@
 # Project Instructions
 
-This project is a [PRODUCT_NAME] application for [PRIMARY_USERS]. It uses React
-Router framework mode, React, TypeScript, Mantine, Tailwind CSS, PostgreSQL,
-Prisma migrations, Kysely queries, better-auth, Vitest, Playwright, ESLint, and
-Prettier.
+> Initialization markers:
+>
+> - `[REPLACE]` Fill with product-specific names, routes, entities, and
+>   workflows.
+> - `[KEEP]` Preserve unless the stack changes. These rules encode the template
+>   architecture and safety constraints.
+> - `[OPTIONAL]` Delete or rewrite after deciding whether the sample project CRUD
+>   remains part of the product.
+
+This project is a [REPLACE: PRODUCT_NAME] application for
+[REPLACE: PRIMARY_USERS]. It uses React Router framework mode, React,
+TypeScript, Mantine, Tailwind CSS, PostgreSQL, Prisma migrations, Kysely
+queries, better-auth, Vitest, Playwright, ESLint, and Prettier.
 
 ## Product Context
 
-- Purpose: [ONE_SENTENCE_PURPOSE]
-- Primary users: [USER_ROLES]
-- Core workflows: [CORE_WORKFLOWS]
-- Core domain entities: [DOMAIN_ENTITIES]
+- Purpose: [REPLACE: ONE_SENTENCE_PURPOSE]
+- Primary users: [REPLACE: USER_ROLES]
+- Core workflows: [REPLACE: CORE_WORKFLOWS]
+- Core domain entities: [REPLACE: DOMAIN_ENTITIES]
+- Route map: [REPLACE: ROUTE_MAP]
+- Auth model: [REPLACE: PUBLIC_ROUTES, AUTHENTICATED_ROUTES, ROLES]
+- Deployment target: [REPLACE: PLATFORM_AND_DATABASE]
+
+## Template Decisions
+
+- [OPTIONAL] Sample project CRUD:
+  [REPLACE: deleted, renamed to DOMAIN_ENTITY, or kept as documented example].
+- [OPTIONAL] Demo seed data:
+  [REPLACE: remove, rename, or adapt `prisma/seed.ts` to the real domain].
+- [REPLACE] Branding:
+  [PRODUCT_NAME], navigation labels, page titles, metadata, and empty states.
 
 ## Commands
+
+[KEEP]
 
 - Install dependencies with `pnpm install`.
 - Start local PostgreSQL with `pnpm db:up`.
 - Apply development migrations with `pnpm db:migrate`.
 - Regenerate Kysely database types with `pnpm db:generate`.
+- Seed local demo data with `pnpm db:seed` when useful.
 - Start the dev server with `pnpm dev`.
 - Validate with the narrowest relevant command first, then broaden with
   `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, and
   `pnpm test:e2e`.
 
 ## Workflow
+
+[KEEP]
 
 - Create a working branch before making code changes. Do not work directly on
   `main`.
@@ -35,6 +61,8 @@ Prettier.
   formatting may have changed.
 
 ## Architecture
+
+[KEEP]
 
 - Keep route modules in `app/routes` thin.
 - Move non-trivial data loading, form parsing, validation, auth checks, and
@@ -48,6 +76,8 @@ Prettier.
 - Keep generated files out of manual edits.
 
 ## React Router
+
+[KEEP]
 
 - Use framework-mode route types from generated `+types` directories:
   `import type { Route } from "./+types/<route-name>"`.
@@ -63,6 +93,8 @@ Prettier.
 
 ## TypeScript
 
+[KEEP]
+
 - Keep TypeScript strict. Do not weaken `tsconfig.json` or introduce broad
   `any` types to bypass errors.
 - Use `import type` for type-only imports.
@@ -77,6 +109,8 @@ Prettier.
 
 ## Styling
 
+[KEEP]
+
 - Mantine owns interactive components, forms, overlays, notifications,
   AppShell, and theme-aware component props.
 - Tailwind owns page composition, simple layout utilities, spacing, and
@@ -90,6 +124,8 @@ Prettier.
 
 ## Auth And Data
 
+[KEEP]
+
 - Use `requireAuth(request)` in every loader/action that reads or mutates
   user-owned data.
 - Scope database reads and writes by authenticated user id or explicit role.
@@ -100,9 +136,24 @@ Prettier.
 
 ## Testing
 
+[KEEP]
+
 - Add Vitest coverage for non-trivial `app/lib` logic.
 - Add Playwright coverage when changing user-visible routing, auth, navigation,
   or critical forms.
 - Prefer observable behavior over implementation details.
 - Do not commit generated test artifacts such as `test-results/` or
   `playwright-report/`.
+
+## Initialization Checklist
+
+- [REPLACE] Replace package/app names in `package.json`, route metadata,
+  navigation, README, and visible UI copy.
+- [REPLACE] Update `.env.example` with deployment-specific required variables
+  and safe placeholders.
+- [REPLACE] Rename or remove `project` domain files, tests, route labels, and
+  seed data if the sample CRUD is not part of the product.
+- [KEEP] Re-run `pnpm db:generate` after schema changes and commit generated
+  database types only when the schema changed.
+- [KEEP] Finish with `pnpm format:check`, `pnpm lint`, `pnpm typecheck`,
+  `pnpm test`, and any relevant `pnpm test:e2e` flow.
