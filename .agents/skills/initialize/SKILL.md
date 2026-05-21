@@ -60,6 +60,25 @@ Update these files when relevant:
 - `e2e/**` and `app/**/*.test.*`: update tests to match the initialized
   product behavior.
 
+## Final Consistency Checklist
+
+Before finishing initialization, verify these artifacts describe the same
+product decisions:
+
+- `README.md`, root `AGENTS.md`, `.env.example`, and `package.json` use the
+  project name, package name, routes, environment variables, and validation
+  commands consistently.
+- Route titles, navigation labels, tests, seed/sample data, and domain copy no
+  longer point at the generic template unless the sample CRUD was intentionally
+  kept as an example.
+- The sample CRUD decision is recorded: deleted, renamed into a real domain
+  entity, or retained as documented example code.
+- CI, Docker, migration commands, and generated-type checks still match the
+  chosen database and deployment path.
+- Prisma migration ownership, Kysely runtime-query ownership, React Router route
+  rules, TypeScript strictness, Mantine/Tailwind styling boundaries, and
+  better-auth data-safety rules remain present in `AGENTS.md`.
+
 ## Code Rules
 
 - Keep route modules thin. Move non-trivial loaders, actions, parsing,

@@ -104,14 +104,25 @@ pnpm db:up                # Start local PostgreSQL
 pnpm db:down              # Stop local PostgreSQL
 pnpm db:migrate           # Create/apply development migrations
 pnpm db:migrate:deploy    # Apply migrations in CI/production
-pnpm db:generate          # Prisma generate + Kysely database types
+pnpm db:generate          # Generate Kysely database types
 ```
 
 ## Docker
 
 ```bash
 docker build -t react-router-template .
-docker run -p 3000:3000 --env-file .env react-router-template
 ```
 
-Docker Compose is included for local PostgreSQL development.
+For a full local container stack, start Postgres, apply migrations from the host
+through the published database port, then start the app container:
+
+```bash
+docker compose up -d postgres
+DATABASE_URL="postgresql://app:password@localhost:5432/app_dev" pnpm db:migrate:deploy
+docker compose up --build app
+```
+
+The compose app service uses the internal `postgres` hostname. For standalone
+`docker run`, set `DATABASE_URL` to an external database reachable from inside
+the container, such as a managed Postgres instance or a host database exposed to
+Docker.

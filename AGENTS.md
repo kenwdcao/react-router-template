@@ -9,7 +9,7 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 - Install dependencies with `pnpm install`.
 - Start local PostgreSQL with `pnpm db:up`.
 - Apply development migrations with `pnpm db:migrate`.
-- Regenerate Prisma client and Kysely database types with `pnpm db:generate`.
+- Regenerate Kysely database types with `pnpm db:generate`.
 - Start the dev server with `pnpm dev`.
 - Validate changes with the narrowest relevant command first, then broaden when needed: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, and `pnpm test:e2e`.
 

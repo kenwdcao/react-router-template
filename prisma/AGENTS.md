@@ -14,8 +14,8 @@ This directory owns database schema and migrations.
 
 - Update `schema.prisma` first, then create a migration with
   `pnpm db:migrate`.
-- After any schema or migration change, run `pnpm db:generate` so the Prisma
-  client and Kysely database types match the schema.
+- After any schema or migration change, run `pnpm db:generate` so the Kysely
+  database types match the schema.
 - Keep column defaults, nullability, indexes, uniqueness, and relations explicit.
 - Prefer additive migrations when possible. Treat destructive migrations as
   product decisions that need clear intent.

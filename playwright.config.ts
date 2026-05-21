@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import "dotenv/config";
 
 const port = Number(process.env.PORT ?? 5173);
 const baseURL = `http://127.0.0.1:${port}`;

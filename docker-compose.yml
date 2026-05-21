@@ -10,6 +10,25 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-app_dev}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-replace-with-at-least-32-random-characters}
+      BETTER_AUTH_URL: http://localhost:${APP_PORT:-3000}
+      BETTER_AUTH_TRUSTED_ORIGINS: http://localhost:${APP_PORT:-3000}
+    ports:
+      - "${APP_PORT:-3000}:3000"
 
 volumes:
   postgres_data:

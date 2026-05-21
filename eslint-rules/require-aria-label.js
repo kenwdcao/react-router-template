@@ -47,6 +47,19 @@ export default {
       "Slider",
     ]);
 
+    const mantineFormControls = new Set([
+      "TextInput",
+      "Textarea",
+      "PasswordInput",
+      "NumberInput",
+      "Select",
+      "MultiSelect",
+      "Checkbox",
+      "Radio",
+      "Switch",
+      "Slider",
+    ]);
+
     /**
      * @param {import('eslint').Rule.Node} node
      * @returns {boolean}
@@ -81,6 +94,20 @@ export default {
     function hasAttribute(attributes, name) {
       return attributes.some(
         (attr) => attr.type === "JSXAttribute" && attr.name.name === name,
+      );
+    }
+
+    /**
+     * @param {import('eslint').Rule.Node[]} attributes
+     * @param {string} tagName
+     * @returns {boolean}
+     */
+    function hasAccessibleNameAttribute(attributes, tagName) {
+      return (
+        hasAttribute(attributes, "aria-label") ||
+        hasAttribute(attributes, "aria-labelledby") ||
+        hasAttribute(attributes, "title") ||
+        (mantineFormControls.has(tagName) && hasAttribute(attributes, "label"))
       );
     }
 
@@ -126,24 +153,7 @@ export default {
         // Check aria-label on elements without visible text
         const parent = node.parent;
         if (parent && parent.type === "JSXElement" && !hasVisibleText(parent)) {
-          if (
-            !hasAttribute(node.attributes, "aria-label") &&
-            !hasAttribute(node.attributes, "aria-labelledby") &&
-            !hasAttribute(node.attributes, "title")
-          ) {
-            // Allow input placeholders as accessible names
-            if (
-              tagName === "input" ||
-              tagName === "TextInput" ||
-              tagName === "Textarea" ||
-              tagName === "PasswordInput" ||
-              tagName === "NumberInput" ||
-              tagName === "Select" ||
-              tagName === "MultiSelect"
-            ) {
-              if (hasAttribute(node.attributes, "placeholder")) return;
-            }
-
+          if (!hasAccessibleNameAttribute(node.attributes, tagName)) {
             context.report({
               node,
               messageId: "requireAriaLabel",
