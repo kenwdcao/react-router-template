@@ -11,38 +11,29 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 - Apply development migrations with `pnpm db:migrate`.
 - Regenerate Prisma client and Kysely database types with `pnpm db:generate`.
 - Start the dev server with `pnpm dev`.
-- Validate changes with the narrowest relevant command first, then broaden when
-  needed: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, and
-  `pnpm test:e2e`.
+- Validate changes with the narrowest relevant command first, then broaden when needed: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, and `pnpm test:e2e`.
 
 ## Workflow
 
-- Create a working branch before making code changes. Do not work directly on
-  `main`.
-- Keep `main` history linear. Prefer fast-forward or squash-style integration
-  and avoid local merge commits on `main`.
-- Use concise conventional commit messages such as `feat:`, `fix:`, `docs:`,
-  `refactor:`, and `test:` when creating commits.
-- Run `pnpm format` or the narrower Prettier command before committing when
-  formatting may have changed.
+- Create a working branch before making code changes. Do not work directly on `main`.
+- Keep `main` history linear. Prefer fast-forward or squash-style integration and avoid local merge commits on `main`.
+- Use concise conventional commit messages such as `feat:`, `fix:`, `docs:`, `refactor:`, and `test:` when creating commits.
+- Run `pnpm format` or the narrower Prettier command before committing when formatting may have changed.
 
 ## Template Initialization
 
-- When adapting this template for a real product, use the local
-  `.agents/skills/initialize` skill first.
-- Gather the product name, package name, purpose, user roles, initial route map,
-  auth requirements, core domain entities, branding basics, deployment target,
-  and required environment variables before broad edits.
-- Replace template placeholders such as `react-router-template`,
-  `React Router Template`, the welcome copy, and the sample `project` domain
-  with project-specific names and workflows.
-- Update root `AGENTS.md` during initialization so future agents receive the
-  actual product context, domain vocabulary, route/auth/data rules, and
-  validation expectations instead of generic template instructions.
-- Update `README.md`, `.env.example`, route titles, navigation labels, tests,
-  and sample data together so the initialized project is internally consistent.
-- Decide explicitly whether the sample project CRUD should be deleted, renamed
-  into a real domain entity, or kept as a documented example.
+1. Run the initialize skill using `.agents/skills/initialize` for guided scaffolding.
+2. Collect project details before editing any files:
+   a. Product name, package name, and purpose
+   b. User roles and auth requirements
+   c. Initial route map
+   d. Core domain entities
+   e. Branding basics
+   f. Deployment target and required environment variables
+3. Replace placeholders: swap `react-router-template`, `React Router Template`, welcome copy, and the sample `project` domain with project-specific names and workflows.
+4. Decide whether to delete the sample CRUD, rename it into a real domain entity, or keep it as a documented example.
+5. Rewrite root `AGENTS.md` with actual product context, domain vocabulary, route/auth/data rules, and validation expectations.
+6. Update `README.md`, `.env.example`, route titles, navigation labels, tests, and sample data for consistency.
 
 ## Architecture
 
@@ -53,8 +44,7 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
   `app/root.tsx`.
 - Section-level UI belongs in nested layout routes such as `marketing`, `auth`,
   and `dashboard`.
-- Put shared domain logic in `app/lib`; keep presentational React components in
-  `app/ui`.
+- Put shared domain logic in `app/lib`; keep presentational React components in `app/ui`.
 - Use the `~/*` path alias for imports from `app`.
 
 ## React Router
@@ -118,8 +108,29 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 
 ## Testing
 
-- Add or update Vitest coverage for non-trivial logic in `app/lib` and reusable
-  components in `app/ui`.
-- Add or update Playwright coverage when a change alters user-visible routing,
-  authentication, navigation, or critical forms.
-- Prefer testing observable behavior over implementation details.
+### Unit And Component Tests
+
+- Use Vitest and React Testing Library for non-trivial `app/lib` logic and
+  reusable `app/ui` components.
+- Test behavior, not implementation details.
+- Focus on user interactions, business logic, validation, error handling, and
+  permission logic.
+- Do not add tests for pure rendering, styles, or framework behavior that this
+  app does not own.
+
+### E2E Tests
+
+- Use Playwright for critical user journeys and user-visible routing changes.
+- Cover complete flows such as register/login -> route action -> redirected or
+  verified result.
+- Add or update E2E coverage when changing authentication, navigation,
+  protected layouts, or critical forms.
+
+### Testing Workflow
+
+- Keep complex loader/action logic in `app/lib` so it can be unit tested without
+  rendering a route.
+- Update tests during template initialization when app name, navigation labels,
+  routes, auth behavior, or the sample project domain changes.
+- Do not commit generated test artifacts such as `test-results/` or
+  `playwright-report/`.

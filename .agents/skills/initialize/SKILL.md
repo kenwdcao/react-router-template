@@ -16,8 +16,7 @@ commands, and Agent-facing guardrails.
 1. Confirm the repo root and current branch. Create a working branch before
    edits if the user has not already done so.
 2. Check whether the repo is still template-shaped by looking for placeholder
-   names such as `react-router-template`, `React Router Template`, the welcome
-   page, and the sample `project` domain.
+   names such as `react-router-template`, `React Router Template`, the welcome page, and the sample `project` domain.
 3. Gather missing product details before editing. If the user already supplied
    enough context, proceed without asking.
 4. Update project identity and documentation first, then code and schema.
