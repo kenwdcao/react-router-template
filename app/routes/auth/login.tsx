@@ -15,8 +15,8 @@ import {
   useNavigation,
   useSearchParams,
 } from "react-router";
-import { handleLoginAction } from "~/lib/auth/login-action.server";
-import { getSafeRedirectTo } from "~/lib/auth/redirects";
+import { getSafeRedirectTo } from "~/lib/auth";
+import { handleLoginAction } from "~/lib/auth/index.server";
 import type { Route } from "./+types/login";
 
 export function meta() {

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { requireAuth } from "~/lib/auth/require-auth.server";
+import { requireAuth } from "~/lib/auth/index.server";
 import {
   handleProjectsAction,
   loadProjectsPage,

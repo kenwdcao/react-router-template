@@ -9,7 +9,7 @@ import {
   Title,
 } from "@mantine/core";
 import { Form, Link, useActionData, useNavigation } from "react-router";
-import { handleRegisterAction } from "~/lib/auth/register-action.server";
+import { handleRegisterAction } from "~/lib/auth/index.server";
 import type { Route } from "./+types/register";
 
 export function meta() {

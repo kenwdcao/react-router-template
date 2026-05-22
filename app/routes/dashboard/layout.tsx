@@ -17,9 +17,9 @@ import {
   useLoaderData,
   useNavigate,
 } from "react-router";
-import { signOut } from "~/lib/auth/client";
-import { requireAuth } from "~/lib/auth/require-auth.server";
-import { ThemeSelector } from "~/ui/components/common/ThemeSelector";
+import { signOut } from "~/lib/auth";
+import { requireAuth } from "~/lib/auth/index.server";
+import { ThemeSelector } from "~/ui/components/common";
 import type { Route } from "./+types/layout";
 
 const navItems = [

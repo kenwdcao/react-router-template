@@ -2,7 +2,7 @@ import type {
   ColorScheme,
   PrimaryColor,
   ResolvedColorScheme,
-} from "~/lib/types/theme";
+} from "~/lib/types";
 
 export const PRIMARY_COLOR_COOKIE_NAME = "mantine-primary-color";
 export const COLOR_SCHEME_COOKIE_NAME = "mantine-color-scheme";

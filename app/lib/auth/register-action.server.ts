@@ -1,7 +1,6 @@
 import { data, redirect } from "react-router";
 import { z } from "zod";
-import { getAuthErrorMessage } from "~/lib/auth/errors.server";
-import { auth } from "~/lib/auth/server";
+import { auth, getAuthErrorMessage } from "~/lib/auth/index.server";
 
 export type RegisterActionData = {
   errors?: {

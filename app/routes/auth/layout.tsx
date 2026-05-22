@@ -1,7 +1,7 @@
 import { Box, Container, Group } from "@mantine/core";
 import { Outlet } from "react-router";
-import { requireAnonymous } from "~/lib/auth/require-auth.server";
-import { ThemeSelector } from "~/ui/components/common/ThemeSelector";
+import { requireAnonymous } from "~/lib/auth/index.server";
+import { ThemeSelector } from "~/ui/components/common";
 import type { Route } from "./+types/layout";
 
 export async function loader({ request }: Route.LoaderArgs) {

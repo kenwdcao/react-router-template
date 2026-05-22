@@ -1,7 +1,6 @@
 # UI Instructions
 
-This directory contains shared presentational components, theme helpers, and
-UI-specific tests.
+This directory contains shared presentational components, theme helpers, and UI-specific tests.
 
 ## Component Boundaries
 
@@ -9,6 +8,12 @@ UI-specific tests.
 - Prefer small components with explicit props over large components that infer behavior from global state.
 - Reuse existing theme helpers from `app/ui/theme` and shared utilities from `app/lib` before adding new styling abstractions.
 - Components that are specific to one route can stay near that route. Move them into `app/ui` only when they are reusable or part of the shared design system.
+
+## Barrel Exports
+
+- Each component folder must expose its public API through an `index.ts` barrel file. Import components via the folder path, e.g. `~/ui/components/common`, not from individual files.
+- Keep barrel files thin: only re-export public symbols. Do not add runtime logic or side effects in `index.ts`.
+- When adding a new component to an existing folder, update the folder's `index.ts` so the new export is discoverable through the barrel.
 
 ## Mantine And Styling
 

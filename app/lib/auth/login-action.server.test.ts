@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { handleLoginAction } from "~/lib/auth/login-action.server";
-import { auth } from "~/lib/auth/server";
+import { auth, handleLoginAction } from "~/lib/auth/index.server";
 
 vi.mock("~/lib/auth/server", () => ({
   auth: {

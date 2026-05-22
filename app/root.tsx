@@ -25,8 +25,8 @@ import {
   parseColorSchemeCookie,
   parsePrimaryColorCookie,
   parseResolvedColorSchemeCookie,
-} from "~/lib/utils/theme";
-import { RouteProgress } from "~/ui/components/common/RouteProgress";
+} from "~/lib/utils";
+import { RouteProgress } from "~/ui/components/common";
 import { createAppTheme } from "~/ui/theme";
 
 import type { Route } from "./+types/root";

@@ -1,7 +1,6 @@
 import { data, redirect } from "react-router";
-import { getAuthErrorMessage } from "~/lib/auth/errors.server";
-import { getSafeRedirectTo } from "~/lib/auth/redirects";
-import { auth } from "~/lib/auth/server";
+import { getSafeRedirectTo } from "~/lib/auth";
+import { auth, getAuthErrorMessage } from "~/lib/auth/index.server";
 
 export type LoginActionData = {
   errors?: {

@@ -1,7 +1,7 @@
 import { MantineProvider } from "@mantine/core";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { Welcome } from "~/ui/components/welcome/welcome";
+import { Welcome } from "~/ui/components/welcome";
 
 describe("Welcome", () => {
   it("renders resource links", () => {

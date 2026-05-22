@@ -1,6 +1,6 @@
 import { Kysely, PostgresDialect } from "kysely";
 import { Pool } from "pg";
-import type { DB } from "~/lib/db/database-types";
+import type { DB } from "~/lib/db";
 import { env } from "~/lib/env.server";
 
 const globalForDb = globalThis as unknown as { pool: Pool | undefined };

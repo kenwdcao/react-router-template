@@ -5,7 +5,7 @@ import {
   buildColorSchemeCookie,
   parseColorSchemeCookie,
   parsePrimaryColorCookie,
-} from "~/lib/utils/theme";
+} from "~/lib/utils";
 
 describe("theme cookies", () => {
   it("reads known theme values from a cookie header", () => {

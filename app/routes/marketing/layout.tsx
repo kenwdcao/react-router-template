@@ -8,9 +8,9 @@ import {
 } from "@mantine/core";
 import { LogOut } from "lucide-react";
 import { Link, Outlet, useLoaderData } from "react-router";
-import { signOut } from "~/lib/auth/client";
-import { getSession } from "~/lib/auth/require-auth.server";
-import { ThemeSelector } from "~/ui/components/common/ThemeSelector";
+import { signOut } from "~/lib/auth";
+import { getSession } from "~/lib/auth/index.server";
+import { ThemeSelector } from "~/ui/components/common";
 import type { Route } from "./+types/layout";
 
 export async function loader({ request }: Route.LoaderArgs) {

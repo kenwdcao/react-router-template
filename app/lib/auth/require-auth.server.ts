@@ -1,6 +1,6 @@
 import { redirect } from "react-router";
-import { getSafeRedirectTo } from "~/lib/auth/redirects";
-import { auth } from "~/lib/auth/server";
+import { getSafeRedirectTo } from "~/lib/auth";
+import { auth } from "~/lib/auth/index.server";
 
 export type AuthSession = NonNullable<
   Awaited<ReturnType<typeof auth.api.getSession>>

@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { db } from "~/lib/db/server";
+import { db } from "~/lib/db/index.server";
 import { PROJECT_STATUS, type ProjectStatus } from "~/lib/projects";
 
 export type ProjectSummary = Awaited<

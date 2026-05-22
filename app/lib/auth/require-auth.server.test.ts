@@ -1,8 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
-import { getSafeRedirectTo } from "~/lib/auth/redirects";
-import type { AuthSession } from "~/lib/auth/require-auth.server";
-import { requireAnonymous, requireAuth } from "~/lib/auth/require-auth.server";
-import { auth } from "~/lib/auth/server";
+import { getSafeRedirectTo } from "~/lib/auth";
+import type { AuthSession } from "~/lib/auth/index.server";
+import { auth, requireAnonymous, requireAuth } from "~/lib/auth/index.server";
 
 vi.mock("~/lib/auth/server", () => ({
   auth: {

@@ -11,7 +11,7 @@ import {
 import { Check, Monitor, Moon, Palette, Sun } from "lucide-react";
 import { useCallback } from "react";
 import { useRevalidator, useRouteLoaderData } from "react-router";
-import type { ColorScheme, PrimaryColor } from "~/lib/types/theme";
+import type { ColorScheme, PrimaryColor } from "~/lib/types";
 import {
   buildColorSchemeCookie,
   buildPrimaryColorCookie,
@@ -19,7 +19,7 @@ import {
   DEFAULT_PRIMARY_COLOR,
   PRIMARY_COLOR_LABELS,
   PRIMARY_COLOR_VALUES,
-} from "~/lib/utils/theme";
+} from "~/lib/utils";
 import type { loader } from "~/root";
 import classes from "./ThemeSelector.module.css";
 

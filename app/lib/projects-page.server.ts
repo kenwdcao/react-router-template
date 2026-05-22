@@ -1,6 +1,6 @@
 import { data, redirect } from "react-router";
 import { z } from "zod";
-import { requireAuth } from "~/lib/auth/require-auth.server";
+import { requireAuth } from "~/lib/auth/index.server";
 import { PROJECT_STATUS } from "~/lib/projects";
 import {
   createProject,
