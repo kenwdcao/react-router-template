@@ -13,31 +13,22 @@ by Kysely.
 
 - Import the shared `db` instance from `~/lib/db/server`.
 - Keep query helpers in server-side modules under `app/lib`.
-- Select only the columns needed by the caller. Prefer reusable `as const`
-  selection arrays when multiple queries return the same shape.
-- Scope user-owned reads and writes by authenticated user id, not by client
-  supplied ids alone.
-- Use `.returning(...)` plus `executeTakeFirst()` or
-  `executeTakeFirstOrThrow()` when the caller needs the changed row.
-- Update `updatedAt` explicitly during updates when the schema does not provide a
-  database-level trigger.
-- Wrap multi-step mutations in a Kysely transaction when the steps must succeed
-  or fail together.
-- Put authorization, archive/status checks, and the mutation they guard in the
-  same transaction when a race could otherwise change the result.
-- Use `Promise.all` for independent database reads that do not depend on each
-  other.
+- Select only the columns needed by the caller. Prefer reusable `as const` selection arrays when multiple queries return the same shape.
+- Scope user-owned reads and writes by authenticated user id, not by client supplied ids alone.
+- Use `.returning(...)` plus `executeTakeFirst()` or `executeTakeFirstOrThrow()` when the caller needs the changed row.
+- Update `updatedAt` explicitly during updates when the schema does not provide a database-level trigger.
+- Wrap multi-step mutations in a Kysely transaction when the steps must succeed or fail together.
+- Put authorization, archive/status checks, and the mutation they guard in the same transaction when a race could otherwise change the result.
+- Use `Promise.all` for independent database reads that do not depend on each other.
 
 ## Boundaries
 
 - Do not import `~/lib/db/server` from browser-only code.
 - Keep environment access inside server modules such as `~/lib/env.server`.
 - Keep transaction boundaries close to the workflow that needs atomicity.
-- Convert database misses into clear route-level behavior in callers, such as a
-  `404 Response` or a typed action error.
+- Convert database misses into clear route-level behavior in callers, such as a `404 Response` or a typed action error.
 
 ## Validation
 
 - After schema changes, run `pnpm db:generate` before `pnpm typecheck`.
-- Add or update tests for query helpers when ownership checks, filtering,
-  sorting, or mutation behavior changes.
+- Add or update tests for query helpers when ownership checks, filtering, sorting, or mutation behavior changes.
