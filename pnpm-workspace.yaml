@@ -1,3 +1,5 @@
+# This file configures pnpm build permissions, NOT workspace/monorepo packages.
+# Listed packages are allowed to run postinstall scripts during `pnpm install`.
 allowBuilds:
   "@prisma/engines": true
   esbuild: true

@@ -10,7 +10,13 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Home, LogOut, PanelsTopLeft } from "lucide-react";
-import { Link, NavLink, Outlet, useLoaderData } from "react-router";
+import {
+  Link,
+  NavLink,
+  Outlet,
+  useLoaderData,
+  useNavigate,
+} from "react-router";
 import { signOut } from "~/lib/auth/client";
 import { requireAuth } from "~/lib/auth/require-auth.server";
 import { ThemeSelector } from "~/ui/components/common/ThemeSelector";
@@ -34,6 +40,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function DashboardLayout() {
   const { user } = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
   const [opened, { toggle }] = useDisclosure();
 
   return (
@@ -88,7 +95,7 @@ export default function DashboardLayout() {
               leftSection={<LogOut size={16} />}
               onClick={async () => {
                 await signOut();
-                window.location.href = "/";
+                navigate("/");
               }}
             >
               Sign out
