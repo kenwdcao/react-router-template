@@ -4,7 +4,6 @@ import {
   FinalCTA,
   GetStarted,
   Hero,
-  MantineShowcase,
   TechStack,
 } from "~/ui/components/home";
 import type { Route } from "./+types/home";
@@ -25,7 +24,6 @@ export default function Home() {
     <Stack gap="xl" py="xl">
       <Hero />
       <FeatureGrid />
-      <MantineShowcase />
       <TechStack />
       <GetStarted />
       <FinalCTA />

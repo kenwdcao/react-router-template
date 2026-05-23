@@ -1,12 +1,18 @@
 import {
+  ActionIcon,
   AppShell,
   Avatar,
+  Burger,
   Button,
+  Drawer,
   Group,
+  NavLink,
+  Stack,
   Text,
   UnstyledButton,
 } from "@mantine/core";
-import { LogOut } from "lucide-react";
+import { useDisclosure } from "@mantine/hooks";
+import { LayoutDashboard, LogOut } from "lucide-react";
 import { Link, Outlet, useLoaderData, useNavigate } from "react-router";
 import { signOut } from "~/lib/auth";
 import { getSession } from "~/lib/auth/index.server";
@@ -29,20 +35,38 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function MarketingLayout() {
   const { user } = useLoaderData<typeof loader>();
+  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
+    useDisclosure();
 
   return (
     <AppShell header={{ height: 56 }} padding="md">
       <AppShell.Header>
         <div className="grid h-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-4">
-          <div className="min-w-0 justify-self-start">
+          <Group gap="sm" className="min-w-0 justify-self-start">
+            <Burger
+              opened={drawerOpened}
+              onClick={toggleDrawer}
+              hiddenFrom="sm"
+              size="sm"
+              aria-label="Toggle navigation"
+            />
             <UnstyledButton component={Link} to="/" aria-label="Home">
               <Text fw={700} size="lg" className="truncate">
                 React Router Template
               </Text>
             </UnstyledButton>
-          </div>
+          </Group>
 
-          <div className="justify-self-center" />
+          <Button
+            variant="subtle"
+            component={Link}
+            to="/dashboard"
+            leftSection={<LayoutDashboard size={16} />}
+            visibleFrom="sm"
+            className="justify-self-center"
+          >
+            Dashboard
+          </Button>
 
           <Group
             gap="sm"
@@ -57,6 +81,24 @@ export default function MarketingLayout() {
       <AppShell.Main>
         <Outlet />
       </AppShell.Main>
+
+      <Drawer
+        opened={drawerOpened}
+        onClose={closeDrawer}
+        title="Navigation"
+        size="xs"
+        hiddenFrom="sm"
+      >
+        <Stack gap="sm">
+          <NavLink
+            component={Link}
+            to="/dashboard"
+            label="Dashboard"
+            leftSection={<LayoutDashboard size={18} />}
+            onClick={closeDrawer}
+          />
+        </Stack>
+      </Drawer>
     </AppShell>
   );
 }
@@ -82,10 +124,23 @@ function MarketingAuthActions({
         <Text size="sm" visibleFrom="md">
           {displayName}
         </Text>
+        <ActionIcon
+          variant="subtle"
+          size="sm"
+          hiddenFrom="sm"
+          aria-label="Sign out"
+          onClick={async () => {
+            await signOut();
+            navigate("/");
+          }}
+        >
+          <LogOut size={16} />
+        </ActionIcon>
         <Button
           variant="subtle"
           size="compact-sm"
           leftSection={<LogOut size={16} />}
+          visibleFrom="sm"
           onClick={async () => {
             await signOut();
             navigate("/");

@@ -39,7 +39,7 @@ export function Hero() {
             A batteries-included full-stack starter with authentication,
             database, SSR, testing, and a polished UI out of the box.
           </Text>
-          <Group>
+          <Group grow>
             <Button
               size="lg"
               component={Link}

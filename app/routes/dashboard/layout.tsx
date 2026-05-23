@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   AppShell,
   Avatar,
   Burger,
@@ -56,7 +57,9 @@ export default function DashboardLayout() {
               aria-label="Toggle navigation"
             />
             <UnstyledButton component={Link} to="/" aria-label="Home">
-              <Text fw={700}>React Router Template</Text>
+              <Text fw={700} visibleFrom="sm">
+                React Router Template
+              </Text>
             </UnstyledButton>
           </Group>
 
@@ -64,12 +67,16 @@ export default function DashboardLayout() {
             variant="subtle"
             component={Link}
             to="/dashboard"
-            className="justify-self-center"
+            className="justify-self-center hidden sm:block"
           >
             Dashboard
           </Button>
 
-          <Group gap="sm" className="min-w-0 justify-self-end">
+          <Group
+            gap="sm"
+            className="min-w-0 justify-self-end"
+            justify="flex-end"
+          >
             <ThemeSelector />
             <Indicator
               processing
@@ -85,10 +92,23 @@ export default function DashboardLayout() {
             <Text size="sm" visibleFrom="md">
               {user.name || user.email}
             </Text>
+            <ActionIcon
+              variant="subtle"
+              size="sm"
+              hiddenFrom="sm"
+              aria-label="Sign out"
+              onClick={async () => {
+                await signOut();
+                navigate("/");
+              }}
+            >
+              <LogOut size={16} />
+            </ActionIcon>
             <Button
               variant="subtle"
               size="compact-sm"
               leftSection={<LogOut size={16} />}
+              visibleFrom="sm"
               onClick={async () => {
                 await signOut();
                 navigate("/");

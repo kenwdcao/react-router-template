@@ -35,7 +35,7 @@ export default function Register() {
         </Anchor>
       </Text>
 
-      <Paper withBorder shadow="md" p={30} radius="md">
+      <Paper withBorder shadow="md" p={{ base: "md", sm: 30 }} radius="md">
         <Form method="post" replace>
           <Stack>
             <TextInput

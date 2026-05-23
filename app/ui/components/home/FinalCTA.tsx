@@ -23,7 +23,7 @@ export function FinalCTA() {
           <Text c="dimmed" ta="center">
             Register an account to try the dashboard, or jump straight in.
           </Text>
-          <Group>
+          <Group grow>
             <Button component={Link} to="/register">
               Get started
             </Button>
