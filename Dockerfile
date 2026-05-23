@@ -19,6 +19,8 @@ RUN corepack enable && corepack prepare pnpm@11.1.2 --activate
 COPY . /app/
 COPY --from=development-dependencies-env /app/node_modules /app/node_modules
 WORKDIR /app
+# Build-time env values satisfy server environment validation. The build does
+# not connect to this database URL.
 RUN DATABASE_URL=postgresql://app:password@localhost:5432/app_build \
   BETTER_AUTH_SECRET=build-secret-at-least-thirty-two-characters \
   BETTER_AUTH_URL=http://localhost:3000 \

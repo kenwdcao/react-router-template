@@ -1,12 +1,4 @@
-export function getAuthErrorMessage(error: unknown, fallback: string) {
-  if (
-    error &&
-    typeof error === "object" &&
-    "message" in error &&
-    typeof error.message === "string"
-  ) {
-    return error.message;
-  }
-
+export function getAuthErrorMessage(error: unknown, fallback: string): string {
+  console.error("[auth]", error);
   return fallback;
 }

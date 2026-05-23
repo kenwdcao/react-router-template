@@ -27,7 +27,7 @@ your deployment stack.
 2. Apply migrations against the production database with
    `pnpm db:migrate:deploy`.
 3. Start the app with `pnpm start` or the provided Docker image.
-4. Verify the root page and a protected auth flow.
+4. Verify `/health`, the root page, and a protected auth flow.
 
 Run `pnpm db:seed` only in disposable development or preview databases. The
 default seed creates a known demo credential and should not be used for
@@ -49,8 +49,8 @@ origin, not the internal container hostname.
 
 ## Health And Operations
 
-- Use the marketing home route or a small app-owned health route as the HTTP
-  health check target.
+- Use `/health` as the HTTP health check target. It is intentionally lightweight
+  and does not require database access.
 - Monitor migration failures, auth error rates, database connection saturation,
   and server process restarts.
 - Back up PostgreSQL before every release that includes schema migrations.

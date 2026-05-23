@@ -7,6 +7,7 @@ A full-stack React Router v7 starter with SSR, Mantine v9, Tailwind CSS v4, Post
 Install dependencies:
 
 ```bash
+node --version              # Use Node.js 22; see .nvmrc and .node-version.
 pnpm install
 ```
 
@@ -32,6 +33,16 @@ The application runs at `http://localhost:5173`. The seed creates
 projects. Override the seed account with `SEED_USER_EMAIL`, `SEED_USER_NAME`,
 and `SEED_USER_PASSWORD` when needed.
 
+Playwright uses a separate `app_test` database by default so browser tests do
+not mutate development data. Create it once, apply migrations against it, then
+run E2E tests:
+
+```bash
+docker exec -it "$(docker compose ps -q postgres)" createdb -U app app_test
+DATABASE_URL="postgresql://app:password@localhost:5432/app_test" pnpm db:migrate:deploy
+pnpm test:e2e
+```
+
 ## Initializing A Real Project
 
 This repository is intended to be copied and then adapted before feature work
@@ -51,6 +62,7 @@ The initialization pass should cover:
 ## Included Patterns
 
 - `app/routes.ts` demonstrates layout routes for marketing, auth, and protected dashboard sections.
+- `app/routes/health.ts` provides a lightweight health-check resource route.
 - `app/lib/auth/require-auth.server.ts` provides `requireAuth`, `requireAnonymous`, and safe redirect handling.
 - `app/routes/auth/login.tsx` and `app/routes/auth/register.tsx` use React Router actions for form submission.
 - `app/routes/dashboard/projects.tsx` shows a protected loader, action mutations, route-level errors, and Kysely-backed CRUD.

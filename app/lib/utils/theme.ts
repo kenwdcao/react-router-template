@@ -124,3 +124,11 @@ export function buildResolvedColorSchemeCookie(
 ): string {
   return buildCookie(RESOLVED_COLOR_SCHEME_COOKIE_NAME, colorScheme);
 }
+
+export function getAvatarInitial(
+  name?: string | null,
+  email?: string | null,
+): string {
+  const source = (name ?? "").trim() || (email ?? "").trim() || "?";
+  return source.charAt(0).toUpperCase();
+}

@@ -19,6 +19,7 @@ import {
 } from "react-router";
 import { signOut } from "~/lib/auth";
 import { requireAuth } from "~/lib/auth/index.server";
+import { getAvatarInitial } from "~/lib/utils";
 import { ThemeSelector } from "~/ui/components/common";
 import type { Route } from "./+types/layout";
 
@@ -147,9 +148,4 @@ function DashboardNavLink({
       <span>{label}</span>
     </NavLink>
   );
-}
-
-function getAvatarInitial(name?: string | null, email?: string | null): string {
-  const source = (name ?? "").trim() || (email ?? "").trim() || "?";
-  return source.charAt(0).toUpperCase();
 }

@@ -1,6 +1,5 @@
 import eslint from "@eslint/js";
 import prettierConfig from "eslint-config-prettier";
-import importPlugin from "eslint-plugin-import";
 import jsxA11yPlugin from "eslint-plugin-jsx-a11y";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
@@ -15,16 +14,12 @@ export default tseslint.config(
     plugins: {
       react: reactPlugin,
       "react-hooks": reactHooksPlugin,
-      import: importPlugin,
       "jsx-a11y": jsxA11yPlugin,
       "local-rules": localRules,
     },
     settings: {
       react: {
         version: "detect",
-      },
-      "import/resolver": {
-        typescript: true,
       },
     },
     rules: {
@@ -44,7 +39,6 @@ export default tseslint.config(
       "local-rules/require-aria-label": "warn",
 
       // Import restrictions: forbid non-lucide icon libraries
-      "import/no-restricted-paths": "off",
       "no-restricted-imports": [
         "error",
         {

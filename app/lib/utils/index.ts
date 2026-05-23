@@ -12,6 +12,7 @@ export {
   buildColorSchemeCookie,
   buildPrimaryColorCookie,
   buildResolvedColorSchemeCookie,
+  getAvatarInitial,
   isColorScheme,
   isPrimaryColor,
   isResolvedColorScheme,

@@ -7,9 +7,10 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { LogOut } from "lucide-react";
-import { Link, Outlet, useLoaderData } from "react-router";
+import { Link, Outlet, useLoaderData, useNavigate } from "react-router";
 import { signOut } from "~/lib/auth";
 import { getSession } from "~/lib/auth/index.server";
+import { getAvatarInitial } from "~/lib/utils";
 import { ThemeSelector } from "~/ui/components/common";
 import type { Route } from "./+types/layout";
 
@@ -74,6 +75,8 @@ function MarketingAuthActions({
     name: string;
   } | null;
 }) {
+  const navigate = useNavigate();
+
   if (user) {
     const displayName = user.name || user.email;
 
@@ -91,7 +94,7 @@ function MarketingAuthActions({
           leftSection={<LogOut size={16} />}
           onClick={async () => {
             await signOut();
-            window.location.href = "/";
+            navigate("/");
           }}
         >
           Sign out
@@ -110,9 +113,4 @@ function MarketingAuthActions({
       </Button>
     </Group>
   );
-}
-
-function getAvatarInitial(name?: string | null, email?: string | null): string {
-  const source = (name ?? "").trim() || (email ?? "").trim() || "?";
-  return source.charAt(0).toUpperCase();
 }

@@ -7,6 +7,7 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 ## Commands
 
 - Install dependencies with `pnpm install`.
+- Use Node.js 22 locally; `.nvmrc`, `.node-version`, Docker, and CI are aligned on that major version.
 - Start local PostgreSQL with `pnpm db:up`.
 - Apply development migrations with `pnpm db:migrate`.
 - Regenerate Kysely database types with `pnpm db:generate`.
@@ -65,6 +66,7 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 - Handle nullable values explicitly with optional chaining or `??` fallbacks.
 - Validate untrusted inputs at the boundary. Existing examples use Zod for environment validation and explicit form parsing for route actions.
 - Do not hand-edit generated files such as `.react-router/**` or `app/lib/db/database-types.ts`.
+- `pnpm-workspace.yaml` is present only for pnpm build approvals, not because this is a monorepo.
 
 ## Styling
 

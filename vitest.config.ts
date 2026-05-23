@@ -11,5 +11,8 @@ export default defineConfig({
     setupFiles: ["./app/test/setup.ts"],
     include: ["app/**/*.{test,spec}.{ts,tsx}"],
     passWithNoTests: true,
+    coverage: {
+      exclude: ["app/lib/db/database-types.ts", "app/test/**", "e2e/**"],
+    },
   },
 });

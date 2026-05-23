@@ -25,6 +25,7 @@ services:
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-app_dev}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-replace-with-at-least-32-random-characters}
+      # External URL reachable from the browser (not an internal container address).
       BETTER_AUTH_URL: http://localhost:${APP_PORT:-3000}
       BETTER_AUTH_TRUSTED_ORIGINS: http://localhost:${APP_PORT:-3000}
     ports:
