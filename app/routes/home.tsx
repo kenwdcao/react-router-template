@@ -1,17 +1,34 @@
-import { Welcome } from "~/ui/components/welcome";
+import { Stack } from "@mantine/core";
+import {
+  FeatureGrid,
+  FinalCTA,
+  GetStarted,
+  Hero,
+  MantineShowcase,
+  TechStack,
+} from "~/ui/components/home";
 import type { Route } from "./+types/home";
 
 export function meta(_: Route.MetaArgs) {
   return [
-    { title: "React Router Template" },
+    { title: "React Router Template — Full-Stack Starter" },
     {
       name: "description",
       content:
-        "A full-stack React Router v7 template with TypeScript and Mantine",
+        "A batteries-included React Router v7 + Mantine starter with auth, database, SSR, and tests.",
     },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  return (
+    <Stack gap="xl" py="xl">
+      <Hero />
+      <FeatureGrid />
+      <MantineShowcase />
+      <TechStack />
+      <GetStarted />
+      <FinalCTA />
+    </Stack>
+  );
 }

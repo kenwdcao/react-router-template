@@ -42,13 +42,7 @@ export default function MarketingLayout() {
             </UnstyledButton>
           </div>
 
-          <Group justify="center" className="justify-self-center">
-            {user && (
-              <Button variant="subtle" component={Link} to="/dashboard">
-                Dashboard
-              </Button>
-            )}
-          </Group>
+          <div className="justify-self-center" />
 
           <Group
             gap="sm"

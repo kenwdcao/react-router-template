@@ -1,0 +1,18 @@
+.backdrop {
+  background: radial-gradient(
+    ellipse at center,
+    var(--mantine-primary-color-light) 0%,
+    transparent 70%
+  );
+}
+
+.gradientTitle {
+  background: linear-gradient(
+    90deg,
+    var(--mantine-primary-color-filled),
+    var(--mantine-primary-color-3)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

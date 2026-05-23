@@ -1,0 +1,10 @@
+.copyWrapper {
+  position: relative;
+}
+
+.copyButton {
+  position: absolute;
+  top: 50%;
+  right: var(--mantine-spacing-sm);
+  transform: translateY(-50%);
+}
