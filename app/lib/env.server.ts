@@ -18,6 +18,9 @@ const envSchema = z.object({
             .filter(Boolean)
         : [],
     ),
+  AI_BASE_URL: z.url().optional(),
+  AI_API_KEY: z.string().min(1).optional(),
+  AI_MODEL_ID: z.string().min(1).optional(),
 });
 
 export type ServerEnv = z.infer<typeof envSchema>;

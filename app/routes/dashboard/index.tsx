@@ -1,53 +1,55 @@
+import { Stack, Text, Title } from "@mantine/core";
+import { useLoaderData } from "react-router";
+import { requireAuth } from "~/lib/auth/index.server";
+import { isAiConfigured } from "~/lib/ai/provider.server";
+import { listProjectsForUser } from "~/lib/projects.server";
+import { env } from "~/lib/env.server";
 import {
-  Button,
-  Group,
-  Paper,
-  SimpleGrid,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
-import { Link } from "react-router";
+  QuickActions,
+  RecentProjects,
+  StatCards,
+} from "~/ui/components/dashboard";
 
 export function meta() {
   return [{ title: "Dashboard" }];
 }
 
+export async function loader({ request }: { request: Request }) {
+  const session = await requireAuth(request);
+  const projects = await listProjectsForUser(session.user.id);
+
+  return {
+    projectCount: projects.length,
+    recentProjects: projects.slice(0, 5),
+    environment: env.BETTER_AUTH_URL.includes("localhost")
+      ? "Development"
+      : "Production",
+    aiReady: isAiConfigured(),
+  };
+}
+
 export default function DashboardIndex() {
+  const data = useLoaderData<typeof loader>();
+
   return (
     <Stack gap="lg">
-      <Group justify="space-between" align="flex-start">
-        <div>
-          <Title order={1}>Dashboard</Title>
-          <Text c="dimmed">
-            Protected layout route with shared navigation and session context.
-          </Text>
-        </div>
-        <Button component={Link} to="/dashboard/projects">
-          Open CRUD example
-        </Button>
-      </Group>
+      <div>
+        <Title order={1}>Dashboard</Title>
+        <Text c="dimmed">
+          Protected layout route with shared navigation and session context.
+        </Text>
+      </div>
 
-      <SimpleGrid cols={{ base: 1, sm: 3 }}>
-        <Paper withBorder p="md" radius="sm">
-          <Text size="sm" c="dimmed">
-            Guard
-          </Text>
-          <Text fw={700}>requireAuth loader</Text>
-        </Paper>
-        <Paper withBorder p="md" radius="sm">
-          <Text size="sm" c="dimmed">
-            Data
-          </Text>
-          <Text fw={700}>Kysely queries</Text>
-        </Paper>
-        <Paper withBorder p="md" radius="sm">
-          <Text size="sm" c="dimmed">
-            Mutations
-          </Text>
-          <Text fw={700}>React Router actions</Text>
-        </Paper>
-      </SimpleGrid>
+      <StatCards
+        projectCount={data.projectCount}
+        lastLogin={null}
+        environment={data.environment}
+        aiReady={data.aiReady}
+      />
+
+      <QuickActions />
+
+      <RecentProjects projects={data.recentProjects} />
     </Stack>
   );
 }

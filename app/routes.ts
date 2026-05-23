@@ -16,5 +16,10 @@ export default [
   route("dashboard", "routes/dashboard/layout.tsx", [
     index("routes/dashboard/index.tsx"),
     route("projects", "routes/dashboard/projects.tsx"),
+    route("activity", "routes/dashboard/activity.tsx"),
+    route("settings", "routes/dashboard/settings.tsx"),
+    route("components", "routes/dashboard/components.tsx"),
+    route("chat", "routes/dashboard/chat.tsx"),
   ]),
+  route("api/chat", "routes/api.chat.ts"),
 ] satisfies RouteConfig;

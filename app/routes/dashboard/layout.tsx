@@ -4,15 +4,15 @@ import {
   Burger,
   Button,
   Group,
+  Indicator,
   ScrollArea,
   Text,
   UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Home, LogOut, PanelsTopLeft } from "lucide-react";
+import { LogOut } from "lucide-react";
 import {
   Link,
-  NavLink,
   Outlet,
   useLoaderData,
   useNavigate,
@@ -21,12 +21,9 @@ import { signOut } from "~/lib/auth";
 import { requireAuth } from "~/lib/auth/index.server";
 import { getAvatarInitial } from "~/lib/utils";
 import { ThemeSelector } from "~/ui/components/common";
+import { Breadcrumbs } from "~/ui/components/dashboard";
+import { Sidebar } from "~/ui/components/dashboard";
 import type { Route } from "./+types/layout";
-
-const navItems = [
-  { to: "/dashboard", label: "Overview", icon: Home, end: true },
-  { to: "/dashboard/projects", label: "Projects", icon: PanelsTopLeft },
-];
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await requireAuth(request);
@@ -84,9 +81,17 @@ export default function DashboardLayout() {
 
           <Group gap="sm" className="min-w-0 justify-self-end">
             <ThemeSelector />
-            <Avatar size="sm" radius="xl">
-              {getAvatarInitial(user.name, user.email)}
-            </Avatar>
+            <Indicator
+              processing
+              size={8}
+              offset={4}
+              color="green"
+              position="bottom-end"
+            >
+              <Avatar size="sm" radius="xl">
+                {getAvatarInitial(user.name, user.email)}
+              </Avatar>
+            </Indicator>
             <Text size="sm" visibleFrom="md">
               {user.name || user.email}
             </Text>
@@ -106,46 +111,13 @@ export default function DashboardLayout() {
       </AppShell.Header>
       <AppShell.Navbar p="md">
         <ScrollArea>
-          <nav className="grid gap-1">
-            {navItems.map((item) => (
-              <DashboardNavLink key={item.to} {...item} />
-            ))}
-          </nav>
+          <Sidebar />
         </ScrollArea>
       </AppShell.Navbar>
       <AppShell.Main>
+        <Breadcrumbs />
         <Outlet />
       </AppShell.Main>
     </AppShell>
-  );
-}
-
-function DashboardNavLink({
-  to,
-  label,
-  icon: Icon,
-  end,
-}: {
-  to: string;
-  label: string;
-  icon: typeof Home;
-  end?: boolean;
-}) {
-  return (
-    <NavLink
-      to={to}
-      end={end}
-      className={({ isActive }) =>
-        [
-          "flex h-10 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors",
-          isActive
-            ? "text-[var(--mantine-primary-color-filled)] hover:bg-[var(--mantine-color-default-hover)]"
-            : "text-[var(--mantine-color-dimmed)] hover:bg-[var(--mantine-color-default-hover)] hover:text-[var(--mantine-color-text)]",
-        ].join(" ")
-      }
-    >
-      <Icon size={18} />
-      <span>{label}</span>
-    </NavLink>
   );
 }

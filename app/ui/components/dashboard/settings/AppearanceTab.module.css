@@ -1,0 +1,21 @@
+.swatch {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: var(--mantine-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline-offset: 2px;
+}
+
+.swatch[data-active="true"] {
+  outline: 2px solid var(--mantine-color-text);
+}
+
+.swatchInner {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--mantine-radius-md);
+}

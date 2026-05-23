@@ -23,8 +23,16 @@ test("registers users and manages owner-scoped projects", async ({ page }) => {
     password: "password-12345",
   });
   await page.goto("/dashboard/projects");
-  await createProject(page, ownerProjectName, "Only visible to owner one");
-  await expect(projectNameInput(page, ownerProjectName)).toBeVisible();
+
+  // Create project via modal
+  await page.getByRole("button", { name: "Create project" }).click();
+  const createDialog = page.getByRole("dialog", { name: "Create project" });
+  await expect(createDialog).toBeVisible();
+  await createDialog.getByLabel("Project name").fill(ownerProjectName);
+  await createDialog.getByLabel("Description").fill("Only visible to owner one");
+  await createDialog.getByRole("button", { name: "Create project" }).click();
+  await expect(createDialog).not.toBeVisible();
+  await expect(page.getByText(ownerProjectName)).toBeVisible();
 
   await page.context().clearCookies();
 
@@ -34,28 +42,38 @@ test("registers users and manages owner-scoped projects", async ({ page }) => {
     password: "password-12345",
   });
   await page.goto("/dashboard/projects");
-  await expect(projectNameInput(page, ownerProjectName)).not.toBeVisible();
-  await expect(page.getByText("No projects yet.")).toBeVisible();
+  await expect(page.getByText(ownerProjectName)).not.toBeVisible();
+  await expect(page.getByText("No projects")).toBeVisible();
 
-  await createProject(page, projectName, "Initial description");
-  await expect(projectNameInput(page, projectName)).toBeVisible();
+  // Create project via modal
+  await page.getByRole("button", { name: "Create project" }).click();
+  const createDialog2 = page.getByRole("dialog", { name: "Create project" });
+  await expect(createDialog2).toBeVisible();
+  await createDialog2.getByLabel("Project name").fill(projectName);
+  await createDialog2.getByLabel("Description").fill("Initial description");
+  await createDialog2.getByRole("button", { name: "Create project" }).click();
+  await expect(createDialog2).not.toBeVisible();
+  await expect(page.getByText(projectName)).toBeVisible();
   await expect(page.getByText("1 total")).toBeVisible();
 
-  const projectForm = page.locator("form").filter({
-    has: projectNameInput(page, projectName),
-  });
-  await projectForm.getByLabel("Name").fill(updatedProjectName);
-  await projectForm.getByLabel("Description").fill("Updated description");
-  await projectForm.getByRole("button", { name: "Save" }).click();
-  await expect(projectNameInput(page, updatedProjectName)).toBeVisible();
-  await expect(projectNameInput(page, projectName)).not.toBeVisible();
+  // Edit project via drawer
+  await page.getByRole("button", { name: `Edit ${projectName}` }).click();
+  const editDialog = page.getByRole("dialog", { name: /Edit/ });
+  await expect(editDialog).toBeVisible();
+  await editDialog.getByLabel("Name").fill(updatedProjectName);
+  await editDialog.getByLabel("Description").fill("Updated description");
+  await editDialog.getByRole("button", { name: "Save" }).click();
+  await expect(editDialog).not.toBeVisible();
+  await expect(page.getByText(updatedProjectName)).toBeVisible();
+  await expect(page.getByText(projectName)).not.toBeVisible();
 
-  const updatedProjectForm = page.locator("form").filter({
-    has: projectNameInput(page, updatedProjectName),
-  });
-  await updatedProjectForm.getByRole("button", { name: "Delete" }).click();
-  await expect(projectNameInput(page, updatedProjectName)).not.toBeVisible();
-  await expect(page.getByText("No projects yet.")).toBeVisible();
+  // Delete project via confirm modal
+  await page.getByRole("button", { name: `Delete ${updatedProjectName}` }).click();
+  const deleteDialog = page.getByRole("dialog", { name: "Delete project" });
+  await expect(deleteDialog).toBeVisible();
+  await deleteDialog.getByRole("button", { name: "Confirm" }).click();
+  await expect(page.getByText(updatedProjectName)).not.toBeVisible();
+  await expect(page.getByText("No projects")).toBeVisible();
 });
 
 async function registerUser(
@@ -69,19 +87,4 @@ async function registerUser(
   await page.locator('input[name="confirmPassword"]').fill(user.password);
   await page.getByRole("button", { name: "Create account" }).click();
   await expect(page).toHaveURL(/\/dashboard$/, { timeout: 20_000 });
-}
-
-async function createProject(page: Page, name: string, description: string) {
-  await page.getByLabel("Project name").fill(name);
-  await page.getByLabel("Description").first().fill(description);
-  await page.getByRole("button", { name: "Create project" }).click();
-  await expect(projectNameInput(page, name)).toBeVisible();
-}
-
-function projectNameInput(page: Page, name: string) {
-  return page.locator(`input[name="name"][value="${cssAttributeValue(name)}"]`);
-}
-
-function cssAttributeValue(value: string) {
-  return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 }

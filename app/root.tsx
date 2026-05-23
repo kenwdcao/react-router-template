@@ -6,6 +6,7 @@ import {
   useComputedColorScheme,
   useMantineColorScheme,
 } from "@mantine/core";
+import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { Suspense, useEffect } from "react";
 import {
@@ -91,10 +92,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <MantineProvider defaultColorScheme={savedColorScheme} theme={theme}>
-          <ResolvedColorSchemeCookieSync />
-          <Notifications position="top-right" />
-          <RouteProgress />
-          <Suspense fallback={<PageFallback />}>{children}</Suspense>
+          <ModalsProvider>
+            <ResolvedColorSchemeCookieSync />
+            <Notifications position="top-right" />
+            <RouteProgress />
+            <Suspense fallback={<PageFallback />}>{children}</Suspense>
+          </ModalsProvider>
         </MantineProvider>
         <ScrollRestoration />
         <Scripts />
