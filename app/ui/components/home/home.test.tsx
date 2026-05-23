@@ -15,13 +15,19 @@ function Wrapper({ children }: { children: React.ReactNode }) {
 describe("Hero", () => {
   it("renders CTA links to /dashboard and /register", () => {
     render(<Hero />, { wrapper: Wrapper });
-    expect(
-      screen.getByRole("link", { name: /View Dashboard Demo/i }),
-    ).toHaveAttribute("href", "/dashboard");
-    expect(screen.getByRole("link", { name: /Get Started/i })).toHaveAttribute(
-      "href",
-      "/register",
-    );
+    // visibleFrom + hiddenFrom both render in JSDOM (no CSS media queries)
+    const dashboardLinks = screen.getAllByRole("link", {
+      name: /View Dashboard Demo/i,
+    });
+    // Desktop set has aria-hidden, so only the mobile set is in the a11y tree
+    expect(dashboardLinks).toHaveLength(1);
+    expect(dashboardLinks[0]).toHaveAttribute("href", "/dashboard");
+
+    const startedLinks = screen.getAllByRole("link", {
+      name: /Get Started/i,
+    });
+    expect(startedLinks).toHaveLength(1);
+    expect(startedLinks[0]).toHaveAttribute("href", "/register");
   });
 });
 
@@ -49,8 +55,10 @@ describe("FinalCTA", () => {
     const links = screen.getAllByRole("link", { name: /Get started/i });
     expect(links).toHaveLength(1);
     expect(links[0]).toHaveAttribute("href", "/register");
-    expect(
-      screen.getByRole("link", { name: /View dashboard demo/i }),
-    ).toHaveAttribute("href", "/dashboard");
+    const dashboardLinks = screen.getAllByRole("link", {
+      name: /View dashboard demo/i,
+    });
+    expect(dashboardLinks).toHaveLength(1);
+    expect(dashboardLinks[0]).toHaveAttribute("href", "/dashboard");
   });
 });

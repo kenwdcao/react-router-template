@@ -15,7 +15,7 @@ export function FinalCTA() {
       <Paper
         withBorder
         radius="lg"
-        p="xl"
+        p={{ base: "md", sm: "xl" }}
         bg="var(--mantine-primary-color-light)"
       >
         <Stack align="center" gap="md">
@@ -23,14 +23,34 @@ export function FinalCTA() {
           <Text c="dimmed" ta="center">
             Register an account to try the dashboard, or jump straight in.
           </Text>
-          <Group grow>
-            <Button component={Link} to="/register">
+          <Stack w="100%" maw={400} visibleFrom="sm" aria-hidden="true">
+            <Group grow>
+              <Button component={Link} to="/register" tabIndex={-1}>
+                Get started
+              </Button>
+              <Button
+                variant="default"
+                component={Link}
+                to="/dashboard"
+                tabIndex={-1}
+              >
+                View dashboard demo
+              </Button>
+            </Group>
+          </Stack>
+          <Stack w="100%" hiddenFrom="sm" gap="sm">
+            <Button fullWidth component={Link} to="/register">
               Get started
             </Button>
-            <Button variant="default" component={Link} to="/dashboard">
+            <Button
+              fullWidth
+              variant="default"
+              component={Link}
+              to="/dashboard"
+            >
               View dashboard demo
             </Button>
-          </Group>
+          </Stack>
         </Stack>
       </Paper>
     </Container>

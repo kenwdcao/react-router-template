@@ -19,13 +19,13 @@ export default function ChatRoute() {
 
   if (!aiConfigured) {
     return (
-      <Stack gap="lg">
+      <Stack gap="md">
         <div>
           <Title order={1}>Chat</Title>
           <Text c="dimmed">AI chatbot powered by the AI SDK.</Text>
         </div>
 
-        <Paper withBorder p="xl" radius="sm">
+        <Paper withBorder p={{ base: "md", sm: "xl" }} radius="sm">
           <Stack gap="md">
             <Title order={3}>Set up AI to enable chat</Title>
             <Text>
@@ -51,7 +51,7 @@ export default function ChatRoute() {
   }
 
   return (
-    <Stack gap="lg">
+    <Stack gap="md" className="h-[calc(100dvh-120px)]">
       <div>
         <Title order={1}>Chat</Title>
         <Text c="dimmed">Ask questions about this template.</Text>

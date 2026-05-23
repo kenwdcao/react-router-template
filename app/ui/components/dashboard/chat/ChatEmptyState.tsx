@@ -15,22 +15,33 @@ const suggestedPrompts = [
 
 export function ChatEmptyState({ onSendPrompt }: ChatEmptyStateProps) {
   return (
-    <Center py="xl">
-      <Stack align="center" gap="md">
+    <Center py="xl" px="sm">
+      <Stack align="center" gap="md" w="100%" maw={500}>
         <ThemeIcon size={48} radius="xl" variant="light">
           <Sparkles size={24} />
         </ThemeIcon>
-        <Text size="lg" fw={500}>
+        <Text size="lg" fw={500} ta="center">
           Ask anything about this template
         </Text>
-        <Stack gap="xs">
+        <Stack gap="xs" w="100%">
           {suggestedPrompts.map((prompt) => (
             <Button
               key={prompt}
               variant="light"
               fullWidth
+              size="sm"
               onClick={() => onSendPrompt(prompt)}
               aria-label={`Ask: ${prompt}`}
+              styles={{
+                inner: {
+                  justifyContent: "flex-start",
+                },
+                label: {
+                  whiteSpace: "normal",
+                  textAlign: "left",
+                  lineHeight: 1.3,
+                },
+              }}
             >
               {prompt}
             </Button>

@@ -14,7 +14,12 @@ export function MessageBubble({ role, content }: MessageBubbleProps) {
   if (role === "user") {
     return (
       <Group justify="flex-end">
-        <Paper bg={theme.primaryColor} p="sm" radius="lg" maw="75%">
+        <Paper
+          bg={theme.primaryColor}
+          p="sm"
+          radius="lg"
+          maw={{ base: "90%", sm: "75%" }}
+        >
           <Text size="sm" c="white">
             {content}
           </Text>
@@ -24,7 +29,7 @@ export function MessageBubble({ role, content }: MessageBubbleProps) {
   }
 
   return (
-    <Group align="flex-start" gap="xs">
+    <Group align="flex-start" gap="xs" wrap="nowrap">
       <Avatar size="sm" radius="xl" color="gray">
         <Bot size={14} />
       </Avatar>
@@ -32,7 +37,8 @@ export function MessageBubble({ role, content }: MessageBubbleProps) {
         bg="var(--mantine-color-default-hover)"
         p="sm"
         radius="lg"
-        maw="75%"
+        maw={{ base: "90%", sm: "75%" }}
+        className="min-w-0 break-words"
       >
         <Text size="sm" component="div">
           <Markdown remarkPlugins={[remarkGfm]}>{content}</Markdown>

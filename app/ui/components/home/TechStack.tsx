@@ -20,7 +20,7 @@ export function TechStack() {
       <Title order={2} ta="center" mb="lg">
         Tech Stack
       </Title>
-      <Group justify="center" gap="xs">
+      <Group justify="center" gap="xs" wrap="wrap">
         {deps.map((dep) => (
           <Badge key={dep} variant="light" size="lg">
             {dep}

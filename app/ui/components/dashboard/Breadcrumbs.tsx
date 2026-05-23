@@ -41,15 +41,41 @@ export function Breadcrumbs() {
     const isLast = index === segments.length - 1;
 
     if (isLast) {
-      return <Text key={segment.path}>{segment.label}</Text>;
+      return (
+        <Text key={segment.path} size="sm" truncate>
+          {segment.label}
+        </Text>
+      );
     }
 
     return (
-      <Text key={segment.path} component={Link} to={segment.path} c="dimmed">
+      <Text
+        key={segment.path}
+        component={Link}
+        to={segment.path}
+        c="dimmed"
+        size="sm"
+        truncate
+      >
         {segment.label}
       </Text>
     );
   });
 
-  return <MantineBreadcrumbs>{items}</MantineBreadcrumbs>;
+  return (
+    <MantineBreadcrumbs
+      separatorMargin={4}
+      styles={{
+        root: {
+          overflowX: "auto",
+          flexWrap: "nowrap",
+        },
+        separator: {
+          margin: "0 2px",
+        },
+      }}
+    >
+      {items}
+    </MantineBreadcrumbs>
+  );
 }

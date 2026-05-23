@@ -16,35 +16,36 @@ import logoLight from "./logo-light.svg";
 export function Hero() {
   return (
     <div className={classes.backdrop}>
-      <Container size="lg" py="xl">
-        <Stack align="center" gap="lg">
+      <Container size="lg" py={{ base: "md", sm: "xl" }}>
+        <Stack align="center" gap="md">
           <Image
             src={logoLight}
             alt="React Router"
-            w={200}
-            visibleFrom="xs"
+            w={160}
+            visibleFrom="sm"
             darkHidden
           />
           <Image
             src={logoDark}
             alt="React Router"
-            w={200}
-            visibleFrom="xs"
+            w={160}
+            visibleFrom="sm"
             lightHidden
           />
-          <Title order={1} className={classes.gradientTitle}>
+          <Title order={1} className={classes.gradientTitle} ta="center">
             React Router Template
           </Title>
-          <Text size="xl" c="dimmed" ta="center" maw={620}>
+          <Text size="lg" c="dimmed" ta="center" maw={620}>
             A batteries-included full-stack starter with authentication,
             database, SSR, testing, and a polished UI out of the box.
           </Text>
-          <Group grow>
+          <Group w="100%" maw={580} visibleFrom="sm" grow aria-hidden="true">
             <Button
               size="lg"
               component={Link}
               to="/dashboard"
               leftSection={<LayoutDashboard size={18} />}
+              tabIndex={-1}
             >
               View Dashboard Demo
             </Button>
@@ -54,10 +55,33 @@ export function Hero() {
               component={Link}
               to="/register"
               leftSection={<Rocket size={18} />}
+              tabIndex={-1}
             >
               Get Started
             </Button>
           </Group>
+          <Stack w="100%" hiddenFrom="sm" gap="sm">
+            <Button
+              size="md"
+              fullWidth
+              component={Link}
+              to="/dashboard"
+              leftSection={<LayoutDashboard size={18} />}
+              styles={{ label: { whiteSpace: "normal" } }}
+            >
+              View Dashboard Demo
+            </Button>
+            <Button
+              size="md"
+              variant="outline"
+              fullWidth
+              component={Link}
+              to="/register"
+              leftSection={<Rocket size={18} />}
+            >
+              Get Started
+            </Button>
+          </Stack>
         </Stack>
       </Container>
     </div>

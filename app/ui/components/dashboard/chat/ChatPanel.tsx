@@ -36,8 +36,8 @@ function ChatInputBar({
 }) {
   return (
     <form onSubmit={onSubmit}>
-      <Paper withBorder p="sm" radius="sm">
-        <Group align="flex-end" gap="xs">
+      <Paper withBorder p={{ base: "xs", sm: "sm" }} radius="sm">
+        <Group align="flex-end" gap="xs" wrap="nowrap">
           <Textarea
             name="prompt"
             placeholder="Ask about this template..."
@@ -45,7 +45,7 @@ function ChatInputBar({
             autosize
             minRows={1}
             maxRows={4}
-            flex={1}
+            className="min-w-0 flex-1"
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
@@ -106,7 +106,7 @@ export function ChatPanel() {
 
   if (messages.length === 0) {
     return (
-      <Stack gap="md" h="calc(100vh - 200px)">
+      <Stack gap="md" className="min-h-0 flex-1">
         <Center flex={1}>
           <ChatEmptyState onSendPrompt={handleSendPrompt} />
         </Center>
@@ -143,7 +143,7 @@ export function ChatPanel() {
   }
 
   return (
-    <Stack gap="md" h="calc(100vh - 200px)">
+    <Stack gap="md" className="min-h-0 flex-1">
       <ScrollArea flex={1}>
         <Stack gap="sm">
           {messages.map((message) => (
