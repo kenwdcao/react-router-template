@@ -66,8 +66,8 @@ export default function DashboardLayout() {
             />
             <UnstyledButton
               component={Link}
-              to="/dashboard"
-              aria-label="Dashboard home"
+              to="/"
+              aria-label="Home"
             >
               <Text fw={700}>React Router Template</Text>
             </UnstyledButton>
