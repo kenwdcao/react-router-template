@@ -34,10 +34,7 @@ export function ProjectsToolbar({
           aria-label="Filter by status"
         />
       </Group>
-      <Button
-        leftSection={<Plus size={16} />}
-        onClick={onCreateClick}
-      >
+      <Button leftSection={<Plus size={16} />} onClick={onCreateClick}>
         Create project
       </Button>
     </Group>

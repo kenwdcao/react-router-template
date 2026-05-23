@@ -1,6 +1,21 @@
 import "dotenv/config";
 import { z } from "zod";
 
+function emptyStringToUndefined(value: unknown) {
+  if (typeof value !== "string") {
+    return value;
+  }
+
+  const trimmed = value.trim();
+  return trimmed === "" ? undefined : trimmed;
+}
+
+const optionalEnvUrl = z.preprocess(emptyStringToUndefined, z.url().optional());
+const optionalEnvString = z.preprocess(
+  emptyStringToUndefined,
+  z.string().min(1).optional(),
+);
+
 const envSchema = z.object({
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
   BETTER_AUTH_SECRET: z
@@ -18,9 +33,9 @@ const envSchema = z.object({
             .filter(Boolean)
         : [],
     ),
-  AI_BASE_URL: z.url().optional(),
-  AI_API_KEY: z.string().min(1).optional(),
-  AI_MODEL_ID: z.string().min(1).optional(),
+  AI_BASE_URL: optionalEnvUrl,
+  AI_API_KEY: optionalEnvString,
+  AI_MODEL_ID: optionalEnvString,
 });
 
 export type ServerEnv = z.infer<typeof envSchema>;

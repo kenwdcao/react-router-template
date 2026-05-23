@@ -11,7 +11,7 @@ export function getProjectKnowledge(): string {
 - Kysely for type-safe SQL queries against PostgreSQL
 - Prisma for schema migrations and seeding only
 - better-auth for email/password authentication
-- AI SDK v5 with OpenAI-compatible provider for the chat demo
+- AI SDK v6 with OpenAI-compatible provider for the chat demo
 - Vitest + React Testing Library (unit), Playwright (E2E)
 
 ## Scripts

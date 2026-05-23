@@ -7,18 +7,24 @@ test.describe("Dashboard Activity", () => {
 
   test("shows empty state when no projects exist", async ({ page }) => {
     await page.goto("/dashboard/activity");
-    await expect(page.getByText("No activity yet")).toBeVisible();
+    await expect(
+      page.locator("main").getByText("No activity yet").first(),
+    ).toBeVisible();
   });
 
-  test("shows populated timeline after creating a project", async ({ page }) => {
+  test("shows populated timeline after creating a project", async ({
+    page,
+  }) => {
     // Create a project first
     await page.goto("/dashboard/projects");
     await page.getByRole("button", { name: "Create project" }).click();
     const createDialog = page.getByRole("dialog", { name: "Create project" });
     await expect(createDialog).toBeVisible();
     await createDialog.getByLabel("Project name").fill("Activity test project");
-    await createDialog.getByLabel("Description").fill("Testing activity timeline");
-    await createDialog.getByRole("button", { name: "Create project" }).click();
+    await createDialog
+      .getByLabel("Description")
+      .fill("Testing activity timeline");
+    await createDialog.getByRole("button", { name: "Create" }).click();
     await expect(createDialog).not.toBeVisible();
 
     // Check activity page

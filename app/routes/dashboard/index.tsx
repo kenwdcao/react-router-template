@@ -1,9 +1,9 @@
 import { Stack, Text, Title } from "@mantine/core";
 import { useLoaderData } from "react-router";
-import { requireAuth } from "~/lib/auth/index.server";
 import { isAiConfigured } from "~/lib/ai/provider.server";
-import { listProjectsForUser } from "~/lib/projects.server";
+import { requireAuth } from "~/lib/auth/index.server";
 import { env } from "~/lib/env.server";
+import { listProjectsForUser } from "~/lib/projects.server";
 import {
   QuickActions,
   RecentProjects,

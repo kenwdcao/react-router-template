@@ -3,7 +3,9 @@ import { env } from "~/lib/env.server";
 
 export class AiNotConfiguredError extends Error {
   constructor() {
-    super("AI is not configured. Set AI_BASE_URL, AI_API_KEY, and AI_MODEL_ID in .env");
+    super(
+      "AI is not configured. Set AI_BASE_URL, AI_API_KEY, and AI_MODEL_ID in .env",
+    );
     this.name = "AiNotConfiguredError";
   }
 }

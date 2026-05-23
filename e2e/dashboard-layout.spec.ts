@@ -13,26 +13,48 @@ test.describe("Dashboard Layout", () => {
   });
 
   test("sidebar navigation items are present", async ({ page }) => {
-    await expect(page.getByRole("link", { name: "Overview" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Projects" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Activity" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Components" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "AI Chat" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Settings" })).toBeVisible();
+    const navigation = page.getByRole("navigation");
+    await expect(
+      navigation.getByRole("link", { name: "Overview" }),
+    ).toBeVisible();
+    await expect(
+      navigation.getByRole("link", { name: "Projects", exact: true }),
+    ).toBeVisible();
+    await expect(
+      navigation.getByRole("link", { name: "Activity", exact: true }),
+    ).toBeVisible();
+    await expect(
+      navigation.getByRole("link", { name: "Components", exact: true }),
+    ).toBeVisible();
+    await expect(
+      navigation.getByRole("link", { name: "AI Chat", exact: true }),
+    ).toBeVisible();
+    await expect(
+      navigation.getByRole("link", { name: "Settings", exact: true }),
+    ).toBeVisible();
   });
 
   test("breadcrumbs reflect current route", async ({ page }) => {
     await page.goto("/dashboard/projects");
-    await expect(page.getByText("Dashboard")).toBeVisible();
-    await expect(page.getByText("Projects")).toBeVisible();
+    const main = page.getByRole("main");
+    await expect(main.getByRole("link", { name: "Dashboard" })).toBeVisible();
+    await expect(main.getByRole("heading", { name: "Projects" })).toBeVisible();
 
     await page.goto("/dashboard/settings");
-    await expect(page.getByText("Settings")).toBeVisible();
+    await expect(
+      page
+        .getByRole("main")
+        .locator(".mantine-Breadcrumbs-root")
+        .getByText("Settings", { exact: true }),
+    ).toBeVisible();
   });
 
   test("active nav link is highlighted", async ({ page }) => {
     await page.goto("/dashboard/projects");
-    const projectsLink = page.getByRole("link", { name: "Projects" });
+    const projectsLink = page.getByRole("link", {
+      name: "Projects",
+      exact: true,
+    });
     await expect(projectsLink).toHaveAttribute("data-active", /.*/);
   });
 

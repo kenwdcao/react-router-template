@@ -9,9 +9,9 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import { CheckSquare, Database, User } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
-import { CheckSquare, Database, User } from "lucide-react";
 
 const breadcrumbItems = [
   { title: "Home", to: "/" },

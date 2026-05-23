@@ -9,11 +9,7 @@ import {
   Textarea,
 } from "@mantine/core";
 import { useEffect, useRef } from "react";
-import {
-  Form,
-  useActionData,
-  useNavigation,
-} from "react-router";
+import { Form, useActionData, useNavigation } from "react-router";
 import { PROJECT_STATUS } from "~/lib/projects";
 import type { ProjectsActionData } from "~/lib/projects-page.server";
 import type { ProjectSummary } from "~/lib/projects.server";
@@ -37,16 +33,17 @@ export function EditProjectDrawer({
   const actionData = useActionData<ProjectsActionData>();
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
-  const wasSubmittingRef = useRef(false);
+  const isBusy = navigation.state !== "idle";
+  const wasBusyRef = useRef(false);
 
   useEffect(() => {
-    if (wasSubmittingRef.current && navigation.state === "idle") {
+    if (wasBusyRef.current && navigation.state === "idle") {
       if (!actionData?.errors) {
         onClose();
       }
     }
-    wasSubmittingRef.current = isSubmitting;
-  }, [navigation.state, actionData, onClose, isSubmitting]);
+    wasBusyRef.current = isBusy;
+  }, [navigation.state, actionData, onClose, isBusy]);
 
   if (!project) {
     return null;
@@ -55,19 +52,32 @@ export function EditProjectDrawer({
   const hasProjectError = actionData?.values?.projectId === project.id;
 
   return (
-    <Drawer opened={opened} onClose={onClose} title="Edit project" position="right">
+    <Drawer
+      opened={opened}
+      onClose={onClose}
+      title="Edit project"
+      position="right"
+    >
       <Form method="post" replace>
-        <input type="hidden" name="_intent" value="update" aria-label="Update project intent" />
-        <input type="hidden" name="projectId" value={project.id} aria-label="Project id" />
+        <input
+          type="hidden"
+          name="_intent"
+          value="update"
+          aria-label="Update project intent"
+        />
+        <input
+          type="hidden"
+          name="projectId"
+          value={project.id}
+          aria-label="Project id"
+        />
         <Stack gap="md">
           <TextInput
             name="name"
             label="Project name"
             placeholder="Customer portal"
             defaultValue={
-              hasProjectError
-                ? actionData?.values?.name
-                : project.name
+              hasProjectError ? actionData?.values?.name : project.name
             }
             error={hasProjectError ? actionData?.errors?.name : undefined}
             required

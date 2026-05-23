@@ -37,9 +37,7 @@ const groups: NavGroup[] = [
   },
   {
     label: "Account",
-    items: [
-      { to: "/dashboard/settings", label: "Settings", icon: Settings },
-    ],
+    items: [{ to: "/dashboard/settings", label: "Settings", icon: Settings }],
   },
 ];
 

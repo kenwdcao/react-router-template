@@ -144,9 +144,8 @@ export function DataDisplayDemo() {
           <Accordion.Item value="deploy">
             <Accordion.Control>How do I deploy?</Accordion.Control>
             <Accordion.Panel>
-              Build with pnpm build, then deploy the server build to any
-              Node.js host. Set environment variables for database, auth, and
-              AI.
+              Build with pnpm build, then deploy the server build to any Node.js
+              host. Set environment variables for database, auth, and AI.
             </Accordion.Panel>
           </Accordion.Item>
         </Accordion>

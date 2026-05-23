@@ -1,3 +1,4 @@
+import { useChat } from "@ai-sdk/react";
 import {
   ActionIcon,
   Alert,
@@ -12,7 +13,6 @@ import {
   Textarea,
 } from "@mantine/core";
 import { AlertCircle, RefreshCw, Send, Trash2 } from "lucide-react";
-import { useChat } from "@ai-sdk/react";
 import { ChatEmptyState } from "./ChatEmptyState";
 import { MessageBubble } from "./MessageBubble";
 

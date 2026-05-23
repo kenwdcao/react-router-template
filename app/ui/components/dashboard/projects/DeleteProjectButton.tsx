@@ -8,9 +8,7 @@ interface DeleteProjectButtonProps {
   project: ProjectSummary;
 }
 
-export function DeleteProjectButton({
-  project,
-}: DeleteProjectButtonProps) {
+export function DeleteProjectButton({ project }: DeleteProjectButtonProps) {
   const submit = useSubmit();
 
   const handleDelete = () => {
@@ -43,7 +41,7 @@ export function DeleteProjectButton({
       variant="subtle"
       color="red"
       onClick={handleDelete}
-      aria-label="Delete project"
+      aria-label={`Delete ${project.name}`}
     >
       <Trash2 size={16} />
     </ActionIcon>

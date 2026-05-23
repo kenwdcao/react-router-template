@@ -27,11 +27,14 @@ The application runs at `http://localhost:5173`.
 - Core entities: [DOMAIN_ENTITIES]
 - Route map: [ROUTE_MAP]
 - Auth model: [PUBLIC_ROUTES_AND_PROTECTED_AREAS]
+- AI assistant: [REMOVE, KEEP_OPTIONAL_DEMO, or CONVERT_TO_PRODUCT_FEATURE]
 
 ## Template Adaptation
 
 - Sample CRUD decision: [DELETE, RENAME_TO_DOMAIN_ENTITY, or KEEP_AS_EXAMPLE]
 - Seed data decision: [REMOVE, RENAME_TO_DOMAIN_ENTITY, or KEEP_FOR_DEMO]
+- AI demo decision:
+  [REMOVE, KEEP_AS_OPTIONAL_DASHBOARD_CHAT_DEMO, or CONVERT_TO_REAL_ASSISTANT]
 - Branding replacements: [PRODUCT_NAME], navigation labels, route titles,
   metadata, empty states, and tests.
 
@@ -44,6 +47,13 @@ secrets.
 - `BETTER_AUTH_SECRET`: [GENERATED_32_PLUS_CHARACTER_SECRET]
 - `BETTER_AUTH_URL`: [PUBLIC_APP_ORIGIN]
 - `BETTER_AUTH_TRUSTED_ORIGINS`: [COMMA_SEPARATED_ALLOWED_ORIGINS]
+
+If the AI assistant is kept or converted, document server-only provider
+variables with safe placeholders:
+
+- `AI_BASE_URL`: [OPENAI_COMPATIBLE_PROVIDER_URL]
+- `AI_MODEL_ID`: [MODEL_IDENTIFIER]
+- `AI_API_KEY`: [SERVER_ONLY_PROVIDER_KEY]
 
 Add product-specific variables here, including deployment-only settings and
 third-party credentials.

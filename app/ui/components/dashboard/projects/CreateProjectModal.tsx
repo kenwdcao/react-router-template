@@ -1,10 +1,14 @@
-import { Button, Group, Modal, Stack, Text, TextInput, Textarea } from "@mantine/core";
-import { useEffect, useRef } from "react";
 import {
-  Form,
-  useActionData,
-  useNavigation,
-} from "react-router";
+  Button,
+  Group,
+  Modal,
+  Stack,
+  Text,
+  TextInput,
+  Textarea,
+} from "@mantine/core";
+import { useEffect, useRef } from "react";
+import { Form, useActionData, useNavigation } from "react-router";
 import type { ProjectsActionData } from "~/lib/projects-page.server";
 
 interface CreateProjectModalProps {
@@ -19,21 +23,27 @@ export function CreateProjectModal({
   const actionData = useActionData<ProjectsActionData>();
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
-  const wasSubmittingRef = useRef(false);
+  const isBusy = navigation.state !== "idle";
+  const wasBusyRef = useRef(false);
 
   useEffect(() => {
-    if (wasSubmittingRef.current && navigation.state === "idle") {
+    if (wasBusyRef.current && navigation.state === "idle") {
       if (!actionData?.errors) {
         onClose();
       }
     }
-    wasSubmittingRef.current = isSubmitting;
-  }, [navigation.state, actionData, onClose, isSubmitting]);
+    wasBusyRef.current = isBusy;
+  }, [navigation.state, actionData, onClose, isBusy]);
 
   return (
     <Modal opened={opened} onClose={onClose} title="Create project">
       <Form method="post" replace>
-        <input type="hidden" name="_intent" value="create" aria-label="Create project intent" />
+        <input
+          type="hidden"
+          name="_intent"
+          value="create"
+          aria-label="Create project intent"
+        />
         <Stack gap="md">
           <TextInput
             name="name"

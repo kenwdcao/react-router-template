@@ -1,9 +1,4 @@
-import {
-  Skeleton,
-  Stack,
-  Text,
-  Timeline,
-} from "@mantine/core";
+import { Skeleton, Stack, Text, Timeline } from "@mantine/core";
 import { Pencil, Plus } from "lucide-react";
 
 export interface ActivityEvent {

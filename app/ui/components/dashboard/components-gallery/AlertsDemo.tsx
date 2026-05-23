@@ -10,7 +10,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { AlertCircle, Bell, Info, CheckCircle } from "lucide-react";
+import { AlertCircle, Bell, CheckCircle, Info } from "lucide-react";
 
 export function AlertsDemo() {
   return (
@@ -26,8 +26,8 @@ export function AlertsDemo() {
           title="Information"
           icon={<Info size={18} />}
         >
-          This template uses React Router v7 framework mode with TypeScript
-          for full-stack development.
+          This template uses React Router v7 framework mode with TypeScript for
+          full-stack development.
         </Alert>
 
         <Alert
@@ -36,8 +36,8 @@ export function AlertsDemo() {
           title="Success"
           icon={<CheckCircle size={18} />}
         >
-          Your project has been created successfully. You can now start
-          building your application.
+          Your project has been created successfully. You can now start building
+          your application.
         </Alert>
 
         <Alert
@@ -46,8 +46,8 @@ export function AlertsDemo() {
           title="Warning"
           icon={<AlertCircle size={18} />}
         >
-          Make sure to configure your environment variables before deploying
-          to production.
+          Make sure to configure your environment variables before deploying to
+          production.
         </Alert>
 
         <Alert
@@ -56,8 +56,8 @@ export function AlertsDemo() {
           title="Error"
           icon={<AlertCircle size={18} />}
         >
-          Database connection failed. Please check your DATABASE_URL
-          environment variable.
+          Database connection failed. Please check your DATABASE_URL environment
+          variable.
         </Alert>
 
         <Alert
@@ -70,11 +70,7 @@ export function AlertsDemo() {
           template.
         </Alert>
 
-        <Blockquote
-          color="blue"
-          cite="– Mantine documentation"
-          iconSize={40}
-        >
+        <Blockquote color="blue" cite="– Mantine documentation" iconSize={40}>
           Mantine is a fully featured React components library that provides
           more than 100 components and 50 hooks.
         </Blockquote>
@@ -82,10 +78,10 @@ export function AlertsDemo() {
         <Spoiler maxHeight={60} showLabel="Show more" hideLabel="Hide">
           <Text size="sm" c="dimmed">
             This is a longer piece of text that gets truncated by default. When
-            you click the spoiler button, it expands to reveal the full
-            content. This is useful for displaying long descriptions or
-            documentation excerpts without taking up too much space initially.
-            The component handles the expand/collapse animation automatically.
+            you click the spoiler button, it expands to reveal the full content.
+            This is useful for displaying long descriptions or documentation
+            excerpts without taking up too much space initially. The component
+            handles the expand/collapse animation automatically.
           </Text>
         </Spoiler>
 
@@ -93,11 +89,7 @@ export function AlertsDemo() {
           <Text size="sm" fw={500} mb="xs">
             Highlight
           </Text>
-          <Highlight
-            highlight="React Router"
-            size="sm"
-            c="dimmed"
-          >
+          <Highlight highlight="React Router" size="sm" c="dimmed">
             React Router is a full-stack framework for building modern web
             applications with React Router v7.
           </Highlight>

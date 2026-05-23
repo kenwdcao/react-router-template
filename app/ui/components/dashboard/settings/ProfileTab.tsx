@@ -7,8 +7,8 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { Form, useNavigation } from "react-router";
 import { useEffect } from "react";
+import { Form, useNavigation } from "react-router";
 import { signOut } from "~/lib/auth";
 import { getAvatarInitial } from "~/lib/utils";
 

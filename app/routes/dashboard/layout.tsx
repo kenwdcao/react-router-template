@@ -11,18 +11,12 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { LogOut } from "lucide-react";
-import {
-  Link,
-  Outlet,
-  useLoaderData,
-  useNavigate,
-} from "react-router";
+import { Link, Outlet, useLoaderData, useNavigate } from "react-router";
 import { signOut } from "~/lib/auth";
 import { requireAuth } from "~/lib/auth/index.server";
 import { getAvatarInitial } from "~/lib/utils";
 import { ThemeSelector } from "~/ui/components/common";
-import { Breadcrumbs } from "~/ui/components/dashboard";
-import { Sidebar } from "~/ui/components/dashboard";
+import { Breadcrumbs, Sidebar } from "~/ui/components/dashboard";
 import type { Route } from "./+types/layout";
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -61,11 +55,7 @@ export default function DashboardLayout() {
               size="sm"
               aria-label="Toggle navigation"
             />
-            <UnstyledButton
-              component={Link}
-              to="/"
-              aria-label="Home"
-            >
+            <UnstyledButton component={Link} to="/" aria-label="Home">
               <Text fw={700}>React Router Template</Text>
             </UnstyledButton>
           </Group>

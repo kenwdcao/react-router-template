@@ -24,7 +24,16 @@ test("interactive MantineShowcase feedback tab shows notification", async ({
 }) => {
   await page.goto("/");
 
-  await page.getByRole("tab", { name: "Feedback" }).click();
-  await page.getByRole("button", { name: "Show notification" }).click();
+  const feedbackTab = page
+    .locator("main")
+    .getByRole("tab", { name: "Feedback" })
+    .first();
+  await feedbackTab.click();
+  const showBtn = page
+    .locator("main")
+    .getByRole("button", { name: "Show notification" })
+    .first();
+  await showBtn.waitFor({ state: "visible" });
+  await showBtn.click();
   await expect(page.getByText("Notification sent")).toBeVisible();
 });

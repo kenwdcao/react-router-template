@@ -9,12 +9,16 @@ test.describe("Dashboard Settings", () => {
   test("renders all setting tabs", async ({ page }) => {
     await expect(page.getByRole("tab", { name: "Profile" })).toBeVisible();
     await expect(page.getByRole("tab", { name: "Appearance" })).toBeVisible();
-    await expect(page.getByRole("tab", { name: "Notifications" })).toBeVisible();
+    await expect(
+      page.getByRole("tab", { name: "Notifications" }),
+    ).toBeVisible();
   });
 
   test("profile tab shows user info", async ({ page }) => {
-    await expect(page.getByLabel("Name")).toBeVisible();
-    await expect(page.getByLabel("Email")).toBeVisible();
+    await expect(page.locator("main").getByLabel("Name").first()).toBeVisible();
+    await expect(
+      page.locator("main").getByLabel("Email").first(),
+    ).toBeVisible();
   });
 
   test("appearance tab shows color options", async ({ page }) => {

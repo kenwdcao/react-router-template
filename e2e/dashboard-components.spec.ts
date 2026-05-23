@@ -15,7 +15,7 @@ test.describe("Dashboard Components Gallery", () => {
     await page.getByRole("button", { name: "Open modal" }).click();
     const dialog = page.getByRole("dialog", { name: "Demo modal" });
     await expect(dialog).toBeVisible();
-    await dialog.getByRole("button", { name: "Close" }).click();
+    await dialog.getByRole("button", { name: /close/i }).click();
     await expect(dialog).not.toBeVisible();
   });
 
@@ -23,7 +23,7 @@ test.describe("Dashboard Components Gallery", () => {
     await page.getByRole("button", { name: "Open drawer" }).click();
     const dialog = page.getByRole("dialog", { name: "Demo drawer" });
     await expect(dialog).toBeVisible();
-    await dialog.getByRole("button", { name: "Close" }).click();
+    await dialog.getByRole("button", { name: /close/i }).click();
     await expect(dialog).not.toBeVisible();
   });
 

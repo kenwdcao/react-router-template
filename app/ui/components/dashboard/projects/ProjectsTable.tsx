@@ -125,10 +125,7 @@ function ProjectCard({
   );
 }
 
-export function ProjectsTable({
-  projects,
-  onEdit,
-}: ProjectsTableProps) {
+export function ProjectsTable({ projects, onEdit }: ProjectsTableProps) {
   if (projects.length === 0) {
     return (
       <Card withBorder padding="xl" radius="sm">
@@ -153,11 +150,7 @@ export function ProjectsTable({
           </Table.Thead>
           <Table.Tbody>
             {projects.map((project) => (
-              <ProjectRow
-                key={project.id}
-                project={project}
-                onEdit={onEdit}
-              />
+              <ProjectRow key={project.id} project={project} onEdit={onEdit} />
             ))}
           </Table.Tbody>
         </Table>
@@ -166,11 +159,7 @@ export function ProjectsTable({
       <Box hiddenFrom="sm">
         <SimpleGrid cols={1} spacing="sm">
           {projects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              onEdit={onEdit}
-            />
+            <ProjectCard key={project.id} project={project} onEdit={onEdit} />
           ))}
         </SimpleGrid>
       </Box>

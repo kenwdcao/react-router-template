@@ -113,7 +113,9 @@ function FormsPanel() {
           key={form.key("favoriteFeature")}
           {...form.getInputProps("favoriteFeature")}
         />
-        <Text size="sm" fw={500}>Satisfaction</Text>
+        <Text size="sm" fw={500}>
+          Satisfaction
+        </Text>
         <Slider
           label="Satisfaction"
           key={form.key("satisfaction")}

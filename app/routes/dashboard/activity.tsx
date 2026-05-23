@@ -1,4 +1,4 @@
-import { Stack, Title, Text } from "@mantine/core";
+import { Stack, Text, Title } from "@mantine/core";
 import { useLoaderData } from "react-router";
 import { requireAuth } from "~/lib/auth/index.server";
 import { listProjectsForUser } from "~/lib/projects.server";

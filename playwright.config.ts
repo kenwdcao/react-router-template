@@ -10,6 +10,8 @@ const databaseURL =
 
 export default defineConfig({
   testDir: "./e2e",
+  timeout: 60_000,
+  workers: 2,
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? "github" : [["list"], ["html", { open: "never" }]],
   use: {

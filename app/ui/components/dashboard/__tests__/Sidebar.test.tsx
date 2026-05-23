@@ -5,14 +5,12 @@ import { Sidebar } from "../Sidebar";
 
 vi.mock("react-router", () => ({
   useLocation: () => ({ pathname: "/dashboard" }),
-  Link: ({
-    to,
-    children,
-  }: {
-    to: string;
-    children: React.ReactNode;
-  }) => (
-    <a href={to} data-testid={`link-${to}`} aria-label={typeof children === "string" ? children : to}>
+  Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
+    <a
+      href={to}
+      data-testid={`link-${to}`}
+      aria-label={typeof children === "string" ? children : to}
+    >
       {children}
     </a>
   ),

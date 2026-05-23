@@ -33,6 +33,10 @@ The application runs at `http://localhost:5173`. The seed creates
 projects. Override the seed account with `SEED_USER_EMAIL`, `SEED_USER_NAME`,
 and `SEED_USER_PASSWORD` when needed.
 
+The AI chat demo is optional. `/dashboard/chat` stays in setup mode until
+`AI_BASE_URL`, `AI_API_KEY`, and `AI_MODEL_ID` are all present in the server
+environment; do not expose provider credentials to client code.
+
 Playwright uses a separate `app_test` database by default so browser tests do
 not mutate development data. Create it once, apply migrations against it, then
 run E2E tests:
@@ -56,8 +60,10 @@ The initialization pass should cover:
 - Auth requirements, deployment target, environment variables, and branding.
 - Whether the sample project CRUD should be removed, renamed into the real
   domain, or kept as an example.
+- Whether the AI chat/assistant demo should be removed, kept as an optional
+  example, or converted into a real product feature.
 - Updates to `AGENTS.md`, `README.md`, `.env.example`, route titles, navigation,
-  tests, and sample domain code.
+  tests, AI env docs, and sample domain code.
 
 ## Included Patterns
 
@@ -66,9 +72,10 @@ The initialization pass should cover:
 - `app/lib/auth/require-auth.server.ts` provides `requireAuth`, `requireAnonymous`, and safe redirect handling.
 - `app/routes/auth/login.tsx` and `app/routes/auth/register.tsx` use React Router actions for form submission.
 - `app/routes/dashboard/projects.tsx` shows a protected loader, action mutations, route-level errors, and Kysely-backed CRUD.
+- `app/routes/dashboard/chat.tsx`, `app/routes/api.chat.ts`, and `app/lib/ai/**` show an optional AI SDK chat demo backed by server-only OpenAI-compatible env config.
 - `app/lib/env.server.ts` validates required server environment variables with Zod before DB or auth setup.
 - `prisma/seed.ts` creates an idempotent better-auth demo account and sample owner-scoped projects.
-- `.github/workflows/ci.yml` runs migrations, generated types, lint, typecheck, unit tests, build, and Playwright.
+- `.github/workflows/ci.yml` runs migrations, generated types, format check, lint, typecheck, unit tests, build, and Playwright.
 
 ## Routing Layouts
 
@@ -113,6 +120,7 @@ Avoid inline styles. Prefer Mantine props for component styling and Tailwind cla
 pnpm dev                  # React Router dev server
 pnpm build                # Production build
 pnpm start                # Serve build output
+pnpm format:check         # Check Prettier formatting across the repository
 pnpm lint                 # ESLint with local project rules
 pnpm typecheck            # React Router typegen + TypeScript
 pnpm test                 # Vitest unit/component tests

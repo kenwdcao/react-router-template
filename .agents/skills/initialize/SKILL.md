@@ -37,6 +37,9 @@ Ask only for details that are missing:
   removed, renamed, or kept as an example.
 - Whether demo seed data should be removed, renamed into the replacement
   domain, or kept for local onboarding.
+- AI demo/assistant choice: remove it, keep it as an optional demo, or convert
+  it into a real product feature; if kept, identify provider, model, and
+  server-only environment variables.
 - Branding basics: app title, primary color, tone, and any known navigation
   labels.
 - Deployment target and required environment variables.
@@ -51,13 +54,17 @@ Update these files when relevant:
 
 - `package.json`: `name`, optional scripts, and package metadata.
 - `README.md`: project-specific setup, domain summary, environment variables,
-  and validation commands.
+  AI demo decision, and validation commands.
 - `AGENTS.md`: replace template-level language with the actual product context,
-  domain vocabulary, route/auth/data rules, and validation expectations.
-- `.env.example`: project-specific variables with safe placeholder values.
+  domain vocabulary, route/auth/data/AI rules, and validation expectations.
+- `.env.example`: project-specific variables with safe placeholder values,
+  including optional AI provider variables only when the assistant remains.
 - `app/lib/auth/server.ts`: `appName` and provider/plugin configuration.
-- `app/routes/**`: route names, titles, navigation, and placeholder pages.
+- `app/routes/**`: route names, titles, navigation, placeholder pages, and
+  optional AI demo routes.
 - `app/ui/**`: brand text, theme defaults, reusable components, and copy.
+- `app/lib/ai/**`: remove, rename, or adapt assistant knowledge/provider logic
+  when the AI demo decision changes.
 - `app/lib/projects.ts` and `app/lib/projects.server.ts`: rename the sample
   domain consistently, keeping shared constants separate from Kysely-derived
   result types.
@@ -82,6 +89,9 @@ product decisions:
   entity, or retained as documented example code.
 - The seed-data decision is recorded and `pnpm db:seed` either matches the real
   domain or is removed from docs and package scripts.
+- The AI demo/assistant decision is recorded: removed, retained as optional
+  demo with server-only env docs, or converted into a product feature with
+  matching README, AGENTS, env, routes, navigation, and tests.
 - Domain result types have one source of truth. For the sample project domain,
   `ProjectSummary` is derived from `app/lib/projects.server.ts`; do not recreate
   a parallel interface in the shared constants module.

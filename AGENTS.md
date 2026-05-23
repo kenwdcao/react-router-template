@@ -31,10 +31,12 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
    d. Core domain entities
    e. Branding basics
    f. Deployment target and required environment variables
+   g. AI demo/assistant decision and provider requirements
 3. Replace placeholders: swap `react-router-template`, `React Router Template`, welcome copy, and the sample `project` domain with project-specific names and workflows.
 4. Decide whether to delete the sample CRUD, rename it into a real domain entity, or keep it as a documented example.
-5. Rewrite root `AGENTS.md` with actual product context, domain vocabulary, route/auth/data rules, and validation expectations.
-6. Update `README.md`, `.env.example`, route titles, navigation labels, tests, and sample data for consistency.
+5. Decide whether `/dashboard/chat` and `/api/chat` should be deleted, kept as an optional AI demo, or rewritten into a product-owned assistant.
+6. Rewrite root `AGENTS.md` with actual product context, domain vocabulary, route/auth/data/AI rules, and validation expectations.
+7. Update `README.md`, `.env.example`, route titles, navigation labels, tests, AI env docs, and sample data for consistency.
 
 ## Architecture
 
@@ -84,6 +86,12 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 - better-auth owns the authentication tables in the Prisma schema. Be careful when changing `user`, `session`, `account`, and `verification`.
 - Keep server-only database and auth code out of client components.
 - Do not expose password hashes, raw provider tokens, or other server-only internals through loader data or action responses.
+
+## AI Demo And Assistant
+
+- AI configuration is optional. `/dashboard/chat` and `/api/chat` are demo surfaces and should stay in setup/disabled mode unless `AI_BASE_URL`, `AI_API_KEY`, and `AI_MODEL_ID` are present in the server environment.
+- Keep AI provider creation, model selection, and API keys in server-only modules and environment variables. Do not expose `AI_API_KEY`, provider tokens, or secret-bearing prompts through loader data, action responses, client components, or logs.
+- During real-project initialization, explicitly decide whether to delete the AI demo, keep it as documented example code, or rewrite it into a product-owned assistant; align `README.md`, `AGENTS.md`, `.env.example`, routes/navigation, and tests with that decision.
 
 ## Testing
 

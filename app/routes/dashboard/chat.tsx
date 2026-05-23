@@ -1,7 +1,7 @@
 import { Code, Paper, Stack, Text, Title } from "@mantine/core";
 import { useLoaderData } from "react-router";
-import { requireAuth } from "~/lib/auth/index.server";
 import { isAiConfigured } from "~/lib/ai/provider.server";
+import { requireAuth } from "~/lib/auth/index.server";
 import { ChatPanel } from "~/ui/components/dashboard/chat";
 import type { Route } from "./+types/chat";
 

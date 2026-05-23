@@ -22,6 +22,22 @@ describe("parseEnv", () => {
     });
   });
 
+  it("treats blank optional AI variables as unconfigured", () => {
+    expect(
+      parseEnv({
+        DATABASE_URL: "postgresql://app:password@localhost:5432/app_test",
+        BETTER_AUTH_SECRET: "secret-at-least-thirty-two-characters",
+        AI_BASE_URL: "",
+        AI_API_KEY: "   ",
+        AI_MODEL_ID: "",
+      }),
+    ).toMatchObject({
+      AI_BASE_URL: undefined,
+      AI_API_KEY: undefined,
+      AI_MODEL_ID: undefined,
+    });
+  });
+
   it("rejects a missing auth secret", () => {
     expect(() =>
       parseEnv({

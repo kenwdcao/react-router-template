@@ -45,12 +45,7 @@ export function Breadcrumbs() {
     }
 
     return (
-      <Text
-        key={segment.path}
-        component={Link}
-        to={segment.path}
-        c="dimmed"
-      >
+      <Text key={segment.path} component={Link} to={segment.path} c="dimmed">
         {segment.label}
       </Text>
     );

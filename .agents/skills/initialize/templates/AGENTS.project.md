@@ -30,6 +30,9 @@ queries, better-auth, Vitest, Playwright, ESLint, and Prettier.
   [REPLACE: deleted, renamed to DOMAIN_ENTITY, or kept as documented example].
 - [OPTIONAL] Demo seed data:
   [REPLACE: remove, rename, or adapt `prisma/seed.ts` to the real domain].
+- [OPTIONAL] AI assistant/demo:
+  [REPLACE: remove, keep as optional `/dashboard/chat` demo, or convert into a
+  real assistant; document provider env vars if kept].
 - [REPLACE] Branding:
   [PRODUCT_NAME], navigation labels, page titles, metadata, and empty states.
 
@@ -134,6 +137,18 @@ queries, better-auth, Vitest, Playwright, ESLint, and Prettier.
 - Keep better-auth-owned tables compatible with the auth integration.
 - Do not expose password hashes, provider tokens, or server-only internals.
 
+## AI Assistant
+
+[OPTIONAL]
+
+- If kept or converted, AI provider configuration is optional and server-only.
+  Document `AI_BASE_URL`, `AI_API_KEY`, and `AI_MODEL_ID` in `.env.example`
+  with safe placeholders.
+- Never expose AI keys, provider tokens, or secret-bearing prompts through
+  loader data, action responses, client components, or logs.
+- If removed or converted, keep README, AGENTS, env docs, route labels,
+  navigation, tests, and assistant knowledge aligned with that decision.
+
 ## Testing
 
 [KEEP]
@@ -153,6 +168,8 @@ queries, better-auth, Vitest, Playwright, ESLint, and Prettier.
   and safe placeholders.
 - [REPLACE] Rename or remove `project` domain files, tests, route labels, and
   seed data if the sample CRUD is not part of the product.
+- [REPLACE] Record the AI demo decision and align README, AGENTS,
+  `.env.example`, route/navigation labels, and tests.
 - [KEEP] Re-run `pnpm db:generate` after schema changes and commit generated
   database types only when the schema changed.
 - [KEEP] Finish with `pnpm format:check`, `pnpm lint`, `pnpm typecheck`,

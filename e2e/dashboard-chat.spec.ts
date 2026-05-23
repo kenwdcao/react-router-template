@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type APIResponse, type Page } from "@playwright/test";
 
 test.describe("Dashboard Chat", () => {
   test.beforeEach(async ({ page }) => {
@@ -7,32 +7,100 @@ test.describe("Dashboard Chat", () => {
 
   test("shows setup help when AI is not configured", async ({ page }) => {
     await page.goto("/dashboard/chat");
-    await expect(page.getByText(/AI_BASE_URL|AI_API_KEY|AI_MODEL_ID/)).toBeVisible();
-  });
-
-  test("sends a message and receives a streamed reply when AI is mocked", async ({ page }) => {
-    // Mock the OpenAI-compatible endpoint
-    await page.route("**/api/chat", async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: "text/plain",
-        body: `0:["This template includes React Router v7, Mantine v9, and more."]\n`,
-      });
+    const setupHeading = page.getByRole("heading", {
+      name: "Set up AI to enable chat",
     });
 
-    // The chat page needs aiConfigured=true from the loader.
-    // Since we can't mock the loader easily, this test verifies the component
-    // renders when the chat UI is available.
-    await page.goto("/dashboard/chat");
-
-    // If the setup help panel shows (no AI config), the test still passes
-    // because that's the expected behavior without env vars.
-    const hasSetupHelp = await page.getByText(/AI_BASE_URL/).isVisible().catch(() => false);
-    if (hasSetupHelp) {
-      await expect(page.getByText(/AI_BASE_URL/)).toBeVisible();
+    if (!(await setupHeading.isVisible().catch(() => false))) {
+      test.skip(true, "AI is configured; setup help is not rendered.");
     }
+
+    await expect(setupHeading).toBeVisible();
+    await expect(page.getByText("AI_BASE_URL")).toBeVisible();
+    await expect(page.getByText("AI_API_KEY")).toBeVisible();
+    await expect(page.getByText("AI_MODEL_ID")).toBeVisible();
+  });
+
+  test("returns 400 for malformed chat API requests", async ({ page }) => {
+    const badJsonResponse = await page.context().request.post("/api/chat", {
+      data: Buffer.from("{not-json"),
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+    await expectJsonError(
+      badJsonResponse,
+      400,
+      "Request body must be valid JSON.",
+    );
+
+    const badShapeResponse = await page.context().request.post("/api/chat", {
+      data: {
+        messages: [{ role: "user", content: "old message shape" }],
+      },
+    });
+    await expectJsonError(
+      badShapeResponse,
+      400,
+      "Request body must include a valid non-empty AI SDK UI messages array.",
+    );
+
+    const emptyMessagesResponse = await page
+      .context()
+      .request.post("/api/chat", {
+        data: {
+          messages: [],
+        },
+      });
+    await expectJsonError(
+      emptyMessagesResponse,
+      400,
+      "Request body must include a valid non-empty AI SDK UI messages array.",
+    );
+  });
+
+  test("returns 503 for chat API requests when AI is not configured", async ({
+    page,
+  }) => {
+    await page.goto("/dashboard/chat");
+    const setupHeading = page.getByRole("heading", {
+      name: "Set up AI to enable chat",
+    });
+
+    if (!(await setupHeading.isVisible().catch(() => false))) {
+      test.skip(true, "AI is configured; skipping unconfigured API path.");
+    }
+
+    const response = await page.context().request.post("/api/chat", {
+      data: {
+        messages: [
+          {
+            id: "message-1",
+            role: "user",
+            parts: [{ type: "text", text: "What is this template?" }],
+          },
+        ],
+      },
+    });
+
+    await expectJsonError(
+      response,
+      503,
+      "AI is not configured. Set AI_BASE_URL, AI_API_KEY, and AI_MODEL_ID in .env",
+    );
   });
 });
+
+async function expectJsonError(
+  response: APIResponse,
+  status: number,
+  error: string,
+) {
+  expect(response.status()).toBe(status);
+  await expect(response).not.toBeOK();
+  expect(response.headers()["content-type"]).toContain("application/json");
+  expect(await response.json()).toEqual({ error });
+}
 
 async function login(page: Page) {
   const runId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;

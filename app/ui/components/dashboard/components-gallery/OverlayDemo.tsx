@@ -37,8 +37,8 @@ export function OverlayDemo() {
           </Popover.Target>
           <Popover.Dropdown>
             <Text size="sm">
-              This is a popover with some content inside. Use it for
-              contextual information.
+              This is a popover with some content inside. Use it for contextual
+              information.
             </Text>
           </Popover.Dropdown>
         </Popover>
@@ -74,10 +74,11 @@ export function OverlayDemo() {
         opened={modalOpened}
         onClose={modalHandlers.close}
         title="Demo modal"
+        closeButtonProps={{ "aria-label": "Close demo modal" }}
       >
         <Text>
-          This is a Mantine Modal. Use it for forms, confirmations, or
-          focused interactions that block the rest of the page.
+          This is a Mantine Modal. Use it for forms, confirmations, or focused
+          interactions that block the rest of the page.
         </Text>
       </Modal>
 
@@ -85,11 +86,12 @@ export function OverlayDemo() {
         opened={drawerOpened}
         onClose={drawerHandlers.close}
         title="Demo drawer"
+        closeButtonProps={{ "aria-label": "Close demo drawer" }}
       >
         <Stack gap="md">
           <Text>
-            This is a Mantine Drawer. It slides in from the side and is
-            useful for panels, filters, or detail views.
+            This is a Mantine Drawer. It slides in from the side and is useful
+            for panels, filters, or detail views.
           </Text>
         </Stack>
       </Drawer>

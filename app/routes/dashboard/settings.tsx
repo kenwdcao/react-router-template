@@ -1,6 +1,14 @@
-import { redirect } from "react-router";
-import { useActionData, useLoaderData, useSearchParams } from "react-router";
-import { auth, getAuthErrorMessage, requireAuth } from "~/lib/auth/index.server";
+import {
+  redirect,
+  useActionData,
+  useLoaderData,
+  useSearchParams,
+} from "react-router";
+import {
+  auth,
+  getAuthErrorMessage,
+  requireAuth,
+} from "~/lib/auth/index.server";
 import { SettingsTabs } from "~/ui/components/dashboard/settings";
 import type { Route } from "./+types/settings";
 

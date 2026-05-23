@@ -1,10 +1,4 @@
-import {
-  Badge,
-  Group,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Badge, Group, Stack, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 import {
@@ -41,8 +35,9 @@ export default function ProjectsRoute() {
   const { projects } = useLoaderData<typeof loader>();
   const [createOpened, createHandlers] = useDisclosure(false);
   const [editOpened, editHandlers] = useDisclosure(false);
-  const [editingProject, setEditingProject] =
-    useState<ProjectSummary | null>(null);
+  const [editingProject, setEditingProject] = useState<ProjectSummary | null>(
+    null,
+  );
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
@@ -80,10 +75,7 @@ export default function ProjectsRoute() {
         onStatusChange={setStatusFilter}
       />
 
-      <ProjectsTable
-        projects={filteredProjects}
-        onEdit={handleEdit}
-      />
+      <ProjectsTable projects={filteredProjects} onEdit={handleEdit} />
 
       <CreateProjectModal
         opened={createOpened}

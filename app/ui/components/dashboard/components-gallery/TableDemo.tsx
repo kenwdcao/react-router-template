@@ -1,10 +1,4 @@
-import {
-  Badge,
-  Pagination,
-  Paper,
-  Table,
-  Title,
-} from "@mantine/core";
+import { Badge, Pagination, Paper, Table, Title } from "@mantine/core";
 import { useState } from "react";
 
 interface DemoRow {
@@ -68,7 +62,11 @@ export function TableDemo() {
               <Table.Td>{row.id}</Table.Td>
               <Table.Td>{row.name}</Table.Td>
               <Table.Td>
-                <Badge color={statusColor(row.status)} variant="light" size="sm">
+                <Badge
+                  color={statusColor(row.status)}
+                  variant="light"
+                  size="sm"
+                >
                   {row.status}
                 </Badge>
               </Table.Td>
@@ -77,12 +75,7 @@ export function TableDemo() {
           ))}
         </Table.Tbody>
       </Table>
-      <Pagination
-        total={totalPages}
-        value={page}
-        onChange={setPage}
-        mt="md"
-      />
+      <Pagination total={totalPages} value={page} onChange={setPage} mt="md" />
     </Paper>
   );
 }

@@ -71,7 +71,7 @@ export function StatCards({
               {item.label}
             </Text>
           </Group>
-          <Text fw={700} size="lg">
+          <Text component="div" fw={700} size="lg">
             {values[item.key]}
           </Text>
         </Paper>
