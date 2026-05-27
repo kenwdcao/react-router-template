@@ -13,6 +13,7 @@ import {
   Textarea,
 } from "@mantine/core";
 import { AlertCircle, RefreshCw, Send, Trash2 } from "lucide-react";
+import { readFormString } from "~/lib/utils";
 import { ChatEmptyState } from "./ChatEmptyState";
 import { MessageBubble } from "./MessageBubble";
 
@@ -63,7 +64,7 @@ function ChatInputBar({
           >
             <Send size={16} />
           </ActionIcon>
-          {showClear && (
+          {showClear ? (
             <ActionIcon
               size="lg"
               variant="subtle"
@@ -73,7 +74,7 @@ function ChatInputBar({
             >
               <Trash2 size={16} />
             </ActionIcon>
-          )}
+          ) : null}
         </Group>
       </Paper>
     </form>
@@ -90,9 +91,9 @@ export function ChatPanel() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const prompt = formData.get("prompt") as string;
-    if (!prompt?.trim()) return;
-    sendMessage({ text: prompt });
+    const prompt = readFormString(formData, "prompt");
+    if (!prompt) return;
+    void sendMessage({ text: prompt });
     (e.target as HTMLFormElement).reset();
   }
 
@@ -101,7 +102,7 @@ export function ChatPanel() {
   }
 
   function handleSendPrompt(prompt: string) {
-    sendMessage({ text: prompt });
+    void sendMessage({ text: prompt });
   }
 
   if (messages.length === 0) {
@@ -111,7 +112,7 @@ export function ChatPanel() {
           <ChatEmptyState onSendPrompt={handleSendPrompt} />
         </Center>
         <Stack gap="xs">
-          {error && (
+          {error ? (
             <Alert
               color="red"
               icon={<AlertCircle size={16} />}
@@ -130,7 +131,7 @@ export function ChatPanel() {
                 </Button>
               </Group>
             </Alert>
-          )}
+          ) : null}
           <ChatInputBar
             isLoading={isLoading}
             onClear={handleClear}
@@ -153,12 +154,12 @@ export function ChatPanel() {
               content={getMessageText(message.parts)}
             />
           ))}
-          {isLoading && (
+          {isLoading ? (
             <Group gap="xs">
               <Loader size="xs" />
             </Group>
-          )}
-          {error && (
+          ) : null}
+          {error ? (
             <Alert
               color="red"
               icon={<AlertCircle size={16} />}
@@ -177,7 +178,7 @@ export function ChatPanel() {
                 </Button>
               </Group>
             </Alert>
-          )}
+          ) : null}
         </Stack>
       </ScrollArea>
 

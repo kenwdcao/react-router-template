@@ -58,9 +58,9 @@ export function ThemeSelector({
       setColorScheme(scheme);
       document.cookie = buildColorSchemeCookie(scheme);
       document.cookie = buildResolvedColorSchemeCookie(
-        (scheme === "auto" ? computedColorScheme : scheme) as "light" | "dark",
+        scheme === "auto" ? computedColorScheme : scheme,
       );
-      revalidate();
+      void revalidate();
     },
     [setColorScheme, computedColorScheme, revalidate],
   );
@@ -72,7 +72,7 @@ export function ThemeSelector({
       }
 
       document.cookie = buildPrimaryColorCookie(color);
-      revalidate();
+      void revalidate();
     },
     [currentPrimaryColor, revalidate],
   );

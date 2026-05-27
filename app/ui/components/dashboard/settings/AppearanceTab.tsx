@@ -39,9 +39,9 @@ export function AppearanceTab() {
       setColorScheme(value);
       document.cookie = buildColorSchemeCookie(value);
       document.cookie = buildResolvedColorSchemeCookie(
-        (value === "auto" ? computedColorScheme : value) as "light" | "dark",
+        value === "auto" ? computedColorScheme : value,
       );
-      revalidate();
+      void revalidate();
     },
     [setColorScheme, computedColorScheme, revalidate],
   );
@@ -50,7 +50,7 @@ export function AppearanceTab() {
     (color: PrimaryColor) => {
       if (color === currentPrimaryColor) return;
       document.cookie = buildPrimaryColorCookie(color);
-      revalidate();
+      void revalidate();
     },
     [currentPrimaryColor, revalidate],
   );

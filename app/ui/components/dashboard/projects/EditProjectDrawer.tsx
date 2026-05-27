@@ -107,11 +107,11 @@ export function EditProjectDrawer({
             error={hasProjectError ? actionData?.errors?.status : undefined}
             allowDeselect={false}
           />
-          {actionData?.errors?.form && (
+          {actionData?.errors?.form ? (
             <Text c="red" size="sm">
               {actionData.errors.form}
             </Text>
-          )}
+          ) : null}
           <Group justify="flex-end">
             <Button variant="subtle" onClick={onClose}>
               Cancel

@@ -28,7 +28,7 @@ export function DeleteProjectButton({ project }: DeleteProjectButtonProps) {
       labels: { confirm: "Delete", cancel: "Cancel" },
       confirmProps: { color: "red" },
       onConfirm: () => {
-        submit(
+        void submit(
           { _intent: "delete", projectId: project.id },
           { method: "post", replace: true },
         );

@@ -1,6 +1,7 @@
 import { data, redirect } from "react-router";
 import { z } from "zod";
 import { auth, getAuthErrorMessage } from "~/lib/auth/index.server";
+import { readFormString } from "~/lib/utils";
 
 export type RegisterActionData = {
   errors?: {
@@ -20,10 +21,12 @@ const emailSchema = z.email();
 
 export async function handleRegisterAction(request: Request) {
   const formData = await request.formData();
-  const name = String(formData.get("name") ?? "").trim();
-  const email = String(formData.get("email") ?? "").trim();
-  const password = String(formData.get("password") ?? "");
-  const confirmPassword = String(formData.get("confirmPassword") ?? "");
+  const name = readFormString(formData, "name");
+  const email = readFormString(formData, "email");
+  const password = readFormString(formData, "password", { trim: false });
+  const confirmPassword = readFormString(formData, "confirmPassword", {
+    trim: false,
+  });
   const errors: NonNullable<RegisterActionData["errors"]> = {};
 
   if (!name) {

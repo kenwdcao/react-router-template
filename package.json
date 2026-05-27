@@ -22,8 +22,8 @@
     "db:seed": "prisma db seed",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "lint:fix": "eslint \"**/*.{ts,tsx}\" --fix",
     "prepare": "husky"
   },
   "dependencies": {
@@ -51,7 +51,10 @@
     "zod": "^4.4.3"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
+    "*.{js,jsx}": [
+      "prettier --write"
+    ],
+    "*.{ts,tsx}": [
       "prettier --write",
       "eslint --fix"
     ],
@@ -60,7 +63,7 @@
     ]
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
+    "@eslint/js": "^9.39.4",
     "@playwright/test": "^1.60.0",
     "@react-router/dev": "7.15.1",
     "@tailwindcss/vite": "^4.2.2",
@@ -72,12 +75,14 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
     "@vitest/coverage-v8": "^4.1.7",
+    "@vitest/eslint-plugin": "^1.6.18",
     "dotenv": "^17.4.2",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
     "kysely-codegen": "^0.20.0",

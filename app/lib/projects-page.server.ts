@@ -8,6 +8,7 @@ import {
   listProjectsForUser,
   updateProject,
 } from "~/lib/projects.server";
+import { readFormString } from "~/lib/utils";
 
 export type ProjectsActionData = {
   errors?: {
@@ -61,7 +62,7 @@ export async function loadProjectsPage(request: Request) {
 export async function handleProjectsAction(request: Request) {
   const session = await requireAuth(request);
   const formData = await request.formData();
-  const intent = String(formData.get("_intent") ?? "");
+  const intent = readFormString(formData, "_intent");
 
   if (intent === "create") {
     return handleCreateProject(formData, session.user.id);
@@ -172,10 +173,4 @@ function readProjectFormValues(formData: FormData) {
     projectId: readFormString(formData, "projectId"),
     status: readFormString(formData, "status") || PROJECT_STATUS.active,
   };
-}
-
-function readFormString(formData: FormData, key: string) {
-  const value = formData.get(key);
-
-  return typeof value === "string" ? value.trim() : "";
 }

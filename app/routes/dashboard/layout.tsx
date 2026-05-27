@@ -99,7 +99,7 @@ export default function DashboardLayout() {
               aria-label="Sign out"
               onClick={async () => {
                 await signOut();
-                navigate("/");
+                void navigate("/");
               }}
             >
               <LogOut size={16} />
@@ -111,7 +111,7 @@ export default function DashboardLayout() {
               visibleFrom="sm"
               onClick={async () => {
                 await signOut();
-                navigate("/");
+                void navigate("/");
               }}
             >
               Sign out

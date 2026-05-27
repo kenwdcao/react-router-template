@@ -1,6 +1,7 @@
 import { data, redirect } from "react-router";
 import { getSafeRedirectTo } from "~/lib/auth";
 import { auth, getAuthErrorMessage } from "~/lib/auth/index.server";
+import { readFormString } from "~/lib/utils";
 
 export type LoginActionData = {
   errors?: {
@@ -15,8 +16,8 @@ export type LoginActionData = {
 
 export async function handleLoginAction(request: Request) {
   const formData = await request.formData();
-  const email = String(formData.get("email") ?? "").trim();
-  const password = String(formData.get("password") ?? "");
+  const email = readFormString(formData, "email");
+  const password = readFormString(formData, "password", { trim: false });
   const redirectTo = getSafeRedirectTo(formData.get("redirectTo"));
   const errors: NonNullable<LoginActionData["errors"]> = {};
 

@@ -61,11 +61,11 @@ export function CreateProjectModal({
             autosize
             minRows={2}
           />
-          {actionData?.errors?.form && (
+          {actionData?.errors?.form ? (
             <Text c="red" size="sm">
               {actionData.errors.form}
             </Text>
-          )}
+          ) : null}
           <Group justify="flex-end">
             <Button variant="subtle" onClick={onClose}>
               Cancel

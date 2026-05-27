@@ -106,7 +106,6 @@ export default {
       return (
         hasAttribute(attributes, "aria-label") ||
         hasAttribute(attributes, "aria-labelledby") ||
-        hasAttribute(attributes, "title") ||
         (mantineFormControls.has(tagName) && hasAttribute(attributes, "label"))
       );
     }

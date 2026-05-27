@@ -68,11 +68,11 @@ export default function Login() {
               error={actionData?.errors?.password}
               required
             />
-            {actionData?.errors?.form && (
+            {actionData?.errors?.form ? (
               <Text c="red" size="sm">
                 {actionData.errors.form}
               </Text>
-            )}
+            ) : null}
           </Stack>
           <Button type="submit" fullWidth mt="xl" loading={isSubmitting}>
             Sign in

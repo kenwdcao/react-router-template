@@ -50,17 +50,17 @@ export function ProfileTab({
         </Indicator>
       </Group>
 
-      {errors?.form && (
+      {errors?.form ? (
         <Text c="red" size="sm">
           {errors.form}
         </Text>
-      )}
+      ) : null}
 
-      {success === "profile" && (
+      {success === "profile" ? (
         <Text c="green" size="sm">
           Profile updated successfully.
         </Text>
-      )}
+      ) : null}
 
       <Form method="post" replace>
         <input

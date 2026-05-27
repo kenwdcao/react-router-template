@@ -9,6 +9,7 @@ import {
   getAuthErrorMessage,
   requireAuth,
 } from "~/lib/auth/index.server";
+import { readFormString } from "~/lib/utils";
 import { SettingsTabs } from "~/ui/components/dashboard/settings";
 import type { Route } from "./+types/settings";
 
@@ -46,10 +47,10 @@ export async function action({
 }: Route.ActionArgs): Promise<Response | SettingsActionData> {
   await requireAuth(request);
   const formData = await request.formData();
-  const intent = formData.get("_intent");
+  const intent = readFormString(formData, "_intent");
 
   if (intent === "profile") {
-    const name = String(formData.get("name") ?? "").trim();
+    const name = readFormString(formData, "name");
     if (!name) {
       return { errors: { name: "Name is required" } };
     }

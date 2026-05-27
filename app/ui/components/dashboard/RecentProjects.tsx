@@ -80,7 +80,7 @@ export function RecentProjects({ projects }: RecentProjectsProps) {
           </Group>
         </Paper>
       ))}
-      {projects.length >= 5 && (
+      {projects.length >= 5 ? (
         <UnstyledButton
           component={Link}
           to="/dashboard/projects"
@@ -90,7 +90,7 @@ export function RecentProjects({ projects }: RecentProjectsProps) {
             View all projects
           </Text>
         </UnstyledButton>
-      )}
+      ) : null}
     </Stack>
   );
 }

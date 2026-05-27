@@ -53,11 +53,11 @@ function ProjectRow({
       <Table.Td>
         <Stack gap={0}>
           <Text fw={500}>{project.name}</Text>
-          {project.description && (
+          {project.description ? (
             <Text c="dimmed" size="sm" lineClamp={1}>
               {project.description}
             </Text>
-          )}
+          ) : null}
         </Stack>
       </Table.Td>
       <Table.Td>
@@ -101,11 +101,11 @@ function ProjectCard({
             </Text>
             <StatusBadge status={project.status} />
           </Group>
-          {project.description && (
+          {project.description ? (
             <Text c="dimmed" size="sm" lineClamp={2}>
               {project.description}
             </Text>
-          )}
+          ) : null}
           <Text size="xs" c="dimmed">
             Updated {formatDate(project.updatedAt)}
           </Text>

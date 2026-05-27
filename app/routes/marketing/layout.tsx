@@ -131,7 +131,7 @@ function MarketingAuthActions({
           aria-label="Sign out"
           onClick={async () => {
             await signOut();
-            navigate("/");
+            void navigate("/");
           }}
         >
           <LogOut size={16} />
@@ -143,7 +143,7 @@ function MarketingAuthActions({
           visibleFrom="sm"
           onClick={async () => {
             await signOut();
-            navigate("/");
+            void navigate("/");
           }}
         >
           Sign out
