@@ -11,7 +11,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function AuthLayout() {
   return (
-    <Box className="min-h-screen bg-[var(--mantine-color-body)]">
+    <Box className="min-h-screen bg-(--mantine-color-body)">
       <Group justify="flex-end" p="md">
         <ThemeSelector />
       </Group>

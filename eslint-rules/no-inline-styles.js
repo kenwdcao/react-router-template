@@ -21,13 +21,33 @@ export default {
   },
   create(context) {
     /**
+     * Strip TypeScript AST wrappers so the rule can inspect the underlying
+     * expression. Without this, `style={{ "--x": v } as CSSProperties}` would
+     * false-positive because the value node is a TSAsExpression, not an
+     * ObjectExpression.
+     * @param {import('eslint').Rule.Node} node
+     * @returns {import('eslint').Rule.Node}
+     */
+    function unwrapTSExpression(node) {
+      if (
+        node.type === "TSAsExpression" ||
+        node.type === "TSSatisfiesExpression" ||
+        node.type === "TSNonNullExpression"
+      ) {
+        return unwrapTSExpression(node.expression);
+      }
+      return node;
+    }
+
+    /**
      * Check if a style value object contains only CSS custom properties.
      * @param {import('eslint').Rule.Node} valueNode
      * @returns {boolean}
      */
     function isOnlyCustomProperties(valueNode) {
-      if (valueNode.type === "ObjectExpression") {
-        return valueNode.properties.every((prop) => {
+      const unwrapped = unwrapTSExpression(valueNode);
+      if (unwrapped.type === "ObjectExpression") {
+        return unwrapped.properties.every((prop) => {
           if (prop.type !== "Property") return false;
           const key =
             prop.key.type === "Identifier"

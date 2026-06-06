@@ -61,6 +61,64 @@ export default {
     ]);
 
     /**
+     * Recursively check if a JSX expression contains visible text.
+     * Handles conditional expressions, logical expressions, nested JSX
+     * elements/fragments, identifiers, and call expressions.
+     * @param {import('eslint').Rule.Node} expression
+     * @returns {boolean}
+     */
+    function expressionHasVisibleText(expression) {
+      if (expression.type === "Literal") {
+        return (
+          typeof expression.value === "string" &&
+          expression.value.trim().length > 0
+        );
+      }
+
+      if (expression.type === "TemplateLiteral") {
+        return expression.quasis.some(
+          (quasi) => quasi.value.raw.trim().length > 0,
+        );
+      }
+
+      if (
+        expression.type === "JSXElement" ||
+        expression.type === "JSXFragment"
+      ) {
+        return hasVisibleText(expression);
+      }
+
+      if (expression.type === "ConditionalExpression") {
+        return (
+          expressionHasVisibleText(expression.consequent) ||
+          expressionHasVisibleText(expression.alternate)
+        );
+      }
+
+      if (expression.type === "LogicalExpression") {
+        return expressionHasVisibleText(expression.right);
+      }
+
+      if (expression.type === "BinaryExpression") {
+        return (
+          expressionHasVisibleText(expression.left) ||
+          expressionHasVisibleText(expression.right)
+        );
+      }
+
+      if (
+        expression.type === "Identifier" ||
+        expression.type === "MemberExpression" ||
+        expression.type === "ChainExpression" ||
+        expression.type === "CallExpression"
+      ) {
+        return true;
+      }
+
+      return false;
+    }
+
+    /**
      * @param {import('eslint').Rule.Node} node
      * @returns {boolean}
      */
@@ -72,15 +130,10 @@ export default {
           return child.value.trim().length > 0;
         }
         if (child.type === "JSXExpressionContainer") {
-          const expr = child.expression;
-          // String literal inside expression
-          if (expr.type === "Literal" && typeof expr.value === "string") {
-            return expr.value.trim().length > 0;
-          }
-          // Template literal with content
-          if (expr.type === "TemplateLiteral") {
-            return expr.quasis.some((q) => q.value.raw.trim().length > 0);
-          }
+          return expressionHasVisibleText(child.expression);
+        }
+        if (child.type === "JSXElement" || child.type === "JSXFragment") {
+          return hasVisibleText(child);
         }
         return false;
       });
@@ -106,6 +159,7 @@ export default {
       return (
         hasAttribute(attributes, "aria-label") ||
         hasAttribute(attributes, "aria-labelledby") ||
+        hasAttribute(attributes, "title") ||
         (mantineFormControls.has(tagName) && hasAttribute(attributes, "label"))
       );
     }
@@ -124,6 +178,32 @@ export default {
               attr.value.expression.type === "Literal" &&
               attr.value.expression.value === true)),
       );
+    }
+
+    /**
+     * @param {import('eslint').Rule.Node[]} attributes
+     * @returns {boolean}
+     */
+    function isHiddenInput(attributes) {
+      return attributes.some((attr) => {
+        if (
+          attr.type !== "JSXAttribute" ||
+          attr.name.name !== "type" ||
+          !attr.value
+        ) {
+          return false;
+        }
+
+        if (attr.value.type === "Literal") {
+          return attr.value.value === "hidden";
+        }
+
+        return (
+          attr.value.type === "JSXExpressionContainer" &&
+          attr.value.expression.type === "Literal" &&
+          attr.value.expression.value === "hidden"
+        );
+      });
     }
 
     return {
@@ -146,8 +226,9 @@ export default {
 
         if (!isInteractive) return;
 
-        // Skip disabled elements
+        // Skip disabled elements and hidden inputs
         if (isDisabled(node.attributes)) return;
+        if (tagName === "input" && isHiddenInput(node.attributes)) return;
 
         // Check aria-label on elements without visible text
         const parent = node.parent;

@@ -38,7 +38,7 @@ export function MessageBubble({ role, content }: MessageBubbleProps) {
         p="sm"
         radius="lg"
         maw={{ base: "90%", sm: "75%" }}
-        className="min-w-0 break-words"
+        className="min-w-0 wrap-break-word"
       >
         <Text size="sm" component="div">
           <Markdown remarkPlugins={[remarkGfm]}>{content}</Markdown>

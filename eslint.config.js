@@ -5,6 +5,7 @@ import jsxA11yPlugin from "eslint-plugin-jsx-a11y";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import reactRefreshPlugin from "eslint-plugin-react-refresh";
+import tailwindCanonicalClasses from "eslint-plugin-tailwind-canonical-classes";
 import tseslint from "typescript-eslint";
 import localRules from "./eslint-rules/index.js";
 
@@ -105,6 +106,7 @@ export default tseslint.config(
       "react-hooks": reactHooksPlugin,
       "jsx-a11y": jsxA11yPlugin,
       "react-refresh": reactRefreshPlugin,
+      "tailwind-canonical-classes": tailwindCanonicalClasses,
       "local-rules": localRules,
     },
     settings: {
@@ -126,6 +128,7 @@ export default tseslint.config(
         { prefer: "type-imports", fixStyle: "separate-type-imports" },
       ],
       "@typescript-eslint/no-explicit-any": "error",
+      "@typescript-eslint/no-non-null-assertion": "error",
       "@typescript-eslint/no-floating-promises": "error",
       "@typescript-eslint/no-misused-promises": [
         "error",
@@ -135,6 +138,14 @@ export default tseslint.config(
       "react/jsx-no-leaked-render": [
         "error",
         { validStrategies: ["ternary", "coerce"] },
+      ],
+      "react/no-unstable-nested-components": ["error", { allowAsProps: true }],
+      "react/jsx-no-constructed-context-values": "error",
+      eqeqeq: ["error", "always"],
+      "no-implicit-coercion": "error",
+      "tailwind-canonical-classes/tailwind-canonical-classes": [
+        "warn",
+        { cssPath: "./app/app.css" },
       ],
 
       // Local rules
@@ -149,7 +160,19 @@ export default tseslint.config(
   {
     files: ["**/*.server.ts", "app/routes/**/*.{ts,tsx}"],
     rules: {
-      "@typescript-eslint/only-throw-error": "off",
+      "@typescript-eslint/only-throw-error": [
+        "error",
+        {
+          allow: [
+            { from: "lib", name: "Response" },
+            {
+              from: "package",
+              name: "DataWithResponseInit",
+              package: "react-router",
+            },
+          ],
+        },
+      ],
     },
   },
   {
@@ -183,6 +206,12 @@ export default tseslint.config(
     files: ["app/routes/**/*.{ts,tsx}", "app/root.tsx"],
     rules: {
       "react-refresh/only-export-components": "off",
+    },
+  },
+  {
+    files: ["app/lib/**/*.ts"],
+    rules: {
+      "local-rules/max-file-lines": ["error", { max: 500 }],
     },
   },
   {
