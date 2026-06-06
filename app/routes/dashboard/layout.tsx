@@ -11,7 +11,8 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { LogOut } from "lucide-react";
+import { ChevronLeft, ChevronRight, LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link, Outlet, useLoaderData, useNavigate } from "react-router";
 import { signOut } from "~/lib/auth";
 import { requireAuth } from "~/lib/auth/index.server";
@@ -19,6 +20,9 @@ import { getAvatarInitial } from "~/lib/utils";
 import { ThemeSelector } from "~/ui/components/common";
 import { Breadcrumbs, Sidebar } from "~/ui/components/dashboard";
 import type { Route } from "./+types/layout";
+import classes from "./layout.module.css";
+
+const SIDEBAR_COLLAPSED_KEY = "dashboard-sidebar-collapsed";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await requireAuth(request);
@@ -35,16 +39,25 @@ export default function DashboardLayout() {
   const { user } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const [opened, { toggle }] = useDisclosure();
+  const [desktopCollapsed, setDesktopCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "true";
+  });
+
+  useEffect(() => {
+    localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(desktopCollapsed));
+  }, [desktopCollapsed]);
 
   return (
     <AppShell
       header={{ height: 56 }}
       navbar={{
-        width: 260,
+        width: desktopCollapsed ? 56 : 260,
         breakpoint: "sm",
         collapsed: { mobile: !opened },
       }}
       padding="md"
+      transitionDuration={200}
     >
       <AppShell.Header>
         <div className="grid h-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-4">
@@ -119,10 +132,34 @@ export default function DashboardLayout() {
           </Group>
         </div>
       </AppShell.Header>
-      <AppShell.Navbar p="md">
+      <AppShell.Navbar p={desktopCollapsed ? 8 : "md"}>
         <ScrollArea>
-          <Sidebar />
+          <Sidebar collapsed={desktopCollapsed} />
         </ScrollArea>
+        <ActionIcon
+          variant="default"
+          size="sm"
+          radius="xl"
+          className={classes.sidebarToggleButton}
+          aria-label={
+            desktopCollapsed
+              ? "Expand app navigation"
+              : "Collapse app navigation"
+          }
+          title={
+            desktopCollapsed
+              ? "Expand app navigation"
+              : "Collapse app navigation"
+          }
+          onClick={() => setDesktopCollapsed((v) => !v)}
+          visibleFrom="sm"
+        >
+          {desktopCollapsed ? (
+            <ChevronRight size={14} />
+          ) : (
+            <ChevronLeft size={14} />
+          )}
+        </ActionIcon>
       </AppShell.Navbar>
       <AppShell.Main>
         <Breadcrumbs />

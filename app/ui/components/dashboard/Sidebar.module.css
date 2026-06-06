@@ -1,0 +1,12 @@
+.railLink.railLink {
+  justify-content: center;
+  padding: var(--mantine-spacing-xs);
+}
+
+.railLink.railLink :global(.mantine-NavLink-body) {
+  display: none;
+}
+
+.railLink.railLink :global(.mantine-NavLink-section) {
+  margin-right: 0;
+}
