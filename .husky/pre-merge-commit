@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+echo "❌ Non-fast-forward merge blocked."
+echo "   This project requires linear git history."
+echo "   Use 'git merge --ff-only' or rebase before merging."
+exit 1

@@ -1,0 +1,34 @@
+#!/usr/bin/env sh
+
+# $1 = remote name, $2 = remote URL
+# stdin: <local ref> <local sha> <remote ref> <remote sha> per line
+# Reject push if any commit in the range is a merge commit (non-linear history).
+
+remote="$1"
+
+while read local_ref local_sha remote_ref remote_sha; do
+  if [ "$remote_sha" = "0000000000000000000000000000000000000000" ]; then
+    # New branch — resolve merge-base against remote default branch
+    head_ref=$(git ls-remote --symref "$remote" HEAD 2>/dev/null | head -1 | sed 's|.*refs/heads/||')
+    if [ -n "$head_ref" ] && git rev-parse --verify "$remote/$head_ref" >/dev/null 2>&1; then
+      base=$(git merge-base "$remote/$head_ref" "$local_sha" 2>/dev/null)
+      range="${base:-$local_sha}..$local_sha"
+    else
+      range="$local_sha"
+    fi
+  else
+    range="$remote_sha..$local_sha"
+  fi
+
+  merge_commits=$(git rev-list --merges "$range" 2>/dev/null)
+  if [ -n "$merge_commits" ]; then
+    echo "❌ Push rejected: merge commits found in push range."
+    echo "   This project requires linear git history."
+    echo "   Merge commits:"
+    echo "$merge_commits" | while read sha; do
+      echo "     $sha $(git log --oneline -1 "$sha" 2>/dev/null | cut -d' ' -f2-)"
+    done
+    echo "   Rebase your branch and push again."
+    exit 1
+  fi
+done
