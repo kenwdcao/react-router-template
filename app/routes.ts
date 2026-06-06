@@ -8,7 +8,10 @@ import {
 export default [
   route("health", "routes/health.ts"),
   route("api/auth/*", "routes/api.auth.$.ts"),
-  layout("routes/marketing/layout.tsx", [index("routes/home.tsx")]),
+  layout("routes/marketing/layout.tsx", [
+    index("routes/home.tsx"),
+    route("*", "routes/not-found.tsx"),
+  ]),
   layout("routes/auth/layout.tsx", [
     route("login", "routes/auth/login.tsx"),
     route("register", "routes/auth/register.tsx"),
