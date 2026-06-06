@@ -9,4 +9,4 @@ export {
   requireAuth,
 } from "./require-auth.server";
 export type { AuthSession } from "./require-auth.server";
-export { auth } from "./server";
+export { auth, isMicrosoftSSOConfigured } from "./server";

@@ -1,6 +1,7 @@
 import {
   Anchor,
   Button,
+  Divider,
   Paper,
   PasswordInput,
   Stack,
@@ -8,12 +9,28 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { Form, Link, useActionData, useNavigation } from "react-router";
-import { handleRegisterAction } from "~/lib/auth/index.server";
+import { useState } from "react";
+import {
+  Form,
+  Link,
+  useActionData,
+  useLoaderData,
+  useNavigation,
+} from "react-router";
+import {
+  handleRegisterAction,
+  isMicrosoftSSOConfigured,
+} from "~/lib/auth/index.server";
+import { startMicrosoftSignIn } from "~/lib/auth/microsoft-sign-in";
+import { MicrosoftSignInButton } from "~/ui/components/auth/microsoft-sign-in";
 import type { Route } from "./+types/register";
 
 export function meta() {
   return [{ title: "Create Account" }];
+}
+
+export function loader() {
+  return { microsoftSSO: isMicrosoftSSOConfigured };
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -21,9 +38,22 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 export default function Register() {
+  const { microsoftSSO } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
-  const isSubmitting = navigation.state === "submitting";
+  const [microsoftLoading, setMicrosoftLoading] = useState(false);
+  const [microsoftError, setMicrosoftError] = useState<string | null>(null);
+  const isSubmitting = navigation.state === "submitting" || microsoftLoading;
+
+  async function handleMicrosoftSignIn() {
+    setMicrosoftError(null);
+    await startMicrosoftSignIn({
+      errorRoute: "/register",
+      onError: setMicrosoftError,
+      onSubmittingChange: setMicrosoftLoading,
+      redirectTo: "/dashboard",
+    });
+  }
 
   return (
     <Stack gap="lg" mt="xl">
@@ -36,6 +66,20 @@ export default function Register() {
       </Text>
 
       <Paper withBorder shadow="md" p={{ base: "md", sm: 30 }} radius="md">
+        {microsoftSSO ? (
+          <>
+            <MicrosoftSignInButton
+              loading={isSubmitting}
+              onClick={handleMicrosoftSignIn}
+            />
+            {microsoftError ? (
+              <Text c="red" size="sm" mt="xs">
+                {microsoftError}
+              </Text>
+            ) : null}
+            <Divider label="or" labelPosition="center" my="md" />
+          </>
+        ) : null}
         <Form method="post" replace>
           <Stack>
             <TextInput

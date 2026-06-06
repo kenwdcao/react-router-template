@@ -1,6 +1,7 @@
 import {
   Anchor,
   Button,
+  Divider,
   Paper,
   PasswordInput,
   Stack,
@@ -8,19 +9,30 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import { useState } from "react";
 import {
   Form,
   Link,
   useActionData,
+  useLoaderData,
   useNavigation,
   useSearchParams,
 } from "react-router";
 import { getSafeRedirectTo } from "~/lib/auth";
-import { handleLoginAction } from "~/lib/auth/index.server";
+import {
+  handleLoginAction,
+  isMicrosoftSSOConfigured,
+} from "~/lib/auth/index.server";
+import { startMicrosoftSignIn } from "~/lib/auth/microsoft-sign-in";
+import { MicrosoftSignInButton } from "~/ui/components/auth/microsoft-sign-in";
 import type { Route } from "./+types/login";
 
 export function meta() {
   return [{ title: "Sign In" }];
+}
+
+export function loader() {
+  return { microsoftSSO: isMicrosoftSSOConfigured };
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -28,11 +40,24 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 export default function Login() {
+  const { microsoftSSO } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   const [searchParams] = useSearchParams();
   const redirectTo = getSafeRedirectTo(searchParams.get("redirectTo"));
-  const isSubmitting = navigation.state === "submitting";
+  const [microsoftLoading, setMicrosoftLoading] = useState(false);
+  const [microsoftError, setMicrosoftError] = useState<string | null>(null);
+  const isSubmitting = navigation.state === "submitting" || microsoftLoading;
+
+  async function handleMicrosoftSignIn() {
+    setMicrosoftError(null);
+    await startMicrosoftSignIn({
+      errorRoute: "/login",
+      onError: setMicrosoftError,
+      onSubmittingChange: setMicrosoftLoading,
+      redirectTo,
+    });
+  }
 
   return (
     <Stack gap="lg" mt="xl">
@@ -45,6 +70,20 @@ export default function Login() {
       </Text>
 
       <Paper withBorder shadow="md" p={{ base: "md", sm: 30 }} radius="md">
+        {microsoftSSO ? (
+          <>
+            <MicrosoftSignInButton
+              loading={isSubmitting}
+              onClick={handleMicrosoftSignIn}
+            />
+            {microsoftError ? (
+              <Text c="red" size="sm" mt="xs">
+                {microsoftError}
+              </Text>
+            ) : null}
+            <Divider label="or" labelPosition="center" my="md" />
+          </>
+        ) : null}
         <Form method="post" replace>
           <input
             type="hidden"

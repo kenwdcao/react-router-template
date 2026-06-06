@@ -33,6 +33,9 @@ const envSchema = z.object({
             .filter(Boolean)
         : [],
     ),
+  MICROSOFT_CLIENT_ID: optionalEnvString,
+  MICROSOFT_CLIENT_SECRET: optionalEnvString,
+  MICROSOFT_TENANT_ID: optionalEnvString,
   AI_BASE_URL: optionalEnvUrl,
   AI_API_KEY: optionalEnvString,
   AI_MODEL_ID: optionalEnvString,
