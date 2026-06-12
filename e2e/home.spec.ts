@@ -7,7 +7,7 @@ test("renders the marketing home page and auth links", async ({ page }) => {
     page.getByRole("heading", { level: 1, name: /React Router Template/i }),
   ).toBeVisible();
   await expect(
-    page.getByRole("link", { name: "View Dashboard Demo" }).first(),
+    page.getByRole("banner").getByRole("link", { name: "Dashboard" }),
   ).toHaveAttribute("href", "/dashboard");
   await expect(page.getByRole("link", { name: "Sign in" })).toHaveAttribute(
     "href",
