@@ -111,7 +111,7 @@ export default tseslint.config(
     rules: {
       ...reactPlugin.configs.recommended.rules,
       ...reactPlugin.configs["jsx-runtime"].rules,
-      ...reactHooksPlugin.configs.recommended.rules,
+      ...reactHooksPlugin.configs["recommended-latest"].rules,
       "no-duplicate-imports": "off",
       eqeqeq: ["error", "always"],
       "no-implicit-coercion": "error",
