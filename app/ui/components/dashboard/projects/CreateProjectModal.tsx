@@ -27,13 +27,21 @@ export function CreateProjectModal({
   const wasBusyRef = useRef(false);
 
   useEffect(() => {
-    if (wasBusyRef.current && navigation.state === "idle") {
-      if (!actionData?.errors) {
-        onClose();
-      }
+    if (!opened) {
+      wasBusyRef.current = false;
+      return;
     }
-    wasBusyRef.current = isBusy;
-  }, [navigation.state, actionData, onClose, isBusy]);
+
+    if (isBusy) {
+      wasBusyRef.current = true;
+      return;
+    }
+
+    if (wasBusyRef.current && !actionData?.errors) {
+      wasBusyRef.current = false;
+      onClose();
+    }
+  }, [opened, isBusy, actionData, onClose]);
 
   return (
     <Modal opened={opened} onClose={onClose} title="Create project">

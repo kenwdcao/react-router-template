@@ -55,5 +55,5 @@ jobs:
       - run: docker build -t react-router-template-ci .
       - run: pnpm exec playwright install --with-deps chromium
       # Reset immediately before browser tests so future E2E cases do not inherit unit/build state.
-      - run: pnpm exec prisma migrate reset --force --skip-seed
+      - run: pnpm exec prisma migrate reset --force
       - run: pnpm test:e2e
