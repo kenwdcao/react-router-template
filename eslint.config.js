@@ -1,7 +1,6 @@
-import eslint from "@eslint/js";
 import vitestPlugin from "@vitest/eslint-plugin";
+import mantine from "eslint-config-mantine";
 import prettierConfig from "eslint-config-prettier";
-import jsxA11yPlugin from "eslint-plugin-jsx-a11y";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import reactRefreshPlugin from "eslint-plugin-react-refresh";
@@ -84,11 +83,7 @@ export default tseslint.config(
       "**/*.{js,mjs,cjs}",
     ],
   },
-  eslint.configs.recommended,
-  ...tseslint.configs.recommended.map((config) => ({
-    ...config,
-    files: typescriptFiles,
-  })),
+  ...mantine,
   ...tseslint.configs.recommendedTypeChecked.map((config) => ({
     ...config,
     files: typescriptFiles,
@@ -104,7 +99,6 @@ export default tseslint.config(
     plugins: {
       react: reactPlugin,
       "react-hooks": reactHooksPlugin,
-      "jsx-a11y": jsxA11yPlugin,
       "react-refresh": reactRefreshPlugin,
       "tailwind-canonical-classes": tailwindCanonicalClasses,
       "local-rules": localRules,
@@ -118,7 +112,9 @@ export default tseslint.config(
       ...reactPlugin.configs.recommended.rules,
       ...reactPlugin.configs["jsx-runtime"].rules,
       ...reactHooksPlugin.configs.recommended.rules,
-      ...jsxA11yPlugin.configs.recommended.rules,
+      "no-duplicate-imports": "off",
+      eqeqeq: ["error", "always"],
+      "no-implicit-coercion": "error",
       "@typescript-eslint/no-unused-vars": [
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
@@ -141,8 +137,6 @@ export default tseslint.config(
       ],
       "react/no-unstable-nested-components": ["error", { allowAsProps: true }],
       "react/jsx-no-constructed-context-values": "error",
-      eqeqeq: ["error", "always"],
-      "no-implicit-coercion": "error",
       "tailwind-canonical-classes/tailwind-canonical-classes": [
         "warn",
         { cssPath: "./app/app.css" },
@@ -155,6 +149,12 @@ export default tseslint.config(
 
       // Import restrictions: forbid non-lucide icon libraries
       "no-restricted-imports": ["error", iconImportRestrictions],
+    },
+  },
+  {
+    files: ["**/*.server.ts", "prisma/**"],
+    rules: {
+      "no-console": "off",
     },
   },
   {
