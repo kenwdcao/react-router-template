@@ -14,7 +14,7 @@ describe("StatCards", () => {
         projectCount={5}
         lastLogin="Today"
         environment="Development"
-        aiReady={true}
+        aiReady
       />,
     );
 
