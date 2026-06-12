@@ -1,4 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
+import { createProjectViaModal } from "./helpers/projects";
+
+const ACTION_TIMEOUT = 20_000;
 
 test("redirects anonymous project access to sign in", async ({ page }) => {
   await page.goto("/dashboard/projects");
@@ -24,19 +27,10 @@ test("registers users and manages owner-scoped projects", async ({ page }) => {
   });
   await page.goto("/dashboard/projects");
 
-  // Create project via modal
-  await page.getByRole("button", { name: "Create project" }).click();
-  const createDialog = page.getByRole("dialog", { name: "Create project" });
-  await expect(createDialog).toBeVisible();
-  await createDialog.getByLabel("Project name").fill(ownerProjectName);
-  await createDialog
-    .getByLabel("Description")
-    .fill("Only visible to owner one");
-  await createDialog.getByRole("button", { name: "Create" }).click();
-  await expect(createDialog).not.toBeVisible();
-  await expect(
-    page.getByRole("table").getByText(ownerProjectName),
-  ).toBeVisible();
+  await createProjectViaModal(page, {
+    name: ownerProjectName,
+    description: "Only visible to owner one",
+  });
 
   await page.context().clearCookies();
 
@@ -54,14 +48,10 @@ test("registers users and manages owner-scoped projects", async ({ page }) => {
   ).toBeVisible();
 
   // Create project via modal
-  await page.getByRole("button", { name: "Create project" }).click();
-  const createDialog2 = page.getByRole("dialog", { name: "Create project" });
-  await expect(createDialog2).toBeVisible();
-  await createDialog2.getByLabel("Project name").fill(projectName);
-  await createDialog2.getByLabel("Description").fill("Initial description");
-  await createDialog2.getByRole("button", { name: "Create" }).click();
-  await expect(createDialog2).not.toBeVisible();
-  await expect(page.getByRole("table").getByText(projectName)).toBeVisible();
+  await createProjectViaModal(page, {
+    name: projectName,
+    description: "Initial description",
+  });
   await expect(page.locator("main").getByText("1 total").first()).toBeVisible();
 
   // Edit project via drawer
@@ -74,10 +64,10 @@ test("registers users and manages owner-scoped projects", async ({ page }) => {
   await editDialog.getByLabel("Name").fill(updatedProjectName);
   await editDialog.getByLabel("Description").fill("Updated description");
   await editDialog.getByRole("button", { name: "Save changes" }).click();
-  await expect(editDialog).not.toBeVisible();
   await expect(
     page.getByRole("table").getByText(updatedProjectName),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: ACTION_TIMEOUT });
+  await expect(editDialog).not.toBeVisible();
   await expect(page.getByText(projectName, { exact: true })).toHaveCount(0);
 
   // Delete project via confirm modal

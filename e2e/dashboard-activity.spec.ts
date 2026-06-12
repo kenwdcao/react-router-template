@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { createProjectViaModal } from "./helpers/projects";
 
 test.describe("Dashboard Activity", () => {
   test.beforeEach(async ({ page }) => {
@@ -17,15 +18,10 @@ test.describe("Dashboard Activity", () => {
   }) => {
     // Create a project first
     await page.goto("/dashboard/projects");
-    await page.getByRole("button", { name: "Create project" }).click();
-    const createDialog = page.getByRole("dialog", { name: "Create project" });
-    await expect(createDialog).toBeVisible();
-    await createDialog.getByLabel("Project name").fill("Activity test project");
-    await createDialog
-      .getByLabel("Description")
-      .fill("Testing activity timeline");
-    await createDialog.getByRole("button", { name: "Create" }).click();
-    await expect(createDialog).not.toBeVisible();
+    await createProjectViaModal(page, {
+      name: "Activity test project",
+      description: "Testing activity timeline",
+    });
 
     // Check activity page
     await page.goto("/dashboard/activity");
