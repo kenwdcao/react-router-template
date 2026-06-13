@@ -109,9 +109,12 @@ export default tseslint.config(
       },
     },
     rules: {
-      ...reactPlugin.configs.recommended.rules,
-      ...reactPlugin.configs["jsx-runtime"].rules,
-      ...reactHooksPlugin.configs["recommended-latest"].rules,
+      ...reactPlugin.configs.flat.recommended.rules,
+      ...reactPlugin.configs.flat["jsx-runtime"].rules,
+      // React Compiler ESLint rules (immutability, purity, refs, etc.) ship in
+      // eslint-plugin-react-hooks recommended-latest; the build-time transform is
+      // enabled separately via reactCompilerPreset in vite.config.ts.
+      ...reactHooksPlugin.configs.flat["recommended-latest"].rules,
       "no-duplicate-imports": "off",
       eqeqeq: ["error", "always"],
       "no-implicit-coercion": "error",
