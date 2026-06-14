@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm run docker:db && react-router dev",
+    "dev:clean": "rm -rf node_modules/.vite && pnpm dev",
     "build": "react-router build",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
