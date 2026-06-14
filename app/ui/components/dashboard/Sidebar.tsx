@@ -1,7 +1,6 @@
 import { NavLink as MantineNavLink, Stack, Text, Tooltip } from "@mantine/core";
 import {
   Activity,
-  Bot,
   Component,
   FolderKanban,
   Home,
@@ -35,7 +34,6 @@ const groups: NavGroup[] = [
     label: "Demos",
     items: [
       { to: "/dashboard/components", label: "Components", icon: Component },
-      { to: "/dashboard/chat", label: "AI Chat", icon: Bot },
     ],
   },
   {

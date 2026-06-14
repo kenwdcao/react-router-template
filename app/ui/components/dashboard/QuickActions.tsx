@@ -1,5 +1,5 @@
 import { Paper, SimpleGrid, Stack, Text, UnstyledButton } from "@mantine/core";
-import { Bot, Component, FolderKanban } from "lucide-react";
+import { Component, FolderKanban } from "lucide-react";
 import { Link } from "react-router";
 
 interface QuickAction {
@@ -17,12 +17,6 @@ const actions: QuickAction[] = [
     description: "Create, edit, and organize your projects.",
   },
   {
-    to: "/dashboard/chat",
-    icon: Bot,
-    title: "AI Chat",
-    description: "Start a conversation with the AI assistant.",
-  },
-  {
     to: "/dashboard/components",
     icon: Component,
     title: "Component library",
@@ -32,7 +26,7 @@ const actions: QuickAction[] = [
 
 export function QuickActions() {
   return (
-    <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="md">
+    <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
       {actions.map((action) => (
         <UnstyledButton
           key={action.to}

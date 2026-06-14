@@ -11,19 +11,24 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { ChevronLeft, ChevronRight, LogOut } from "lucide-react";
+import { Bot, ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, Outlet, useLoaderData, useNavigate } from "react-router";
 import { signOut } from "~/lib/auth";
 import { requireAuth } from "~/lib/auth/index.server";
 import {
+  buildChatExpandedCookie,
+  buildChatOpenCookie,
   buildSidebarCollapsedCookie,
   getAvatarInitial,
   migrateSidebarCollapsedFromLocalStorage,
+  parseChatExpandedCookie,
+  parseChatOpenCookie,
   parseSidebarCollapsedCookie,
 } from "~/lib/utils";
 import { ThemeSelector } from "~/ui/components/common";
 import { Breadcrumbs, Sidebar } from "~/ui/components/dashboard";
+import { ChatSidebarPanel } from "~/ui/components/dashboard/chat";
 import type { Route } from "./+types/layout";
 import classes from "./layout.module.css";
 
@@ -38,16 +43,22 @@ export async function loader({ request }: Route.LoaderArgs) {
     sidebarCollapsed: parseSidebarCollapsedCookie(
       request.headers.get("cookie"),
     ),
+    chatOpen: parseChatOpenCookie(request.headers.get("cookie")),
+    chatExpanded: parseChatExpandedCookie(request.headers.get("cookie")),
   };
 }
 
 export default function DashboardLayout() {
-  const { user, sidebarCollapsed } = useLoaderData<typeof loader>();
+  const { user, sidebarCollapsed, chatOpen, chatExpanded } =
+    useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const [opened, { toggle }] = useDisclosure();
   // Initial value comes from the loader (cookie-derived), so the server render
   // and the first client render agree — no expand→collapse flash on refresh.
   const [desktopCollapsed, setDesktopCollapsed] = useState(sidebarCollapsed);
+  // Same SSR-safe seeding for the AI chat aside.
+  const [chatOpenState, setChatOpenState] = useState(chatOpen);
+  const [chatExpandedState, setChatExpandedState] = useState(chatExpanded);
 
   // Seed the cookie from the legacy localStorage preference once, without
   // touching render state. No-op once the cookie is authoritative.
@@ -63,6 +74,22 @@ export default function DashboardLayout() {
     });
   };
 
+  const handleToggleChat = () => {
+    setChatOpenState((prev) => {
+      const next = !prev;
+      document.cookie = buildChatOpenCookie(next);
+      return next;
+    });
+  };
+
+  const handleToggleChatExpanded = () => {
+    setChatExpandedState((prev) => {
+      const next = !prev;
+      document.cookie = buildChatExpandedCookie(next);
+      return next;
+    });
+  };
+
   return (
     <AppShell
       header={{ height: 56 }}
@@ -70,6 +97,11 @@ export default function DashboardLayout() {
         width: desktopCollapsed ? 56 : 260,
         breakpoint: "sm",
         collapsed: { mobile: !opened },
+      }}
+      aside={{
+        width: chatExpandedState ? 630 : 420,
+        breakpoint: "sm",
+        collapsed: { desktop: !chatOpenState, mobile: true },
       }}
       padding="md"
       transitionDuration={200}
@@ -105,6 +137,16 @@ export default function DashboardLayout() {
             className="min-w-0 justify-self-end"
             justify="flex-end"
           >
+            <ActionIcon
+              variant={chatOpenState ? "filled" : "light"}
+              size="sm"
+              visibleFrom="sm"
+              aria-label={chatOpenState ? "Close AI chat" : "Open AI chat"}
+              title={chatOpenState ? "Close AI chat" : "Open AI chat"}
+              onClick={handleToggleChat}
+            >
+              <Bot size={16} />
+            </ActionIcon>
             <ThemeSelector />
             <Indicator
               processing
@@ -180,6 +222,15 @@ export default function DashboardLayout() {
         <Breadcrumbs />
         <Outlet />
       </AppShell.Main>
+      <AppShell.Aside p="md">
+        {chatOpenState ? (
+          <ChatSidebarPanel
+            onClose={handleToggleChat}
+            onToggleExpanded={handleToggleChatExpanded}
+            expanded={chatExpandedState}
+          />
+        ) : null}
+      </AppShell.Aside>
     </AppShell>
   );
 }

@@ -5,20 +5,58 @@ test.describe("Dashboard Chat", () => {
     await login(page);
   });
 
-  test("shows setup help when AI is not configured", async ({ page }) => {
-    await page.goto("/dashboard/chat");
-    const setupHeading = page.getByRole("heading", {
-      name: "Set up AI to enable chat",
-    });
+  test("opens the AI chat sidebar from the header button", async ({ page }) => {
+    await page.goto("/dashboard");
 
-    if (!(await setupHeading.isVisible().catch(() => false))) {
-      test.skip(true, "AI is configured; setup help is not rendered.");
-    }
+    // The header button reveals the aside on first paint.
+    await page.getByRole("button", { name: "Open AI chat" }).first().click();
 
-    await expect(setupHeading).toBeVisible();
-    await expect(page.getByText("AI_BASE_URL")).toBeVisible();
-    await expect(page.getByText("AI_API_KEY")).toBeVisible();
-    await expect(page.getByText("AI_MODEL_ID")).toBeVisible();
+    // The aside renders with a region landmark.
+    await expect(
+      page.getByRole("region", { name: "AI chat panel" }),
+    ).toBeVisible();
+    // Empty-state prompt surfaces inside the aside.
+    await expect(
+      page.getByText("Ask anything about this template"),
+    ).toBeVisible();
+  });
+
+  test("persists the chat sidebar open state across reloads", async ({
+    page,
+  }) => {
+    await page.goto("/dashboard");
+    await page.getByRole("button", { name: "Open AI chat" }).first().click();
+
+    // After reload the aside must still be open (cookie-fed SSR, no flash).
+    await page.reload();
+    await expect(
+      page.getByRole("region", { name: "AI chat panel" }),
+    ).toBeVisible();
+  });
+
+  test("expands and shrinks the chat sidebar", async ({ page }) => {
+    await page.goto("/dashboard");
+    await page.getByRole("button", { name: "Open AI chat" }).first().click();
+
+    const expand = page.getByRole("button", { name: "Expand panel" });
+    await expand.click();
+
+    await expect(
+      page.getByRole("button", { name: "Shrink panel" }),
+    ).toBeVisible();
+  });
+
+  test("lists preset questions in the FAQ dropdown", async ({ page }) => {
+    await page.goto("/dashboard");
+    await page.getByRole("button", { name: "Open AI chat" }).first().click();
+
+    await page
+      .getByRole("button", { name: "Frequently asked questions" })
+      .click();
+
+    await expect(
+      page.getByRole("menuitem", { name: "How do I add a new route?" }),
+    ).toBeVisible();
   });
 
   test("returns 400 for malformed chat API requests", async ({ page }) => {
@@ -62,12 +100,21 @@ test.describe("Dashboard Chat", () => {
   test("returns 503 for chat API requests when AI is not configured", async ({
     page,
   }) => {
-    await page.goto("/dashboard/chat");
-    const setupHeading = page.getByRole("heading", {
-      name: "Set up AI to enable chat",
+    // Probe the API directly to decide whether AI is configured. A valid request
+    // returns 503 only when the provider is unavailable; otherwise the 503 path
+    // is not exercised in this environment.
+    const probe = await page.context().request.post("/api/chat", {
+      data: {
+        messages: [
+          {
+            id: "probe-1",
+            role: "user",
+            parts: [{ type: "text", text: "probe" }],
+          },
+        ],
+      },
     });
-
-    if (!(await setupHeading.isVisible().catch(() => false))) {
+    if (probe.status() !== 503) {
       test.skip(true, "AI is configured; skipping unconfigured API path.");
     }
 

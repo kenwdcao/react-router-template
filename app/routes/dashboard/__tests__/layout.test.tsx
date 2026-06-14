@@ -5,6 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const loaderState = {
   user: { email: "user@example.com", name: "Test User" },
   sidebarCollapsed: false,
+  chatOpen: false,
+  chatExpanded: false,
 };
 
 // Mocks are hoisted. The factory closures read the shared objects lazily, so the
@@ -38,6 +40,12 @@ vi.mock("~/ui/components/dashboard", () => ({
   Sidebar: ({ collapsed }: { collapsed?: boolean }) => (
     <div data-testid="sidebar" data-collapsed={collapsed ? "true" : "false"} />
   ),
+}));
+
+// Stub the chat panel so the layout test stays focused on aside toggle/state
+// behavior and never boots the real chat hook.
+vi.mock("~/ui/components/dashboard/chat", () => ({
+  ChatSidebarPanel: () => <div data-testid="chat-sidebar-panel" />,
 }));
 
 import type { Route } from "../+types/layout";
@@ -81,6 +89,25 @@ describe("dashboard layout loader", () => {
     );
 
     expect(data.sidebarCollapsed).toBe(false);
+  });
+
+  it("reads chatOpen=true from the request cookie", async () => {
+    const data = await loader(buildLoaderArgs("dashboard-chat-open=true"));
+
+    expect(data.chatOpen).toBe(true);
+  });
+
+  it("reads chatExpanded=true from the request cookie", async () => {
+    const data = await loader(buildLoaderArgs("dashboard-chat-expanded=true"));
+
+    expect(data.chatExpanded).toBe(true);
+  });
+
+  it("defaults chatOpen and chatExpanded to false when the cookie is missing", async () => {
+    const data = await loader(buildLoaderArgs());
+
+    expect(data.chatOpen).toBe(false);
+    expect(data.chatExpanded).toBe(false);
   });
 });
 
@@ -145,5 +172,71 @@ describe("dashboard layout collapse state", () => {
     fireEvent.click(toggle);
 
     expect(document.cookie).toContain("dashboard-sidebar-collapsed=false");
+  });
+});
+
+describe("dashboard layout chat sidebar state", () => {
+  beforeEach(() => {
+    loaderState.chatOpen = false;
+    loaderState.chatExpanded = false;
+    document.cookie =
+      "dashboard-chat-open=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie =
+      "dashboard-chat-expanded=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  });
+
+  afterEach(() => {
+    document.cookie =
+      "dashboard-chat-open=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie =
+      "dashboard-chat-expanded=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  });
+
+  it("does not render the chat panel on first paint when the loader says closed", () => {
+    loaderState.chatOpen = false;
+
+    renderWithMantine(<DashboardLayout />);
+
+    expect(screen.queryAllByTestId("chat-sidebar-panel")).toHaveLength(0);
+  });
+
+  it("renders the chat panel on first paint when the loader says open", () => {
+    // Mirrors the collapse flash fix: the aside must reflect the loader value
+    // on the very first render, before any effect.
+    loaderState.chatOpen = true;
+
+    renderWithMantine(<DashboardLayout />);
+
+    expect(screen.getAllByTestId("chat-sidebar-panel").length).toBeGreaterThan(
+      0,
+    );
+  });
+
+  it("opens the panel and writes an open=true cookie when the header button is clicked", () => {
+    loaderState.chatOpen = false;
+
+    renderWithMantine(<DashboardLayout />);
+
+    // The header button renders in both the mobile and desktop AppShell slots;
+    // they share the same handler, so the first is representative.
+    const [toggle] = screen.getAllByRole("button", { name: "Open AI chat" });
+    fireEvent.click(toggle);
+
+    // AppShell renders the aside in mobile + desktop slots; assert presence.
+    expect(screen.getAllByTestId("chat-sidebar-panel").length).toBeGreaterThan(
+      0,
+    );
+    expect(document.cookie).toContain("dashboard-chat-open=true");
+  });
+
+  it("writes an open=false cookie when closing the panel", () => {
+    loaderState.chatOpen = true;
+
+    renderWithMantine(<DashboardLayout />);
+
+    const [close] = screen.getAllByRole("button", { name: "Close AI chat" });
+    fireEvent.click(close);
+
+    expect(document.cookie).toContain("dashboard-chat-open=false");
   });
 });
