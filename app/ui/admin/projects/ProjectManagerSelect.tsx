@@ -64,7 +64,12 @@ export function ProjectManagerSelect({
             placeholder="Search users by name or email..."
             value={search}
             error={error}
-            required={required}
+            // Visual required asterisk only — do NOT set the native `required`
+            // attribute. This input holds the search filter text, not the
+            // selected value, so native required validation would block form
+            // submission whenever the user picks a manager without typing.
+            // Required-ness is enforced by the form's managerIds validator.
+            withAsterisk={required}
             onChange={(e) => {
               setSearch(e.currentTarget.value);
               combobox.openDropdown();
