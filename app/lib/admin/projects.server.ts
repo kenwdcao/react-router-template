@@ -16,6 +16,34 @@ import {
 /** At least one ASCII alphanumeric character so slugify produces a non-empty slug. */
 const alphanumericRegex = /[a-zA-Z0-9]/;
 
+/**
+ * Validate that every requested manager is an existing, non-banned user. Returns
+ * a deduped list (stable input order) or an error string. Enforced server-side
+ * regardless of any client-side checks so a crafted POST cannot bind a banned
+ * or nonexistent user to a project.
+ */
+async function validateManagerIds(
+  rawManagerIds: string[],
+): Promise<{ ok: true; managerIds: string[] } | { ok: false; error: string }> {
+  const managerIds = [...new Set(rawManagerIds)];
+  if (managerIds.length === 0) {
+    return { ok: false, error: "At least one project manager is required" };
+  }
+  const eligible = await db
+    .selectFrom("user")
+    .select("id")
+    .where("id", "in", managerIds)
+    .where("banned", "=", false)
+    .execute();
+  if (eligible.length !== managerIds.length) {
+    return {
+      ok: false,
+      error: "One or more selected managers are invalid or banned",
+    };
+  }
+  return { ok: true, managerIds };
+}
+
 /** Distinct, sorted list of clients across all projects (for the client combobox). */
 export async function getUniqueClients(): Promise<string[]> {
   const projects = await db.selectFrom("project").select("metadata").execute();
@@ -187,12 +215,9 @@ export async function createProject(
   if (!input.client.trim()) {
     return { success: false, error: "Client is required" };
   }
-  if (input.managerIds.length === 0) {
-    return {
-      success: false,
-      error: "At least one project manager is required",
-    };
-  }
+  const managers = await validateManagerIds(input.managerIds);
+  if (!managers.ok) return { success: false, error: managers.error };
+  const { managerIds } = managers;
 
   const normalized = normalizeProjectInput(input);
   const now = new Date();
@@ -216,7 +241,7 @@ export async function createProject(
         })
         .execute();
 
-      const rows = input.managerIds.map((userId) => ({
+      const rows = managerIds.map((userId) => ({
         projectId: id,
         userId,
         createdAt: now,
@@ -246,12 +271,9 @@ export async function updateProject(
   if (!input.client.trim()) {
     return { success: false, error: "Client is required" };
   }
-  if (input.managerIds.length === 0) {
-    return {
-      success: false,
-      error: "At least one project manager is required",
-    };
-  }
+  const managers = await validateManagerIds(input.managerIds);
+  if (!managers.ok) return { success: false, error: managers.error };
+  const { managerIds } = managers;
 
   const normalized = normalizeProjectInput(input);
   const now = new Date();
@@ -278,22 +300,46 @@ export async function updateProject(
         .execute();
       const currentIds = current.map((row) => row.userId);
 
-      const toAdd = input.managerIds.filter((id) => !currentIds.includes(id));
-      const toRemove = currentIds.filter(
-        (id) => !input.managerIds.includes(id),
-      );
+      const toAdd = managerIds.filter((id) => !currentIds.includes(id));
+      const toRemove = currentIds.filter((id) => !managerIds.includes(id));
 
       if (toAdd.length > 0) {
-        await trx
-          .insertInto("project_manager")
-          .values(
-            toAdd.map((userId) => ({
-              projectId: input.projectId,
-              userId,
-              createdAt: now,
-            })),
-          )
+        // Split "to add" into rows that already exist as terminated (revive
+        // them, since the PK is (projectId, userId)) vs. genuinely new rows.
+        // An unconditional INSERT would violate the PK when a previously
+        // removed manager is re-added, making the project unsaveable.
+        const existing = await trx
+          .selectFrom("project_manager")
+          .select("userId")
+          .where("projectId", "=", input.projectId)
+          .where("userId", "in", toAdd)
           .execute();
+        const existingIds = new Set(existing.map((row) => row.userId));
+
+        const toRevive = toAdd.filter((id) => existingIds.has(id));
+        const toInsert = toAdd.filter((id) => !existingIds.has(id));
+
+        if (toRevive.length > 0) {
+          await trx
+            .updateTable("project_manager")
+            .set({ terminatedAt: null })
+            .where("projectId", "=", input.projectId)
+            .where("userId", "in", toRevive)
+            .execute();
+        }
+
+        if (toInsert.length > 0) {
+          await trx
+            .insertInto("project_manager")
+            .values(
+              toInsert.map((userId) => ({
+                projectId: input.projectId,
+                userId,
+                createdAt: now,
+              })),
+            )
+            .execute();
+        }
       }
 
       if (toRemove.length > 0) {
@@ -318,11 +364,14 @@ export async function setProjectArchiveStatus(
   archived: boolean,
 ): Promise<AdminMutationResult> {
   try {
-    await db
+    const result = await db
       .updateTable("project")
       .set({ archived, updatedAt: new Date() })
       .where("id", "=", projectId)
-      .execute();
+      .executeTakeFirst();
+    if (Number(result?.numUpdatedRows ?? 0) === 0) {
+      return { success: false, error: "Project not found" };
+    }
     return { success: true };
   } catch (error) {
     console.error("Failed to update project archive status:", error);

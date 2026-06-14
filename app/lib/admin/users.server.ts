@@ -1,3 +1,4 @@
+import { sql } from "kysely";
 import { db } from "~/lib/db/index.server";
 import { buildLikeFragment } from "./like";
 
@@ -53,8 +54,8 @@ export async function getUsersWithLastLogin(
     const fragment = buildLikeFragment(trimmed);
     query = query.where((eb) =>
       eb.or([
-        eb("user.name", "ilike", fragment),
-        eb("user.email", "ilike", fragment),
+        sql<boolean>`${sql.ref("user.name")} ilike ${fragment} escape '\\'`,
+        sql<boolean>`${sql.ref("user.email")} ilike ${fragment} escape '\\'`,
       ]),
     );
   }
@@ -73,7 +74,10 @@ export async function getUserCount(searchQuery?: string): Promise<number> {
   if (trimmed) {
     const fragment = buildLikeFragment(trimmed);
     query = query.where((eb) =>
-      eb.or([eb("name", "ilike", fragment), eb("email", "ilike", fragment)]),
+      eb.or([
+        sql<boolean>`${sql.ref("name")} ilike ${fragment} escape '\\'`,
+        sql<boolean>`${sql.ref("email")} ilike ${fragment} escape '\\'`,
+      ]),
     );
   }
 

@@ -1,7 +1,33 @@
 -- AlterTable
+-- Phased: add nullable, backfill unique slugs for any pre-existing rows, then
+-- enforce NOT NULL. Adding NOT NULL directly would fail on databases that
+-- already have `project` rows (e.g. a dev DB seeded before this migration).
 ALTER TABLE "project" ADD COLUMN     "archived" BOOLEAN NOT NULL DEFAULT false,
 ADD COLUMN     "metadata" JSONB,
-ADD COLUMN     "slug" TEXT NOT NULL;
+ADD COLUMN     "slug" TEXT;
+
+-- Backfill: slugify the project name and append the unique project id so the
+-- result is deterministic and guaranteed unique even when names collide or
+-- contain no alphanumeric characters.
+UPDATE "project"
+SET "slug" =
+  COALESCE(
+    NULLIF(
+      LOWER(
+        regexp_replace(
+          regexp_replace("name", '[^a-zA-Z0-9]+', '-', 'g'),
+          '^-+|-+$',
+          '',
+          'g'
+        )
+      ),
+      ''
+    ),
+    'project'
+  ) || '-' || "id"
+WHERE "slug" IS NULL;
+
+ALTER TABLE "project" ALTER COLUMN "slug" SET NOT NULL;
 
 -- AlterTable
 ALTER TABLE "session" ADD COLUMN     "impersonatedBy" TEXT;

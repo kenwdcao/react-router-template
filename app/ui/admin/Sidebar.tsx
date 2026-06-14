@@ -45,7 +45,11 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
             </Text>
           )}
           {group.items.map((item) => {
-            const isActive = location.pathname.startsWith(item.to);
+            // Match on path boundaries so /admin/users doesn't also highlight
+            // for a hypothetical /admin/users-archive route.
+            const isActive =
+              location.pathname === item.to ||
+              location.pathname.startsWith(`${item.to}/`);
 
             if (collapsed) {
               return (

@@ -9,7 +9,7 @@ import {
   unbanUser,
 } from "~/lib/admin/users.server";
 import { isAdminEmail, requireAdmin } from "~/lib/auth/index.server";
-import { formatDateTime } from "~/lib/utils";
+import { formatDateTime, parseIntegerParam } from "~/lib/utils";
 import { AdminErrorBoundary, AdminUsersView } from "~/ui/admin";
 import { useNotificationOnce } from "~/ui/hooks";
 import type { Route } from "./+types/users";
@@ -29,15 +29,12 @@ export function meta() {
 export async function loader({ request }: Route.LoaderArgs) {
   const currentUser = await requireAdmin(request);
   const url = new URL(request.url);
-  const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10));
+  const page = Math.max(1, parseIntegerParam(url.searchParams.get("page"), 1));
   const pageSize = Math.min(
     MAX_PAGE_SIZE,
     Math.max(
       1,
-      parseInt(
-        url.searchParams.get("pageSize") ?? String(DEFAULT_PAGE_SIZE),
-        10,
-      ),
+      parseIntegerParam(url.searchParams.get("pageSize"), DEFAULT_PAGE_SIZE),
     ),
   );
   const searchQuery = url.searchParams.get("search")?.trim() || undefined;
@@ -68,7 +65,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export async function action({ request }: Route.ActionArgs) {
-  await requireAdmin(request);
+  const currentUser = await requireAdmin(request);
   const formData = Object.fromEntries(await request.formData());
   const result = actionSchema.safeParse(formData);
   if (!result.success) {
@@ -80,6 +77,18 @@ export async function action({ request }: Route.ActionArgs) {
   }
 
   const { _intent, userId } = result.data;
+
+  // Defense in depth: the table hides the current admin's ban button, but a
+  // crafted POST must not be able to ban themselves (revoking their own
+  // sessions and locking themselves out until another admin intervenes).
+  if (_intent === "ban" && userId === currentUser.user.id) {
+    return {
+      success: false,
+      message: "You cannot ban your own admin account.",
+      notificationId: crypto.randomUUID(),
+    };
+  }
+
   const actionLabel = _intent === "ban" ? "banned" : "unbanned";
   const user = await getUserById(userId);
   const userName = user?.name ?? "Unknown User";

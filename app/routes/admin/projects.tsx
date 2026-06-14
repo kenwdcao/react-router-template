@@ -10,7 +10,12 @@ import {
   updateProject,
 } from "~/lib/admin/projects.server";
 import { requireAdmin } from "~/lib/auth/index.server";
-import { formatDate } from "~/lib/utils";
+import {
+  formatDate,
+  parseIntegerParam,
+  readFormString,
+  readFormStringArray,
+} from "~/lib/utils";
 import { AdminErrorBoundary, AdminProjectsPage } from "~/ui/admin";
 import type { Route } from "./+types/projects";
 
@@ -24,15 +29,12 @@ export function meta() {
 export async function loader({ request }: Route.LoaderArgs) {
   await requireAdmin(request);
   const url = new URL(request.url);
-  const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10));
+  const page = Math.max(1, parseIntegerParam(url.searchParams.get("page"), 1));
   const pageSize = Math.min(
     MAX_PAGE_SIZE,
     Math.max(
       1,
-      parseInt(
-        url.searchParams.get("pageSize") ?? String(DEFAULT_PAGE_SIZE),
-        10,
-      ),
+      parseIntegerParam(url.searchParams.get("pageSize"), DEFAULT_PAGE_SIZE),
     ),
   );
   const searchQuery = url.searchParams.get("search")?.trim() || undefined;
@@ -55,16 +57,6 @@ export async function loader({ request }: Route.LoaderArgs) {
     clients,
     availableManagers,
   };
-}
-
-function readFormString(formData: FormData, key: string): string {
-  return (formData.get(key) as string | null) ?? "";
-}
-
-function readFormStringArray(formData: FormData, key: string): string[] {
-  return formData
-    .getAll(key)
-    .filter((value): value is string => typeof value === "string");
 }
 
 export async function action({ request }: Route.ActionArgs) {

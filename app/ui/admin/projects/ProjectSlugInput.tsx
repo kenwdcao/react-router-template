@@ -22,6 +22,7 @@ export function ProjectSlugInput({
   const handleButtonClick = () => {
     if (isEditingSlug) {
       onSlugChange(expectedSlug);
+      setIsEditingSlug(false);
     } else {
       setIsEditingSlug(true);
     }
@@ -50,16 +51,15 @@ export function ProjectSlugInput({
           className="flex-1"
           disabled={!isEditingSlug}
         />
-        <Button variant="default" size="xs" onClick={handleButtonClick}>
-          {isEditingSlug ? (
-            <>
-              <RotateCcw size={14} /> Reset
-            </>
-          ) : (
-            <>
-              <Pencil size={14} /> Edit
-            </>
-          )}
+        <Button
+          variant="default"
+          size="xs"
+          onClick={handleButtonClick}
+          leftSection={
+            isEditingSlug ? <RotateCcw size={14} /> : <Pencil size={14} />
+          }
+        >
+          {isEditingSlug ? "Reset" : "Edit"}
         </Button>
       </Group>
       <Text size="xs" c="dimmed" mt={4}>
