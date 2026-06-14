@@ -26,7 +26,7 @@ import {
   parseChatOpenCookie,
   parseSidebarCollapsedCookie,
 } from "~/lib/utils";
-import { ThemeSelector } from "~/ui/components/common";
+import { ThemeSelector, TopNav } from "~/ui/components/common";
 import { Breadcrumbs, Sidebar } from "~/ui/demo/dashboard";
 import { ChatSidebarPanel } from "~/ui/demo/dashboard/chat";
 import type { Route } from "./+types/layout";
@@ -125,31 +125,13 @@ export default function DashboardLayout() {
             </UnstyledButton>
           </Group>
 
-          <Button
-            variant="subtle"
-            component={Link}
-            to="/demo/dashboard"
-            className="justify-self-center hidden sm:block"
-          >
-            Dashboard
-          </Button>
+          <TopNav isAdmin={isAdmin} />
 
           <Group
             gap="sm"
             className="min-w-0 justify-self-end"
             justify="flex-end"
           >
-            {isAdmin ? (
-              <Button
-                variant="subtle"
-                component={Link}
-                to="/admin"
-                size="compact-sm"
-                visibleFrom="sm"
-              >
-                Admin
-              </Button>
-            ) : null}
             <ActionIcon
               variant={chatOpenState ? "filled" : "light"}
               size="sm"

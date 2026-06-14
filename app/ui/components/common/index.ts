@@ -4,4 +4,5 @@ export { RouteProgress } from "./RouteProgress";
 export { TablePagination } from "./TablePagination";
 export type { TablePaginationProps } from "./TablePagination";
 export { ThemeSelector } from "./ThemeSelector";
+export { TopNav } from "./TopNav";
 export { YouBadge } from "./YouBadge";

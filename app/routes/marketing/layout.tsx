@@ -12,12 +12,12 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { LayoutDashboard, LogOut } from "lucide-react";
+import { LayoutDashboard, LogOut, ShieldCheck } from "lucide-react";
 import { Link, Outlet, useLoaderData, useNavigate } from "react-router";
 import { signOut } from "~/lib/auth";
-import { getSession } from "~/lib/auth/index.server";
+import { getSession, isAdminEmail } from "~/lib/auth/index.server";
 import { getAvatarInitial } from "~/lib/utils";
-import { ThemeSelector } from "~/ui/components/common";
+import { ThemeSelector, TopNav } from "~/ui/components/common";
 import type { Route } from "./+types/layout";
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -30,11 +30,13 @@ export async function loader({ request }: Route.LoaderArgs) {
           name: session.user.name,
         }
       : null,
+    // Only the boolean crosses to the client; the ADMIN_EMAILS list stays server-side.
+    isAdmin: session ? isAdminEmail(session.user.email) : false,
   };
 }
 
 export default function MarketingLayout() {
-  const { user } = useLoaderData<typeof loader>();
+  const { user, isAdmin } = useLoaderData<typeof loader>();
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure();
 
@@ -57,16 +59,7 @@ export default function MarketingLayout() {
             </UnstyledButton>
           </Group>
 
-          <Button
-            variant="subtle"
-            component={Link}
-            to="/demo/dashboard"
-            leftSection={<LayoutDashboard size={16} />}
-            visibleFrom="sm"
-            className="justify-self-center"
-          >
-            Dashboard
-          </Button>
+          <TopNav isAdmin={isAdmin} />
 
           <Group
             gap="sm"
@@ -97,6 +90,15 @@ export default function MarketingLayout() {
             leftSection={<LayoutDashboard size={18} />}
             onClick={closeDrawer}
           />
+          {isAdmin ? (
+            <NavLink
+              component={Link}
+              to="/admin"
+              label="Admin"
+              leftSection={<ShieldCheck size={18} />}
+              onClick={closeDrawer}
+            />
+          ) : null}
         </Stack>
       </Drawer>
     </AppShell>

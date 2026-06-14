@@ -1,4 +1,10 @@
 export {
+  ADMIN_SIDEBAR_COLLAPSE_COOKIE_NAME,
+  DEFAULT_ADMIN_SIDEBAR_COLLAPSED,
+  buildAdminSidebarCollapsedCookie,
+  parseAdminSidebarCollapsedCookie,
+} from "./admin-sidebar-collapse";
+export {
   CHAT_EXPANDED_COOKIE_NAME,
   CHAT_OPEN_COOKIE_NAME,
   DEFAULT_CHAT_EXPANDED,

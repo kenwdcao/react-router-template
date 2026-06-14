@@ -7,39 +7,33 @@ import {
   Container,
   Group,
   Indicator,
-  Tabs,
+  ScrollArea,
   Text,
   UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { FolderOpenDot, LogOut, Users } from "lucide-react";
-import {
-  Link,
-  Outlet,
-  useLoaderData,
-  useLocation,
-  useNavigate,
-} from "react-router";
+import { ChevronLeft, ChevronRight, LogOut } from "lucide-react";
+import { useState } from "react";
+import { Link, Outlet, useLoaderData, useNavigate } from "react-router";
 import { signOut } from "~/lib/auth";
 import { requireAdmin } from "~/lib/auth/index.server";
-import { getAvatarInitial } from "~/lib/utils";
-import { ThemeSelector } from "~/ui/components/common";
+import {
+  buildAdminSidebarCollapsedCookie,
+  getAvatarInitial,
+  parseAdminSidebarCollapsedCookie,
+} from "~/lib/utils";
+import { Sidebar } from "~/ui/admin";
+import { ThemeSelector, TopNav } from "~/ui/components/common";
 import type { Route } from "./+types/layout";
-
-const adminTabs = [
-  { value: "users", label: "Users", href: "/admin/users", icon: Users },
-  {
-    value: "projects",
-    label: "Projects",
-    href: "/admin/projects",
-    icon: FolderOpenDot,
-  },
-] as const;
+import classes from "./layout.module.css";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await requireAdmin(request);
   return {
     user: { email: session.user.email, name: session.user.name },
+    sidebarCollapsed: parseAdminSidebarCollapsedCookie(
+      request.headers.get("cookie"),
+    ),
   };
 }
 
@@ -48,20 +42,32 @@ export function meta() {
 }
 
 export default function AdminLayout() {
-  const { user } = useLoaderData<typeof loader>();
+  const { user, sidebarCollapsed } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
-  const location = useLocation();
   const [opened, { toggle }] = useDisclosure();
+  // Initial value comes from the loader (cookie-derived), so the server render
+  // and the first client render agree — no expand→collapse flash on refresh.
+  const [desktopCollapsed, setDesktopCollapsed] = useState(sidebarCollapsed);
 
-  const activeTab =
-    adminTabs.find(
-      (tab) =>
-        location.pathname === tab.href ||
-        location.pathname.startsWith(`${tab.href}/`),
-    )?.value ?? "users";
+  const handleToggleDesktopCollapsed = () => {
+    setDesktopCollapsed((prev) => {
+      const next = !prev;
+      document.cookie = buildAdminSidebarCollapsedCookie(next);
+      return next;
+    });
+  };
 
   return (
-    <AppShell header={{ height: 56 }} padding="md">
+    <AppShell
+      header={{ height: 56 }}
+      navbar={{
+        width: desktopCollapsed ? 56 : 260,
+        breakpoint: "sm",
+        collapsed: { mobile: !opened },
+      }}
+      padding="md"
+      transitionDuration={200}
+    >
       <AppShell.Header>
         <div className="grid h-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-4">
           <Group gap="sm" className="min-w-0 justify-self-start">
@@ -79,46 +85,13 @@ export default function AdminLayout() {
             </UnstyledButton>
           </Group>
 
-          <Group gap="sm" className="justify-self-center">
-            <Tabs
-              value={activeTab}
-              onChange={(value) => {
-                const nextTab = adminTabs.find((tab) => tab.value === value);
-                if (nextTab) void navigate(nextTab.href);
-              }}
-            >
-              <Tabs.List>
-                {adminTabs.map((tab) => {
-                  const Icon = tab.icon;
-                  return (
-                    <Tabs.Tab
-                      key={tab.value}
-                      value={tab.value}
-                      aria-label={tab.label}
-                    >
-                      <span className="mr-2 flex flex-row items-center justify-center gap-2">
-                        <Icon className="size-4" /> {tab.label}
-                      </span>
-                    </Tabs.Tab>
-                  );
-                })}
-              </Tabs.List>
-            </Tabs>
-          </Group>
+          <TopNav isAdmin />
 
           <Group
             gap="sm"
             className="min-w-0 justify-self-end"
             justify="flex-end"
           >
-            <Button
-              variant="subtle"
-              component={Link}
-              to="/demo/dashboard"
-              visibleFrom="sm"
-            >
-              Dashboard
-            </Button>
             <ThemeSelector />
             <Indicator
               processing
@@ -161,6 +134,35 @@ export default function AdminLayout() {
           </Group>
         </div>
       </AppShell.Header>
+      <AppShell.Navbar p={desktopCollapsed ? 8 : "md"}>
+        <ScrollArea>
+          <Sidebar collapsed={desktopCollapsed} />
+        </ScrollArea>
+        <ActionIcon
+          variant="default"
+          size="sm"
+          radius="xl"
+          className={classes.sidebarToggleButton}
+          aria-label={
+            desktopCollapsed
+              ? "Expand app navigation"
+              : "Collapse app navigation"
+          }
+          title={
+            desktopCollapsed
+              ? "Expand app navigation"
+              : "Collapse app navigation"
+          }
+          onClick={handleToggleDesktopCollapsed}
+          visibleFrom="sm"
+        >
+          {desktopCollapsed ? (
+            <ChevronRight size={14} />
+          ) : (
+            <ChevronLeft size={14} />
+          )}
+        </ActionIcon>
+      </AppShell.Navbar>
       <AppShell.Main>
         <Container size="xl" className="mx-auto w-full px-0">
           <div className="pt-4">
