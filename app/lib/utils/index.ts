@@ -1,5 +1,12 @@
 export { readFormString } from "./form-data";
 export {
+  DEFAULT_SIDEBAR_COLLAPSED,
+  SIDEBAR_COLLAPSE_COOKIE_NAME,
+  buildSidebarCollapsedCookie,
+  migrateSidebarCollapsedFromLocalStorage,
+  parseSidebarCollapsedCookie,
+} from "./sidebar-collapse";
+export {
   COLOR_SCHEME_COOKIE_NAME,
   COLOR_SCHEME_VALUES,
   DEFAULT_COLOR_SCHEME,
