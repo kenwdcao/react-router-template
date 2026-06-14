@@ -113,7 +113,7 @@ This template targets information-dense internal tools. Maximize display density
 ### CSS-module overrides and truncation
 
 - Shrink Mantine internals below their defaults with a CSS module where needed (for example menu items to `min-height: 28px; padding: 6px 8px;`, or filter `<th>` to 4px vertical padding).
-- Truncate text at risk of wrapping: `truncate="end"`, `wrap="nowrap"`, `lineClamp`, and `text-overflow: ellipsis` so fixed column widths hold.
+- Truncate text at risk of wrapping: `truncate="end"`, `textWrap="nowrap"`, `lineClamp`, and `text-overflow: ellipsis` so fixed column widths hold.
 - For dense scroll surfaces, use sticky headers (with a `top` offset that tucks under the app shell) and hide cosmetic scrollbars (`scrollbar-width: none`) where appropriate.
 
 ### Legibility and accessibility
