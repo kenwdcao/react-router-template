@@ -108,15 +108,26 @@ export function NavigationDemo() {
         </div>
 
         <Group>
-          <Anchor href="https://mantine.dev" target="_blank" size="sm">
+          <Anchor
+            href="https://mantine.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            size="sm"
+          >
             Mantine docs
           </Anchor>
-          <Anchor href="https://reactrouter.com" target="_blank" size="sm">
+          <Anchor
+            href="https://reactrouter.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            size="sm"
+          >
             React Router docs
           </Anchor>
           <Anchor
             href="https://github.com/kenwdcao/react-router-template"
             target="_blank"
+            rel="noopener noreferrer"
             size="sm"
           >
             Template repo

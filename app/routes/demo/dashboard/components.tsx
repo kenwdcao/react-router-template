@@ -21,7 +21,13 @@ export default function ComponentsRoute() {
         <Text c="dimmed">
           Mantine component gallery showcasing tables, inputs, data display,
           navigation, feedback, alerts, and overlays. Built with{" "}
-          <Anchor href="https://mantine.dev" target="_blank" inherit size="sm">
+          <Anchor
+            href="https://mantine.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            inherit
+            size="sm"
+          >
             Mantine v9
           </Anchor>
           .

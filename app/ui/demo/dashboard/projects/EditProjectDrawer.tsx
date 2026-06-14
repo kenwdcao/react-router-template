@@ -63,22 +63,12 @@ export function EditProjectDrawer({
     <Drawer
       opened={opened}
       onClose={onClose}
-      title="Edit project"
+      title={<Text fw={700}>Edit project</Text>}
       position="right"
     >
       <Form method="post" replace>
-        <input
-          type="hidden"
-          name="_intent"
-          value="update"
-          aria-label="Update project intent"
-        />
-        <input
-          type="hidden"
-          name="projectId"
-          value={project.id}
-          aria-label="Project id"
-        />
+        <input type="hidden" name="_intent" value="update" />
+        <input type="hidden" name="projectId" value={project.id} />
         <Stack gap="md">
           <TextInput
             name="name"
@@ -105,7 +95,6 @@ export function EditProjectDrawer({
           <Select
             name="status"
             label="Status"
-            aria-label="Project status"
             defaultValue={
               hasProjectError
                 ? (actionData?.values?.status ?? project.status)

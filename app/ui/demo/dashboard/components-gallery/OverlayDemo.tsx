@@ -73,7 +73,7 @@ export function OverlayDemo() {
       <Modal
         opened={modalOpened}
         onClose={modalHandlers.close}
-        title="Demo modal"
+        title={<Text fw={700}>Demo modal</Text>}
         closeButtonProps={{ "aria-label": "Close demo modal" }}
       >
         <Text>
@@ -85,7 +85,7 @@ export function OverlayDemo() {
       <Drawer
         opened={drawerOpened}
         onClose={drawerHandlers.close}
-        title="Demo drawer"
+        title={<Text fw={700}>Demo drawer</Text>}
         closeButtonProps={{ "aria-label": "Close demo drawer" }}
       >
         <Stack gap="md">

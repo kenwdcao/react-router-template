@@ -35,7 +35,7 @@ function getStatusBadgeColor(status: string): string {
 
 function StatusBadge({ status }: { status: string }) {
   return (
-    <Badge variant="light" color={getStatusBadgeColor(status)}>
+    <Badge size="xs" variant="light" color={getStatusBadgeColor(status)}>
       {status}
     </Badge>
   );
@@ -52,9 +52,11 @@ function ProjectRow({
     <Table.Tr>
       <Table.Td>
         <Stack gap={0}>
-          <Text fw={500}>{project.name}</Text>
+          <Text size="xs" fw={500}>
+            {project.name}
+          </Text>
           {project.description ? (
-            <Text c="dimmed" size="sm" lineClamp={1}>
+            <Text size="xs" c="dimmed" lineClamp={1}>
               {project.description}
             </Text>
           ) : null}
@@ -64,18 +66,19 @@ function ProjectRow({
         <StatusBadge status={project.status} />
       </Table.Td>
       <Table.Td>
-        <Text size="sm" c="dimmed">
+        <Text size="xs" c="dimmed">
           {formatDate(project.updatedAt)}
         </Text>
       </Table.Td>
       <Table.Td>
         <Group gap="xs" wrap="nowrap">
           <ActionIcon
+            size="compact-xs"
             variant="subtle"
             onClick={() => onEdit(project)}
             aria-label={`Edit ${project.name}`}
           >
-            <Pencil size={16} />
+            <Pencil size={12} />
           </ActionIcon>
           <DeleteProjectButton project={project} />
         </Group>
@@ -112,11 +115,12 @@ function ProjectCard({
         </Stack>
         <Group gap="xs" wrap="nowrap">
           <ActionIcon
+            size="compact-xs"
             variant="subtle"
             onClick={() => onEdit(project)}
             aria-label={`Edit ${project.name}`}
           >
-            <Pencil size={16} />
+            <Pencil size={12} />
           </ActionIcon>
           <DeleteProjectButton project={project} />
         </Group>
@@ -139,7 +143,12 @@ export function ProjectsTable({ projects, onEdit }: ProjectsTableProps) {
   return (
     <>
       <Box visibleFrom="sm">
-        <Table striped highlightOnHover>
+        <Table
+          striped
+          highlightOnHover
+          horizontalSpacing="xs"
+          verticalSpacing={4}
+        >
           <Table.Thead>
             <Table.Tr>
               <Table.Th>Name</Table.Th>

@@ -44,14 +44,13 @@ export function CreateProjectModal({
   }, [opened, isBusy, actionData, onClose]);
 
   return (
-    <Modal opened={opened} onClose={onClose} title="Create project">
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title={<Text fw={700}>Create project</Text>}
+    >
       <Form method="post" replace>
-        <input
-          type="hidden"
-          name="_intent"
-          value="create"
-          aria-label="Create project intent"
-        />
+        <input type="hidden" name="_intent" value="create" />
         <Stack gap="md">
           <TextInput
             name="name"

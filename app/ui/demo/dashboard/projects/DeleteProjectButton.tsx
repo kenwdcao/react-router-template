@@ -13,7 +13,7 @@ export function DeleteProjectButton({ project }: DeleteProjectButtonProps) {
 
   const handleDelete = () => {
     modals.openConfirmModal({
-      title: "Delete project?",
+      title: <Text fw={700}>Delete project?</Text>,
       children: (
         <Stack gap="xs">
           <Text size="sm">
@@ -38,12 +38,13 @@ export function DeleteProjectButton({ project }: DeleteProjectButtonProps) {
 
   return (
     <ActionIcon
+      size="compact-xs"
       variant="subtle"
       color="red"
       onClick={handleDelete}
       aria-label={`Delete ${project.name}`}
     >
-      <Trash2 size={16} />
+      <Trash2 size={12} />
     </ActionIcon>
   );
 }

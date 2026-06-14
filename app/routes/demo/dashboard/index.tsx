@@ -2,7 +2,10 @@ import { Stack, Text, Title } from "@mantine/core";
 import { useLoaderData } from "react-router";
 import { isAiConfigured } from "~/lib/ai/provider.server";
 import { requireAuth } from "~/lib/auth/index.server";
-import { listProjectsForUser } from "~/lib/demo/projects.server";
+import {
+  countProjectsForUser,
+  listRecentProjectsForUser,
+} from "~/lib/demo/projects.server";
 import { env } from "~/lib/env.server";
 import { QuickActions, RecentProjects, StatCards } from "~/ui/demo/dashboard";
 
@@ -12,11 +15,14 @@ export function meta() {
 
 export async function loader({ request }: { request: Request }) {
   const session = await requireAuth(request);
-  const projects = await listProjectsForUser(session.user.id);
+  const [projectCount, recentProjects] = await Promise.all([
+    countProjectsForUser(session.user.id),
+    listRecentProjectsForUser(session.user.id, 5),
+  ]);
 
   return {
-    projectCount: projects.length,
-    recentProjects: projects.slice(0, 5),
+    projectCount,
+    recentProjects,
     environment: env.BETTER_AUTH_URL.includes("localhost")
       ? "Development"
       : "Production",

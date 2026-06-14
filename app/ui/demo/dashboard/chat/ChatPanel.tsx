@@ -13,6 +13,7 @@ import {
   Textarea,
 } from "@mantine/core";
 import { AlertCircle, RefreshCw, Send, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { readFormString } from "~/lib/utils";
 import { ChatEmptyState } from "./ChatEmptyState";
 import { ChatFaqMenu } from "./ChatFaqMenu";
@@ -88,12 +89,18 @@ export function ChatPanel() {
       id: "dashboard-chat",
     });
   const isLoading = status === "streaming";
+  // Track error visibility locally so dismissing an error Alert only hides it
+  // instead of wiping the whole conversation (the previous onClose cleared all
+  // messages). Reset whenever a new prompt is sent or a response is retried so
+  // a fresh error can surface again.
+  const [errorDismissed, setErrorDismissed] = useState(false);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const prompt = readFormString(formData, "prompt");
     if (!prompt) return;
+    setErrorDismissed(false);
     void sendMessage({ text: prompt });
     (e.target as HTMLFormElement).reset();
   }
@@ -103,8 +110,16 @@ export function ChatPanel() {
   }
 
   function handleSendPrompt(prompt: string) {
+    setErrorDismissed(false);
     void sendMessage({ text: prompt });
   }
+
+  function handleRetry() {
+    setErrorDismissed(false);
+    void regenerate();
+  }
+
+  const showError = Boolean(error) && !errorDismissed;
 
   if (messages.length === 0) {
     return (
@@ -113,12 +128,12 @@ export function ChatPanel() {
           <ChatEmptyState />
         </Center>
         <Stack gap="xs">
-          {error ? (
+          {showError ? (
             <Alert
               color="red"
               icon={<AlertCircle size={16} />}
               withCloseButton
-              onClose={() => setMessages([])}
+              onClose={() => setErrorDismissed(true)}
             >
               <Group gap="xs" align="center">
                 <Text size="sm">Failed to get a response.</Text>
@@ -126,7 +141,7 @@ export function ChatPanel() {
                   size="xs"
                   variant="light"
                   leftSection={<RefreshCw size={12} />}
-                  onClick={() => regenerate()}
+                  onClick={handleRetry}
                 >
                   Retry
                 </Button>
@@ -161,12 +176,12 @@ export function ChatPanel() {
               <Loader size="xs" />
             </Group>
           ) : null}
-          {error ? (
+          {showError ? (
             <Alert
               color="red"
               icon={<AlertCircle size={16} />}
               withCloseButton
-              onClose={() => setMessages([])}
+              onClose={() => setErrorDismissed(true)}
             >
               <Group gap="xs" align="center">
                 <Text size="sm">Failed to get a response.</Text>
@@ -174,7 +189,7 @@ export function ChatPanel() {
                   size="xs"
                   variant="light"
                   leftSection={<RefreshCw size={12} />}
-                  onClick={() => regenerate()}
+                  onClick={handleRetry}
                 >
                   Retry
                 </Button>

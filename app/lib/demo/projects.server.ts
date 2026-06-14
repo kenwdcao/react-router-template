@@ -24,6 +24,26 @@ export async function listProjectsForUser(ownerId: string) {
     .execute();
 }
 
+export async function listRecentProjectsForUser(ownerId: string, limit = 5) {
+  return db
+    .selectFrom("project")
+    .select(projectSelection)
+    .where("ownerId", "=", ownerId)
+    .orderBy("updatedAt", "desc")
+    .limit(limit)
+    .execute();
+}
+
+export async function countProjectsForUser(ownerId: string) {
+  const result = await db
+    .selectFrom("project")
+    .where("ownerId", "=", ownerId)
+    .select((qb) => qb.fn.countAll().as("count"))
+    .executeTakeFirst();
+
+  return Number(result?.count ?? 0);
+}
+
 export async function createProject({
   ownerId,
   name,
