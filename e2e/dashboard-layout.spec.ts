@@ -27,9 +27,6 @@ test.describe("Dashboard Layout", () => {
       navigation.getByRole("link", { name: "Components", exact: true }),
     ).toBeVisible();
     await expect(
-      navigation.getByRole("link", { name: "AI Chat", exact: true }),
-    ).toBeVisible();
-    await expect(
       navigation.getByRole("link", { name: "Settings", exact: true }),
     ).toBeVisible();
   });

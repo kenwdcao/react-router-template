@@ -36,7 +36,6 @@ describe("Sidebar", () => {
     expect(screen.getAllByText("Projects").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Activity").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Components").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("AI Chat").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Settings").length).toBeGreaterThan(0);
   });
 });

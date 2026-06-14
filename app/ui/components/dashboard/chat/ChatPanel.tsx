@@ -15,6 +15,7 @@ import {
 import { AlertCircle, RefreshCw, Send, Trash2 } from "lucide-react";
 import { readFormString } from "~/lib/utils";
 import { ChatEmptyState } from "./ChatEmptyState";
+import { ChatFaqMenu } from "./ChatFaqMenu";
 import { MessageBubble } from "./MessageBubble";
 
 function getMessageText(parts: Array<{ type: string; text?: string }>): string {
@@ -109,7 +110,7 @@ export function ChatPanel() {
     return (
       <Stack gap="md" className="min-h-0 flex-1">
         <Center flex={1}>
-          <ChatEmptyState onSendPrompt={handleSendPrompt} />
+          <ChatEmptyState />
         </Center>
         <Stack gap="xs">
           {error ? (
@@ -132,6 +133,7 @@ export function ChatPanel() {
               </Group>
             </Alert>
           ) : null}
+          <ChatFaqMenu onSendPrompt={handleSendPrompt} disabled={isLoading} />
           <ChatInputBar
             isLoading={isLoading}
             onClear={handleClear}
@@ -182,6 +184,7 @@ export function ChatPanel() {
         </Stack>
       </ScrollArea>
 
+      <ChatFaqMenu onSendPrompt={handleSendPrompt} disabled={isLoading} />
       <ChatInputBar
         isLoading={isLoading}
         onClear={handleClear}

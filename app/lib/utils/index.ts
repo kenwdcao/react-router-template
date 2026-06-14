@@ -1,3 +1,13 @@
+export {
+  CHAT_EXPANDED_COOKIE_NAME,
+  CHAT_OPEN_COOKIE_NAME,
+  DEFAULT_CHAT_EXPANDED,
+  DEFAULT_CHAT_OPEN,
+  buildChatExpandedCookie,
+  buildChatOpenCookie,
+  parseChatExpandedCookie,
+  parseChatOpenCookie,
+} from "./chat-sidebar";
 export { readFormString } from "./form-data";
 export {
   DEFAULT_SIDEBAR_COLLAPSED,

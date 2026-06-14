@@ -36,7 +36,7 @@ export function getProjectKnowledge(): string {
 - /dashboard/activity — Activity timeline
 - /dashboard/settings — Profile and preferences
 - /dashboard/components — Mantine component gallery
-- /dashboard/chat — AI chatbot demo (requires AI env config)
+- AI chat sidebar — Toggle from the dashboard header Bot button (requires AI env config)
 - /api/chat — Streaming chat endpoint (AI SDK)
 - /api/auth/* — better-auth handlers
 

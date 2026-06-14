@@ -7,7 +7,6 @@ const routeLabels: Record<string, string> = {
   "/dashboard/activity": "Activity",
   "/dashboard/settings": "Settings",
   "/dashboard/components": "Components",
-  "/dashboard/chat": "AI Chat",
 };
 
 interface BreadcrumbSegment {
