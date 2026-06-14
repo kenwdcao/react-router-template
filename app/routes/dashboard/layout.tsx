@@ -16,13 +16,16 @@ import { useEffect, useState } from "react";
 import { Link, Outlet, useLoaderData, useNavigate } from "react-router";
 import { signOut } from "~/lib/auth";
 import { requireAuth } from "~/lib/auth/index.server";
-import { getAvatarInitial } from "~/lib/utils";
+import {
+  buildSidebarCollapsedCookie,
+  getAvatarInitial,
+  migrateSidebarCollapsedFromLocalStorage,
+  parseSidebarCollapsedCookie,
+} from "~/lib/utils";
 import { ThemeSelector } from "~/ui/components/common";
 import { Breadcrumbs, Sidebar } from "~/ui/components/dashboard";
 import type { Route } from "./+types/layout";
 import classes from "./layout.module.css";
-
-const SIDEBAR_COLLAPSED_KEY = "dashboard-sidebar-collapsed";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await requireAuth(request);
@@ -32,21 +35,33 @@ export async function loader({ request }: Route.LoaderArgs) {
       email: session.user.email,
       name: session.user.name,
     },
+    sidebarCollapsed: parseSidebarCollapsedCookie(
+      request.headers.get("cookie"),
+    ),
   };
 }
 
 export default function DashboardLayout() {
-  const { user } = useLoaderData<typeof loader>();
+  const { user, sidebarCollapsed } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const [opened, { toggle }] = useDisclosure();
-  const [desktopCollapsed, setDesktopCollapsed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "true";
-  });
+  // Initial value comes from the loader (cookie-derived), so the server render
+  // and the first client render agree — no expand→collapse flash on refresh.
+  const [desktopCollapsed, setDesktopCollapsed] = useState(sidebarCollapsed);
 
+  // Seed the cookie from the legacy localStorage preference once, without
+  // touching render state. No-op once the cookie is authoritative.
   useEffect(() => {
-    localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(desktopCollapsed));
-  }, [desktopCollapsed]);
+    migrateSidebarCollapsedFromLocalStorage();
+  }, []);
+
+  const handleToggleDesktopCollapsed = () => {
+    setDesktopCollapsed((prev) => {
+      const next = !prev;
+      document.cookie = buildSidebarCollapsedCookie(next);
+      return next;
+    });
+  };
 
   return (
     <AppShell
@@ -151,7 +166,7 @@ export default function DashboardLayout() {
               ? "Expand app navigation"
               : "Collapse app navigation"
           }
-          onClick={() => setDesktopCollapsed((v) => !v)}
+          onClick={handleToggleDesktopCollapsed}
           visibleFrom="sm"
         >
           {desktopCollapsed ? (

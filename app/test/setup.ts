@@ -21,3 +21,19 @@ Object.defineProperty(window, "matchMedia", {
     dispatchEvent: () => false,
   }),
 });
+
+// jsdom lacks ResizeObserver, which Mantine's ScrollArea/AppShell rely on.
+// Provide a noop so component tests that render the dashboard shell work.
+class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+Object.defineProperty(window, "ResizeObserver", {
+  writable: true,
+  value: ResizeObserver,
+});
+Object.defineProperty(globalThis, "ResizeObserver", {
+  writable: true,
+  value: ResizeObserver,
+});
