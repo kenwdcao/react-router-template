@@ -1,5 +1,5 @@
 import { Combobox, InputBase, useCombobox } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ClientComboboxProps {
   clients: string[];
@@ -22,6 +22,14 @@ export function ClientCombobox({
   });
 
   const [search, setSearch] = useState("");
+
+  // Keep the visible input in sync with the controlled value when it changes
+  // externally (e.g., form reset, modal reopen with different project). Local
+  // typing still updates search immediately via onChange below.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSearch(value);
+  }, [value]);
 
   const filteredClients = clients.filter((client) =>
     client.toLowerCase().includes(search.toLowerCase()),

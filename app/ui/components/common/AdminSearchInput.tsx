@@ -17,6 +17,7 @@ export function AdminSearchInput({ placeholder }: AdminSearchInputProps) {
 
   return (
     <TextInput
+      size="xs"
       placeholder={placeholder}
       aria-label="Search"
       value={value}
@@ -33,7 +34,7 @@ export function AdminSearchInput({ placeholder }: AdminSearchInputProps) {
           { replace: true },
         );
       }}
-      leftSection={<Search size={16} />}
+      leftSection={<Search size={14} />}
       className="w-full sm:w-72"
     />
   );
