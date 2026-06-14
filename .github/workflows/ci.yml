@@ -13,6 +13,8 @@ on:
 
 jobs:
   checks:
+    # 暂时禁用 CI 以节省额度。恢复时删除下面这行 if: false 即可。
+    if: false
     runs-on: ubuntu-latest
     services:
       postgres:
