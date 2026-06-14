@@ -19,6 +19,7 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 - Create a working branch before making code changes. Do not work directly on `main`.
 - Keep `main` history linear. Prefer fast-forward or squash-style integration and avoid local merge commits on `main`.
 - Use concise conventional commit messages such as `feat:`, `fix:`, `docs:`, `refactor:`, and `test:` when creating commits.
+- All commit messages, code comments, and PR/MR titles and descriptions must be written in English.
 - Run `pnpm format` or the narrower Prettier command before committing when formatting may have changed.
 
 ## Template Initialization
@@ -73,6 +74,7 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 ## Styling
 
 - Mantine owns interactive components, forms, overlays, notifications, AppShell, and theme-aware component props.
+- Reference Mantine's documentation index at https://mantine.dev/llms.txt when working with Mantine components, props, and theming.
 - Tailwind owns page-level composition, simple layout utilities, spacing between plain elements, and one-off responsive grid/flex structure.
 - Avoid inline styles. ESLint enforces this with local rules.
 - Use `lucide-react` for icons. Do not add another icon library.
