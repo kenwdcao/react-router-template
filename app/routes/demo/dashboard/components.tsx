@@ -7,7 +7,7 @@ import {
   NavigationDemo,
   OverlayDemo,
   TableDemo,
-} from "~/ui/components/dashboard/components-gallery";
+} from "~/ui/demo/dashboard/components-gallery";
 
 export function meta() {
   return [{ title: "Components" }];

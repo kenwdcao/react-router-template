@@ -3,7 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 test.describe("Dashboard Components Gallery", () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
-    await page.goto("/dashboard/components");
+    await page.goto("/demo/dashboard/components");
   });
 
   test("shows notification when clicking show button", async ({ page }) => {
@@ -43,5 +43,6 @@ async function login(page: Page) {
   await page.locator('input[name="password"]').fill("password-12345");
   await page.locator('input[name="confirmPassword"]').fill("password-12345");
   await page.getByRole("button", { name: "Create account" }).click();
-  await expect(page).toHaveURL(/\/dashboard$/, { timeout: 20_000 });
+  // Registration now redirects to the homepage (default post-auth destination).
+  await expect(page).toHaveURL(/\/$/, { timeout: 20_000 });
 }

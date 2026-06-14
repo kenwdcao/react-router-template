@@ -8,7 +8,7 @@ This directory contains shared presentational components, theme helpers, and UI-
 - Prefer small components with explicit props over large components that infer behavior from global state.
 - Reuse existing theme helpers from `app/ui/theme` and shared utilities from `app/lib` before adding new styling abstractions.
 - Components that are specific to one route can stay near that route. Move them into `app/ui` only when they are reusable or part of the shared design system.
-- Reusable UI belongs under `app/ui/components/`, grouped by route area or feature (for example `auth/`, `dashboard/`, and `common/`).
+- Reusable UI belongs under `app/ui/components/`, grouped by route area or feature (for example `auth/`, `home/`, and `common/`). Template demo UI lives under `app/ui/demo/` (for example `demo/dashboard/`) so it can be deleted as a unit.
 - `common/` is for truly cross-feature components only. Feature areas must share UI through `common/`, not by importing each other's feature components.
 
 ## Barrel Exports

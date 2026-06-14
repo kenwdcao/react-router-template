@@ -12,7 +12,7 @@ export function EmptyActivity() {
         <Text c="dimmed" size="lg">
           No activity yet
         </Text>
-        <Button component={Link} to="/dashboard/projects" variant="light">
+        <Button component={Link} to="/demo/dashboard/projects" variant="light">
           View projects
         </Button>
       </Stack>

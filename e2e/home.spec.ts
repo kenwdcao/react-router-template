@@ -10,7 +10,7 @@ test("renders the marketing home page and auth links", async ({ page }) => {
 
   await expect(header.getByRole("link", { name: "Dashboard" })).toHaveAttribute(
     "href",
-    "/dashboard",
+    "/demo/dashboard",
   );
   await expect(header.getByRole("link", { name: "Sign in" })).toHaveAttribute(
     "href",

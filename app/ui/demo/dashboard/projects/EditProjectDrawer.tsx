@@ -10,9 +10,9 @@ import {
 } from "@mantine/core";
 import { useEffect, useRef } from "react";
 import { Form, useActionData, useNavigation } from "react-router";
-import { PROJECT_STATUS } from "~/lib/projects";
-import type { ProjectsActionData } from "~/lib/projects-page.server";
-import type { ProjectSummary } from "~/lib/projects.server";
+import { PROJECT_STATUS } from "~/lib/demo/projects";
+import type { ProjectsActionData } from "~/lib/demo/projects-page.server";
+import type { ProjectSummary } from "~/lib/demo/projects.server";
 
 interface EditProjectDrawerProps {
   opened: boolean;

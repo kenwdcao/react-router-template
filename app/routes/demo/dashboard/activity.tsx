@@ -1,12 +1,12 @@
 import { Stack, Text, Title } from "@mantine/core";
 import { useLoaderData } from "react-router";
 import { requireAuth } from "~/lib/auth/index.server";
-import { listProjectsForUser } from "~/lib/projects.server";
+import { listProjectsForUser } from "~/lib/demo/projects.server";
 import {
   ActivityTimeline,
   EmptyActivity,
   type ActivityEvent,
-} from "~/ui/components/dashboard/activity";
+} from "~/ui/demo/dashboard/activity";
 import type { Route } from "./+types/activity";
 
 export function meta() {

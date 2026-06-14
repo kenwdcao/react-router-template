@@ -2,7 +2,7 @@ import { ActionIcon, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { Trash2 } from "lucide-react";
 import { useSubmit } from "react-router";
-import type { ProjectSummary } from "~/lib/projects.server";
+import type { ProjectSummary } from "~/lib/demo/projects.server";
 
 interface DeleteProjectButtonProps {
   project: ProjectSummary;

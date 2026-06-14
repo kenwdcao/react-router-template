@@ -35,7 +35,7 @@ vi.mock("~/ui/components/common", () => ({
   ThemeSelector: () => <div data-testid="theme-selector" />,
 }));
 
-vi.mock("~/ui/components/dashboard", () => ({
+vi.mock("~/ui/demo/dashboard", () => ({
   Breadcrumbs: () => <nav data-testid="breadcrumbs" />,
   Sidebar: ({ collapsed }: { collapsed?: boolean }) => (
     <div data-testid="sidebar" data-collapsed={collapsed ? "true" : "false"} />
@@ -44,7 +44,7 @@ vi.mock("~/ui/components/dashboard", () => ({
 
 // Stub the chat panel so the layout test stays focused on aside toggle/state
 // behavior and never boots the real chat hook.
-vi.mock("~/ui/components/dashboard/chat", () => ({
+vi.mock("~/ui/demo/dashboard/chat", () => ({
   ChatSidebarPanel: () => <div data-testid="chat-sidebar-panel" />,
 }));
 
@@ -56,7 +56,7 @@ function renderWithMantine(ui: React.ReactElement) {
 }
 
 function buildLoaderArgs(cookieHeader?: string): Route.LoaderArgs {
-  const request = new Request("https://example.com/dashboard", {
+  const request = new Request("https://example.com/demo/dashboard", {
     headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
   });
   return {
@@ -64,7 +64,7 @@ function buildLoaderArgs(cookieHeader?: string): Route.LoaderArgs {
     params: {},
     context: {},
     url: new URL(request.url),
-    pattern: "/dashboard",
+    pattern: "/demo/dashboard",
   };
 }
 

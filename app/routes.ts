@@ -16,12 +16,12 @@ export default [
     route("login", "routes/auth/login.tsx"),
     route("register", "routes/auth/register.tsx"),
   ]),
-  route("dashboard", "routes/dashboard/layout.tsx", [
-    index("routes/dashboard/index.tsx"),
-    route("projects", "routes/dashboard/projects.tsx"),
-    route("activity", "routes/dashboard/activity.tsx"),
-    route("settings", "routes/dashboard/settings.tsx"),
-    route("components", "routes/dashboard/components.tsx"),
+  route("demo/dashboard", "routes/demo/dashboard/layout.tsx", [
+    index("routes/demo/dashboard/index.tsx"),
+    route("projects", "routes/demo/dashboard/projects.tsx"),
+    route("activity", "routes/demo/dashboard/activity.tsx"),
+    route("settings", "routes/demo/dashboard/settings.tsx"),
+    route("components", "routes/demo/dashboard/components.tsx"),
   ]),
   route("api/chat", "routes/api.chat.ts"),
 ] satisfies RouteConfig;

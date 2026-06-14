@@ -3,18 +3,18 @@ import { requireAuth } from "~/lib/auth/index.server";
 import {
   handleProjectsAction,
   loadProjectsPage,
-} from "~/lib/projects-page.server";
+} from "~/lib/demo/projects-page.server";
 import {
   createProject,
   listProjectsForUser,
   updateProject,
-} from "~/lib/projects.server";
+} from "~/lib/demo/projects.server";
 
 vi.mock("~/lib/auth/require-auth.server", () => ({
   requireAuth: vi.fn(),
 }));
 
-vi.mock("~/lib/projects.server", () => ({
+vi.mock("~/lib/demo/projects.server", () => ({
   PROJECT_STATUS: { active: "active", archived: "archived" },
   createProject: vi.fn(),
   deleteProject: vi.fn(),
@@ -49,7 +49,9 @@ describe("loadProjectsPage", () => {
     ]);
 
     await expect(
-      loadProjectsPage(new Request("http://localhost:5173/dashboard/projects")),
+      loadProjectsPage(
+        new Request("http://localhost:5173/demo/dashboard/projects"),
+      ),
     ).resolves.toMatchObject({
       projects: [{ id: "project-id", name: "Project" }],
       user: { id: "user-id" },
@@ -70,7 +72,7 @@ describe("handleProjectsAction", () => {
   it("returns validation errors for missing project names", async () => {
     const body = new URLSearchParams({ _intent: "create", name: "" });
     const response = await handleProjectsAction(
-      new Request("http://localhost:5173/dashboard/projects", {
+      new Request("http://localhost:5173/demo/dashboard/projects", {
         method: "POST",
         body,
       }),
@@ -96,7 +98,7 @@ describe("handleProjectsAction", () => {
       status: "archivd",
     });
     const response = await handleProjectsAction(
-      new Request("http://localhost:5173/dashboard/projects", {
+      new Request("http://localhost:5173/demo/dashboard/projects", {
         method: "POST",
         body,
       }),

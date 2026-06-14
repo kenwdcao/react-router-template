@@ -35,7 +35,7 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
    g. AI demo/assistant decision and provider requirements
 3. Replace placeholders: swap `react-router-template`, `React Router Template`, welcome copy, and the sample `project` domain with project-specific names and workflows.
 4. Decide whether to delete the sample CRUD, rename it into a real domain entity, or keep it as a documented example.
-5. Decide whether `/dashboard/chat` and `/api/chat` should be deleted, kept as an optional AI demo, or rewritten into a product-owned assistant.
+5. Decide whether the `/demo/dashboard` chat sidebar and `/api/chat` should be deleted, kept as an optional AI demo, or rewritten into a product-owned assistant.
 6. Rewrite root `AGENTS.md` with actual product context, domain vocabulary, route/auth/data/AI rules, and validation expectations.
 7. Update `README.md`, `.env.example`, route titles, navigation labels, tests, AI env docs, and sample data for consistency.
 
@@ -43,7 +43,7 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 
 - Keep route modules in `app/routes` thin. Route modules should wire React Router `loader`, `action`, `meta`, default component, and `ErrorBoundary` exports to focused functions in `app/lib`.
 - Global providers, document shell, fonts, and root-level pending UI belong in `app/root.tsx`.
-- Section-level UI belongs in nested layout routes such as `marketing`, `auth`, and `dashboard`.
+- Section-level UI belongs in nested layout routes such as `marketing`, `auth`, and `demo/dashboard`.
 - Put shared domain logic in `app/lib`; keep presentational React components in `app/ui`.
 - Use the `~/*` path alias for imports from `app`.
 
@@ -91,7 +91,7 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 
 ## AI Demo And Assistant
 
-- AI configuration is optional. `/dashboard/chat` and `/api/chat` are demo surfaces and should stay in setup/disabled mode unless `AI_BASE_URL`, `AI_API_KEY`, and `AI_MODEL_ID` are present in the server environment.
+- AI configuration is optional. The `/demo/dashboard` chat sidebar and `/api/chat` are demo surfaces and should stay in setup/disabled mode unless `AI_BASE_URL`, `AI_API_KEY`, and `AI_MODEL_ID` are present in the server environment.
 - Keep AI provider creation, model selection, and API keys in server-only modules and environment variables. Do not expose `AI_API_KEY`, provider tokens, or secret-bearing prompts through loader data, action responses, client components, or logs.
 - During real-project initialization, explicitly decide whether to delete the AI demo, keep it as documented example code, or rewrite it into a product-owned assistant; align `README.md`, `AGENTS.md`, `.env.example`, routes/navigation, and tests with that decision.
 

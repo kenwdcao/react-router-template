@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { useEffect, useRef } from "react";
 import { Form, useActionData, useNavigation } from "react-router";
-import type { ProjectsActionData } from "~/lib/projects-page.server";
+import type { ProjectsActionData } from "~/lib/demo/projects-page.server";
 
 interface CreateProjectModalProps {
   opened: boolean;

@@ -16,9 +16,10 @@ export default defineConfig({
   optimizeDeps: {
     // Pre-declare the AI SDK packages so Vite optimizes them (and their shared
     // ESM chunks) up front. Without this, Vite discovers them on demand when
-    // `/dashboard/chat` is first hit and triggers a mid-session re-optimization
-    // + reload, which leaves the browser referencing chunk hashes that no
-    // longer exist in `.vite/deps` ("The file does not exist ... .vite/deps").
+    // the `/demo/dashboard` chat sidebar is first opened and triggers a
+    // mid-session re-optimization + reload, which leaves the browser referencing
+    // chunk hashes that no longer exist in `.vite/deps` ("The file does not
+    // exist ... .vite/deps").
     include: ["ai", "@ai-sdk/openai-compatible", "@ai-sdk/react"],
   },
 });

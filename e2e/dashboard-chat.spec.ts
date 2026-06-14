@@ -6,7 +6,7 @@ test.describe("Dashboard Chat", () => {
   });
 
   test("opens the AI chat sidebar from the header button", async ({ page }) => {
-    await page.goto("/dashboard");
+    await page.goto("/demo/dashboard");
 
     // The header button reveals the aside on first paint.
     await page.getByRole("button", { name: "Open AI chat" }).first().click();
@@ -24,7 +24,7 @@ test.describe("Dashboard Chat", () => {
   test("persists the chat sidebar open state across reloads", async ({
     page,
   }) => {
-    await page.goto("/dashboard");
+    await page.goto("/demo/dashboard");
     await page.getByRole("button", { name: "Open AI chat" }).first().click();
 
     // After reload the aside must still be open (cookie-fed SSR, no flash).
@@ -35,7 +35,7 @@ test.describe("Dashboard Chat", () => {
   });
 
   test("expands and shrinks the chat sidebar", async ({ page }) => {
-    await page.goto("/dashboard");
+    await page.goto("/demo/dashboard");
     await page.getByRole("button", { name: "Open AI chat" }).first().click();
 
     const expand = page.getByRole("button", { name: "Expand panel" });
@@ -47,7 +47,7 @@ test.describe("Dashboard Chat", () => {
   });
 
   test("lists preset questions in the FAQ dropdown", async ({ page }) => {
-    await page.goto("/dashboard");
+    await page.goto("/demo/dashboard");
     await page.getByRole("button", { name: "Open AI chat" }).first().click();
 
     await page.getByRole("button", { name: "FAQ" }).click();
@@ -155,5 +155,6 @@ async function login(page: Page) {
   await page.locator('input[name="password"]').fill("password-12345");
   await page.locator('input[name="confirmPassword"]').fill("password-12345");
   await page.getByRole("button", { name: "Create account" }).click();
-  await expect(page).toHaveURL(/\/dashboard$/, { timeout: 20_000 });
+  // Registration now redirects to the homepage (default post-auth destination).
+  await expect(page).toHaveURL(/\/$/, { timeout: 20_000 });
 }

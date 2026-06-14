@@ -25,20 +25,26 @@ const groups: NavGroup[] = [
   {
     label: "Workspace",
     items: [
-      { to: "/dashboard", label: "Overview", icon: Home, end: true },
-      { to: "/dashboard/projects", label: "Projects", icon: FolderKanban },
-      { to: "/dashboard/activity", label: "Activity", icon: Activity },
+      { to: "/demo/dashboard", label: "Overview", icon: Home, end: true },
+      { to: "/demo/dashboard/projects", label: "Projects", icon: FolderKanban },
+      { to: "/demo/dashboard/activity", label: "Activity", icon: Activity },
     ],
   },
   {
     label: "Demos",
     items: [
-      { to: "/dashboard/components", label: "Components", icon: Component },
+      {
+        to: "/demo/dashboard/components",
+        label: "Components",
+        icon: Component,
+      },
     ],
   },
   {
     label: "Account",
-    items: [{ to: "/dashboard/settings", label: "Settings", icon: Settings }],
+    items: [
+      { to: "/demo/dashboard/settings", label: "Settings", icon: Settings },
+    ],
   },
 ];
 

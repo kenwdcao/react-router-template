@@ -2,13 +2,9 @@ import { Stack, Text, Title } from "@mantine/core";
 import { useLoaderData } from "react-router";
 import { isAiConfigured } from "~/lib/ai/provider.server";
 import { requireAuth } from "~/lib/auth/index.server";
+import { listProjectsForUser } from "~/lib/demo/projects.server";
 import { env } from "~/lib/env.server";
-import { listProjectsForUser } from "~/lib/projects.server";
-import {
-  QuickActions,
-  RecentProjects,
-  StatCards,
-} from "~/ui/components/dashboard";
+import { QuickActions, RecentProjects, StatCards } from "~/ui/demo/dashboard";
 
 export function meta() {
   return [{ title: "Dashboard" }];

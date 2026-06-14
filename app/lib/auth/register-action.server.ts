@@ -61,7 +61,7 @@ export async function handleRegisterAction(request: Request) {
       returnHeaders: true,
     });
 
-    return redirect("/dashboard", {
+    return redirect("/", {
       headers: result.headers ?? undefined,
     });
   } catch (error) {

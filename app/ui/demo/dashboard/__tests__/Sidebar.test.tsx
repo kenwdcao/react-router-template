@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { Sidebar } from "../Sidebar";
 
 vi.mock("react-router", () => ({
-  useLocation: () => ({ pathname: "/dashboard" }),
+  useLocation: () => ({ pathname: "/demo/dashboard" }),
   Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
     <a
       href={to}

@@ -9,14 +9,14 @@ import {
 import {
   handleProjectsAction,
   loadProjectsPage,
-} from "~/lib/projects-page.server";
-import type { ProjectSummary } from "~/lib/projects.server";
+} from "~/lib/demo/projects-page.server";
+import type { ProjectSummary } from "~/lib/demo/projects.server";
 import {
   CreateProjectModal,
   EditProjectDrawer,
   ProjectsTable,
   ProjectsToolbar,
-} from "~/ui/components/dashboard/projects";
+} from "~/ui/demo/dashboard/projects";
 import type { Route } from "./+types/projects";
 
 export function meta() {

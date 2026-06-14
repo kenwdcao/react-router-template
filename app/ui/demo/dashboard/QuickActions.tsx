@@ -11,13 +11,13 @@ interface QuickAction {
 
 const actions: QuickAction[] = [
   {
-    to: "/dashboard/projects",
+    to: "/demo/dashboard/projects",
     icon: FolderKanban,
     title: "Manage projects",
     description: "Create, edit, and organize your projects.",
   },
   {
-    to: "/dashboard/components",
+    to: "/demo/dashboard/components",
     icon: Component,
     title: "Component library",
     description: "Browse available UI components and patterns.",

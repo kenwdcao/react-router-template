@@ -10,7 +10,7 @@ import {
   Text,
 } from "@mantine/core";
 import { Pencil } from "lucide-react";
-import type { ProjectSummary } from "~/lib/projects.server";
+import type { ProjectSummary } from "~/lib/demo/projects.server";
 import { DeleteProjectButton } from "./DeleteProjectButton";
 
 interface ProjectsTableProps {

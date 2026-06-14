@@ -10,7 +10,7 @@ import {
   requireAuth,
 } from "~/lib/auth/index.server";
 import { readFormString } from "~/lib/utils";
-import { SettingsTabs } from "~/ui/components/dashboard/settings";
+import { SettingsTabs } from "~/ui/demo/dashboard/settings";
 import type { Route } from "./+types/settings";
 
 export function meta() {
@@ -62,7 +62,7 @@ export async function action({
         headers: request.headers,
         body: { name },
       });
-      return redirect("/dashboard/settings?updated=profile");
+      return redirect("/demo/dashboard/settings?updated=profile");
     } catch (error) {
       return {
         errors: {

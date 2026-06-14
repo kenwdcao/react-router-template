@@ -83,7 +83,7 @@ export function RecentProjects({ projects }: RecentProjectsProps) {
       {projects.length >= 5 ? (
         <UnstyledButton
           component={Link}
-          to="/dashboard/projects"
+          to="/demo/dashboard/projects"
           aria-label="View all projects"
         >
           <Text size="sm" c="blue" fw={500}>

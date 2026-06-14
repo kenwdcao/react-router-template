@@ -1,13 +1,13 @@
 import { data, redirect } from "react-router";
 import { z } from "zod";
 import { requireAuth } from "~/lib/auth/index.server";
-import { PROJECT_STATUS } from "~/lib/projects";
+import { PROJECT_STATUS } from "~/lib/demo/projects";
 import {
   createProject,
   deleteProject,
   listProjectsForUser,
   updateProject,
-} from "~/lib/projects.server";
+} from "~/lib/demo/projects.server";
 import { readFormString } from "~/lib/utils";
 
 export type ProjectsActionData = {
@@ -104,7 +104,7 @@ async function handleCreateProject(formData: FormData, ownerId: string) {
   const { name, description } = parsed.data;
   await createProject({ ownerId, name, description });
 
-  return redirect("/dashboard/projects");
+  return redirect("/demo/dashboard/projects");
 }
 
 async function handleUpdateProject(formData: FormData, ownerId: string) {
@@ -144,7 +144,7 @@ async function handleUpdateProject(formData: FormData, ownerId: string) {
     throw new Response("Project not found", { status: 404 });
   }
 
-  return redirect("/dashboard/projects");
+  return redirect("/demo/dashboard/projects");
 }
 
 async function handleDeleteProject(formData: FormData, ownerId: string) {
@@ -163,7 +163,7 @@ async function handleDeleteProject(formData: FormData, ownerId: string) {
     throw new Response("Project not found", { status: 404 });
   }
 
-  return redirect("/dashboard/projects");
+  return redirect("/demo/dashboard/projects");
 }
 
 function readProjectFormValues(formData: FormData) {

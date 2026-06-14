@@ -13,7 +13,7 @@ function Wrapper({ children }: { children: React.ReactNode }) {
 }
 
 describe("Hero", () => {
-  it("renders CTA links to /dashboard and /register", () => {
+  it("renders CTA links to /demo/dashboard and /register", () => {
     render(<Hero />, { wrapper: Wrapper });
     // visibleFrom + hiddenFrom both render in JSDOM (no CSS media queries)
     const dashboardLinks = screen.getAllByRole("link", {
@@ -21,7 +21,7 @@ describe("Hero", () => {
     });
     // Desktop set has aria-hidden, so only the mobile set is in the a11y tree
     expect(dashboardLinks).toHaveLength(1);
-    expect(dashboardLinks[0]).toHaveAttribute("href", "/dashboard");
+    expect(dashboardLinks[0]).toHaveAttribute("href", "/demo/dashboard");
 
     const startedLinks = screen.getAllByRole("link", {
       name: /Get Started/i,
@@ -59,6 +59,6 @@ describe("FinalCTA", () => {
       name: /View dashboard demo/i,
     });
     expect(dashboardLinks).toHaveLength(1);
-    expect(dashboardLinks[0]).toHaveAttribute("href", "/dashboard");
+    expect(dashboardLinks[0]).toHaveAttribute("href", "/demo/dashboard");
   });
 });

@@ -51,7 +51,7 @@ export default function Register() {
       errorRoute: "/register",
       onError: setMicrosoftError,
       onSubmittingChange: setMicrosoftLoading,
-      redirectTo: "/dashboard",
+      redirectTo: "/",
     });
   }
 

@@ -30,12 +30,12 @@ export function getProjectKnowledge(): string {
 
 ## Routes
 - / — Marketing homepage (public)
-- /login, /register — Auth pages (anonymous-only, redirect to /dashboard after login)
-- /dashboard — Auth-gated layout with AppShell (sidebar + header)
-- /dashboard/projects — Full CRUD demo (Kysely queries, React Router actions/loaders)
-- /dashboard/activity — Activity timeline
-- /dashboard/settings — Profile and preferences
-- /dashboard/components — Mantine component gallery
+- /login, /register — Auth pages (anonymous-only, redirect to / after login)
+- /demo/dashboard — Auth-gated layout with AppShell (sidebar + header)
+- /demo/dashboard/projects — Full CRUD demo (Kysely queries, React Router actions/loaders)
+- /demo/dashboard/activity — Activity timeline
+- /demo/dashboard/settings — Profile and preferences
+- /demo/dashboard/components — Mantine component gallery
 - AI chat sidebar — Toggle from the dashboard header Bot button (requires AI env config)
 - /api/chat — Streaming chat endpoint (AI SDK)
 - /api/auth/* — better-auth handlers
@@ -53,8 +53,9 @@ export function getProjectKnowledge(): string {
 
 ## File Layout
 - app/routes/ — Route modules (each exports loader/action/meta/component)
-- app/lib/ — Domain logic (auth, db, projects, env, utils, ai)
-- app/ui/components/ — Shared presentational components (common/, dashboard/, home/)
+- app/lib/ — Domain logic (auth, db, env, utils, ai); app/lib/demo/ holds template demo logic (projects)
+- app/ui/components/ — Shared presentational components (common/, home/, auth/)
+- app/ui/demo/ — Template demo components (dashboard/)
 - app/ui/theme/ — Mantine theme helpers
 - app/test/ — Vitest setup
 - e2e/ — Playwright specs

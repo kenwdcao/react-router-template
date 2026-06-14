@@ -2,11 +2,11 @@ import { Breadcrumbs as MantineBreadcrumbs, Text } from "@mantine/core";
 import { Link, useLocation } from "react-router";
 
 const routeLabels: Record<string, string> = {
-  "/dashboard": "Dashboard",
-  "/dashboard/projects": "Projects",
-  "/dashboard/activity": "Activity",
-  "/dashboard/settings": "Settings",
-  "/dashboard/components": "Components",
+  "/demo/dashboard": "Dashboard",
+  "/demo/dashboard/projects": "Projects",
+  "/demo/dashboard/activity": "Activity",
+  "/demo/dashboard/settings": "Settings",
+  "/demo/dashboard/components": "Components",
 };
 
 interface BreadcrumbSegment {

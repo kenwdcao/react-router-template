@@ -15,8 +15,8 @@ import { Link } from "react-router";
 
 const breadcrumbItems = [
   { title: "Home", to: "/" },
-  { title: "Dashboard", to: "/dashboard" },
-  { title: "Components", to: "/dashboard/components" },
+  { title: "Dashboard", to: "/demo/dashboard" },
+  { title: "Components", to: "/demo/dashboard/components" },
 ];
 
 export function NavigationDemo() {

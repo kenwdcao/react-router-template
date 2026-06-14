@@ -27,8 +27,8 @@ import {
   parseSidebarCollapsedCookie,
 } from "~/lib/utils";
 import { ThemeSelector } from "~/ui/components/common";
-import { Breadcrumbs, Sidebar } from "~/ui/components/dashboard";
-import { ChatSidebarPanel } from "~/ui/components/dashboard/chat";
+import { Breadcrumbs, Sidebar } from "~/ui/demo/dashboard";
+import { ChatSidebarPanel } from "~/ui/demo/dashboard/chat";
 import type { Route } from "./+types/layout";
 import classes from "./layout.module.css";
 
@@ -126,7 +126,7 @@ export default function DashboardLayout() {
           <Button
             variant="subtle"
             component={Link}
-            to="/dashboard"
+            to="/demo/dashboard"
             className="justify-self-center hidden sm:block"
           >
             Dashboard

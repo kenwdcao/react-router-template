@@ -25,7 +25,7 @@ export function NotFoundPage() {
           </Button>
           <Button
             component={Link}
-            to="/dashboard"
+            to="/demo/dashboard"
             variant="light"
             leftSection={<LayoutDashboard size={16} />}
           >
