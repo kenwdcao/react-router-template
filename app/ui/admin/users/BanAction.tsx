@@ -1,6 +1,6 @@
 import { Button, Group, Popover, Stack, Text } from "@mantine/core";
-import { useState } from "react";
-import { Form } from "react-router";
+import { useEffect, useState } from "react";
+import { useFetcher } from "react-router";
 import { UserLockButton } from "./UserLockButton";
 
 interface BanActionProps {
@@ -9,7 +9,18 @@ interface BanActionProps {
 
 export function BanAction({ user }: BanActionProps) {
   const [opened, setOpened] = useState(false);
+  const fetcher = useFetcher<{ success: boolean }>();
   const isBanning = !user.banned;
+  const submitting = fetcher.state !== "idle";
+
+  // Close the popover only after a successful submission; keep it open during
+  // submission so the inline loading state is visible (per AGENTS.md overlay rules).
+  useEffect(() => {
+    if (fetcher.data?.success && fetcher.state === "idle") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setOpened(false);
+    }
+  }, [fetcher.data, fetcher.state]);
 
   return (
     <Popover
@@ -40,13 +51,14 @@ export function BanAction({ user }: BanActionProps) {
               ? "This user will no longer be able to log in."
               : "This user will be able to log in again."}
           </Text>
-          <Form method="POST">
+          <fetcher.Form method="POST">
             <Group justify="flex-end" gap="xs">
               <Button
                 variant="default"
                 size="xs"
                 type="button"
                 onClick={() => setOpened(false)}
+                disabled={submitting}
               >
                 Cancel
               </Button>
@@ -61,12 +73,12 @@ export function BanAction({ user }: BanActionProps) {
                 variant="outline"
                 color={isBanning ? "red" : "green"}
                 size="xs"
-                onClick={() => setOpened(false)}
+                loading={submitting}
               >
                 {isBanning ? "Ban" : "Unban"}
               </Button>
             </Group>
-          </Form>
+          </fetcher.Form>
         </Stack>
       </Popover.Dropdown>
     </Popover>

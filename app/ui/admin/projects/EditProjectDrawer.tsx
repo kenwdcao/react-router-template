@@ -6,6 +6,7 @@ import {
   Stack,
   Text,
   TextInput,
+  Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { Pencil } from "lucide-react";
@@ -42,6 +43,7 @@ export function EditProjectDrawer({
       name: project?.name ?? "",
       slug: project?.slug ?? "",
       client: project?.metadata.client ?? "",
+      description: project?.description ?? "",
       managerIds: (project?.managers.map((m) => m.id) ?? []).sort(),
     }),
     [project],
@@ -52,6 +54,7 @@ export function EditProjectDrawer({
       name: "",
       slug: "",
       client: "",
+      description: "",
       managerIds: [] as string[],
     },
     validateInputOnChange: true,
@@ -86,6 +89,7 @@ export function EditProjectDrawer({
       initial.name !== current.name ||
       initial.slug !== current.slug ||
       initial.client !== current.client ||
+      initial.description !== current.description ||
       JSON.stringify(initial.managerIds) !==
         JSON.stringify([...current.managerIds].sort())
     );
@@ -152,6 +156,22 @@ export function EditProjectDrawer({
               onChange={(val) => form.setFieldValue("client", val)}
             />
 
+            <Textarea
+              label="Project Description"
+              placeholder="Enter project description (optional)"
+              value={form.values.description}
+              onChange={(e) =>
+                form.setFieldValue("description", e.currentTarget.value)
+              }
+              minRows={6}
+              maxRows={12}
+            />
+            <input
+              type="hidden"
+              name="description"
+              value={form.values.description}
+            />
+
             <ProjectManagerSelect
               availableManagers={availableManagers}
               selectedIds={form.values.managerIds}
@@ -173,6 +193,7 @@ export function EditProjectDrawer({
                 type="submit"
                 leftSection={<Pencil size={16} />}
                 className="w-36!"
+                loading={fetcher.state !== "idle"}
                 disabled={!isDirty}
               >
                 Save Changes

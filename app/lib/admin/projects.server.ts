@@ -225,6 +225,12 @@ export async function createProject(
 export async function updateProject(
   input: UpdateProjectInput,
 ): Promise<AdminMutationResult> {
+  if (!input.name.trim()) {
+    return { success: false, error: "Project name is required" };
+  }
+  if (!input.client.trim()) {
+    return { success: false, error: "Client is required" };
+  }
   if (input.managerIds.length === 0) {
     return {
       success: false,

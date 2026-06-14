@@ -1,4 +1,5 @@
 import { Group, NumberInput, Pagination, Select, Text } from "@mantine/core";
+import styles from "./TablePagination.module.css";
 
 export interface TablePaginationProps {
   /** Current page number (1-based) */
@@ -50,12 +51,9 @@ export function TablePagination({
           value={String(pageSize)}
           onChange={(value) => value && onPageSizeChange(value)}
           data={pageSizeOptions}
-          styles={{
-            input: { width: 70 },
-            option: {
-              flexDirection: "row-reverse",
-              justifyContent: "flex-end",
-            },
+          classNames={{
+            input: styles.pageSizeInput,
+            option: styles.pageSizeOption,
           }}
           aria-label="Items per page"
         />
@@ -90,9 +88,7 @@ export function TablePagination({
                 onPageChange(value);
               }
             }}
-            styles={{
-              input: { width: 56, textAlign: "center" },
-            }}
+            classNames={{ input: styles.gotoInput }}
             aria-label="Go to page"
           />
           <Text size="sm" c="dimmed">

@@ -1,4 +1,4 @@
-import { Alert, Button, Group, Modal, Stack } from "@mantine/core";
+import { Alert, Button, Group, Modal, Stack, Text } from "@mantine/core";
 import { AlertTriangle } from "lucide-react";
 
 interface UnsavedChangesModalProps {
@@ -21,6 +21,7 @@ export function UnsavedChangesModal({
       centered
       size="sm"
       withCloseButton={false}
+      title={<Text fw={700}>Unsaved Changes</Text>}
     >
       <Stack gap="md">
         <Alert
@@ -34,7 +35,11 @@ export function UnsavedChangesModal({
           <Button variant="default" onClick={onClose}>
             Keep Editing
           </Button>
-          <Button color="red" onClick={onConfirm}>
+          <Button
+            color="red"
+            leftSection={<AlertTriangle size={16} />}
+            onClick={onConfirm}
+          >
             Discard Changes
           </Button>
         </Group>

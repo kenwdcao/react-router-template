@@ -35,7 +35,7 @@ export function ProjectsTable({
   const renderManagers = (managers: ProjectWithManagers["managers"]) => {
     if (managers.length === 0) {
       return (
-        <Text c="dimmed" size="sm">
+        <Text c="dimmed" size="xs">
           -
         </Text>
       );
@@ -73,8 +73,8 @@ export function ProjectsTable({
         striped
         highlightOnHover
         withTableBorder
-        horizontalSpacing="md"
-        verticalSpacing="sm"
+        horizontalSpacing="xs"
+        verticalSpacing={4}
       >
         <Table.Thead>
           <Table.Tr>
@@ -95,7 +95,7 @@ export function ProjectsTable({
               <Table.Td>
                 <Group gap="xs" className="text-nowrap">
                   <Folder size={18} />
-                  <Text fz="sm">{project.name}</Text>
+                  <Text size="xs">{project.name}</Text>
                   {project.archived ? (
                     <Badge size="xs" variant="light" color="gray">
                       Archived
@@ -104,21 +104,21 @@ export function ProjectsTable({
                 </Group>
               </Table.Td>
               <Table.Td className="hidden md:table-cell max-w-64">
-                <Text lineClamp={1} size="sm" c="dimmed">
+                <Text lineClamp={1} size="xs" c="dimmed">
                   {project.description || "-"}
                 </Text>
               </Table.Td>
               <Table.Td className="hidden sm:table-cell">
-                <Text size="sm">{getClientDisplay(project)}</Text>
+                <Text size="xs">{getClientDisplay(project)}</Text>
               </Table.Td>
               <Table.Td className="hidden lg:table-cell">
-                <Text size="sm">{getPhaseDisplay(project)}</Text>
+                <Text size="xs">{getPhaseDisplay(project)}</Text>
               </Table.Td>
               <Table.Td className="hidden sm:table-cell">
                 {renderManagers(project.managers)}
               </Table.Td>
               <Table.Td className="hidden lg:table-cell">
-                <Text size="sm">{formatDate(project.createdAt)}</Text>
+                <Text size="xs">{formatDate(project.createdAt)}</Text>
               </Table.Td>
               <Table.Td>
                 <Group gap="xs">
@@ -128,6 +128,7 @@ export function ProjectsTable({
                   />
                   <ProjectArchiveButton
                     projectId={project.id}
+                    projectName={project.name}
                     archived={project.archived}
                   />
                 </Group>
@@ -137,7 +138,7 @@ export function ProjectsTable({
           {projects.length === 0 && (
             <Table.Tr>
               <Table.Td colSpan={7}>
-                <Text c="dimmed" ta="center" py="lg">
+                <Text size="xs" c="dimmed" ta="center" py="lg">
                   No projects found.
                 </Text>
               </Table.Td>

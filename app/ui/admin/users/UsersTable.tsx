@@ -33,8 +33,8 @@ export function UsersTable({
       striped
       highlightOnHover
       withTableBorder
-      horizontalSpacing="md"
-      verticalSpacing="sm"
+      horizontalSpacing="xs"
+      verticalSpacing={4}
     >
       <Table.Thead>
         <Table.Tr>
@@ -65,6 +65,7 @@ export function UsersTable({
             <Table.Td>{user.email}</Table.Td>
             <Table.Td>
               <Badge
+                size="xs"
                 variant="light"
                 color={user.displayRole === "admin" ? "red" : "gray"}
               >
@@ -72,7 +73,11 @@ export function UsersTable({
               </Badge>
             </Table.Td>
             <Table.Td>
-              <Badge variant="light" color={user.banned ? "red" : "green"}>
+              <Badge
+                size="xs"
+                variant="light"
+                color={user.banned ? "red" : "green"}
+              >
                 {user.banned ? "Banned" : "Active"}
               </Badge>
             </Table.Td>
@@ -97,7 +102,7 @@ export function UsersTable({
         {users.length === 0 && (
           <Table.Tr>
             <Table.Td colSpan={8}>
-              <Text c="dimmed" ta="center" py="lg">
+              <Text size="xs" c="dimmed" ta="center" py="lg">
                 No users found.
               </Text>
             </Table.Td>

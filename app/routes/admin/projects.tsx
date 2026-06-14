@@ -94,6 +94,7 @@ export async function action({ request }: Route.ActionArgs) {
     const name = readFormString(formData, "name");
     const slug = readFormString(formData, "slug");
     const client = readFormString(formData, "client");
+    const description = readFormString(formData, "description");
     const managerIds = readFormStringArray(formData, "managerIds");
 
     const result = await updateProject({
@@ -101,6 +102,7 @@ export async function action({ request }: Route.ActionArgs) {
       name,
       slug,
       client,
+      description,
       managerIds,
     });
     if (!result.success) {

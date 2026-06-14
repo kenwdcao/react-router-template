@@ -9,10 +9,11 @@ export function ViewProjectButton() {
         component={Link}
         to="/demo/dashboard/projects"
         variant="light"
+        size="compact-xs"
         aria-label="View projects"
         color="teal"
       >
-        <Eye size={16} />
+        <Eye size={12} />
       </ActionIcon>
     </Tooltip>
   );

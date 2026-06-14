@@ -44,6 +44,7 @@ export function ProjectSlugInput({
           /project/
         </Text>
         <Input
+          aria-label="Project URL slug"
           value={slug}
           onChange={(e) => onSlugChange(e.currentTarget.value)}
           className="flex-1"

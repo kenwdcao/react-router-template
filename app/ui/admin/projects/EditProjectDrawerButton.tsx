@@ -13,10 +13,11 @@ export function EditProjectDrawerButton({
       <ActionIcon
         variant="light"
         color="blue"
+        size="compact-xs"
         aria-label="Edit project"
         onClick={onClick}
       >
-        <Pencil size={16} />
+        <Pencil size={12} />
       </ActionIcon>
     </Tooltip>
   );
