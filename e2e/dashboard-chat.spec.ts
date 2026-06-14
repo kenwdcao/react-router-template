@@ -50,9 +50,7 @@ test.describe("Dashboard Chat", () => {
     await page.goto("/dashboard");
     await page.getByRole("button", { name: "Open AI chat" }).first().click();
 
-    await page
-      .getByRole("button", { name: "Frequently asked questions" })
-      .click();
+    await page.getByRole("button", { name: "FAQ" }).click();
 
     await expect(
       page.getByRole("menuitem", { name: "How do I add a new route?" }),

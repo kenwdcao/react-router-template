@@ -28,7 +28,6 @@ export function ChatFaqMenu({ onSendPrompt, disabled }: ChatFaqMenuProps) {
           leftSection={<ListChecks size={15} />}
           rightSection={<ChevronDown size={14} />}
           disabled={disabled}
-          aria-label="Frequently asked questions"
         >
           FAQ
         </Button>
