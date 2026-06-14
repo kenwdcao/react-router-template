@@ -56,6 +56,15 @@ export async function createProject({
 }) {
   const now = new Date();
   const id = randomUUID();
+
+  // name must contain at least one alphanumeric character; otherwise slugify
+  // returns "" and the slug would be malformed (e.g. "-abc12345").
+  if (!/[a-zA-Z0-9]/.test(name)) {
+    throw new Error(
+      "Project name must contain at least one alphanumeric character",
+    );
+  }
+
   // Slug must be unique; suffix with a short slice of the id to avoid collisions
   // when two owners create projects with the same name.
   const slug = `${slugify(name)}-${id.slice(0, 8)}`;

@@ -32,12 +32,22 @@ const projectStatusSchema = z.enum(
   },
 );
 
+/** At least one alphanumeric character so slugify produces a non-empty slug. */
+const alphanumericRegex = /[a-zA-Z0-9]/;
+
 const projectFieldsSchema = z.object({
   description: z
     .string()
     .trim()
     .transform((value) => (value.length > 0 ? value : null)),
-  name: z.string().trim().min(1, "Project name is required"),
+  name: z
+    .string()
+    .trim()
+    .min(1, "Project name is required")
+    .regex(
+      alphanumericRegex,
+      "Project name must contain at least one letter or number",
+    ),
 });
 
 const projectUpdateSchema = projectFieldsSchema.extend({
