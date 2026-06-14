@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import {
   redirect,
   useActionData,
@@ -80,12 +81,19 @@ export default function SettingsRoute() {
   const actionData = useActionData<typeof action>();
   const [, setSearchParams] = useSearchParams();
 
+  // Stable reference so ProfileTab's auto-dismiss effect doesn't re-run on
+  // every render (the previous inline closure changed identity each render,
+  // repeatedly setting and clearing the timer).
+  const handleDismissSuccess = useCallback(() => {
+    setSearchParams({}, { replace: true });
+  }, [setSearchParams]);
+
   return (
     <SettingsTabs
       user={loaderData.user}
       actionData={actionData}
       success={loaderData.success}
-      onDismissSuccess={() => setSearchParams({}, { replace: true })}
+      onDismissSuccess={handleDismissSuccess}
     />
   );
 }

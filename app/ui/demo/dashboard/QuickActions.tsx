@@ -28,12 +28,7 @@ export function QuickActions() {
   return (
     <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
       {actions.map((action) => (
-        <UnstyledButton
-          key={action.to}
-          component={Link}
-          to={action.to}
-          aria-label={action.title}
-        >
+        <UnstyledButton key={action.to} component={Link} to={action.to}>
           <Paper withBorder p="lg" radius="md">
             <Stack gap="xs">
               <action.icon size={24} />
