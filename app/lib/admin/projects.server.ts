@@ -13,6 +13,9 @@ import {
   type UpdateProjectInput,
 } from "./types";
 
+/** At least one ASCII alphanumeric character so slugify produces a non-empty slug. */
+const alphanumericRegex = /[a-zA-Z0-9]/;
+
 /** Distinct, sorted list of clients across all projects (for the client combobox). */
 export async function getUniqueClients(): Promise<string[]> {
   const projects = await db.selectFrom("project").select("metadata").execute();
@@ -175,6 +178,12 @@ export async function createProject(
   if (!input.name.trim()) {
     return { success: false, error: "Project name is required" };
   }
+  if (!alphanumericRegex.test(input.name)) {
+    return {
+      success: false,
+      error: "Project name must contain at least one letter or number",
+    };
+  }
   if (!input.client.trim()) {
     return { success: false, error: "Client is required" };
   }
@@ -227,6 +236,12 @@ export async function updateProject(
 ): Promise<AdminMutationResult> {
   if (!input.name.trim()) {
     return { success: false, error: "Project name is required" };
+  }
+  if (!alphanumericRegex.test(input.name)) {
+    return {
+      success: false,
+      error: "Project name must contain at least one letter or number",
+    };
   }
   if (!input.client.trim()) {
     return { success: false, error: "Client is required" };
