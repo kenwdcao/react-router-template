@@ -33,9 +33,9 @@ The application runs at `http://localhost:5173`. The seed creates
 projects. Override the seed account with `SEED_USER_EMAIL`, `SEED_USER_NAME`,
 and `SEED_USER_PASSWORD` when needed.
 
-The AI chat demo is optional. `/dashboard/chat` stays in setup mode until
-`AI_BASE_URL`, `AI_API_KEY`, and `AI_MODEL_ID` are all present in the server
-environment; do not expose provider credentials to client code.
+The AI chat demo is optional. The `/demo/dashboard` chat sidebar stays in setup
+mode until `AI_BASE_URL`, `AI_API_KEY`, and `AI_MODEL_ID` are all present in the
+server environment; do not expose provider credentials to client code.
 
 Playwright uses a separate `app_test` database by default so browser tests do
 not mutate development data. Create it once, apply migrations against it, then
@@ -67,12 +67,12 @@ The initialization pass should cover:
 
 ## Included Patterns
 
-- `app/routes.ts` demonstrates layout routes for marketing, auth, and protected dashboard sections.
+- `app/routes.ts` demonstrates layout routes for marketing, auth, and protected demo sections.
 - `app/routes/health.ts` provides a lightweight health-check resource route.
 - `app/lib/auth/require-auth.server.ts` provides `requireAuth`, `requireAnonymous`, and safe redirect handling.
 - `app/routes/auth/login.tsx` and `app/routes/auth/register.tsx` use React Router actions for form submission.
-- `app/routes/dashboard/projects.tsx` shows a protected loader, action mutations, route-level errors, and Kysely-backed CRUD.
-- `app/routes/dashboard/chat.tsx`, `app/routes/api.chat.ts`, and `app/lib/ai/**` show an optional AI SDK chat demo backed by server-only OpenAI-compatible env config.
+- `app/routes/demo/dashboard/projects.tsx` shows a protected loader, action mutations, route-level errors, and Kysely-backed CRUD.
+- `app/routes/api.chat.ts` and `app/lib/ai/**` back the optional AI SDK chat sidebar rendered inside the `/demo/dashboard` layout; they use server-only OpenAI-compatible env config.
 - `app/lib/env.server.ts` validates required server environment variables with Zod before DB or auth setup.
 - `prisma/seed.ts` creates an idempotent better-auth demo account and sample owner-scoped projects.
 - `.github/workflows/ci.yml` runs migrations, generated types, format check, lint, typecheck, unit tests, build, and Playwright.
@@ -83,9 +83,9 @@ The template keeps global providers in `app/root.tsx` and puts section UI in nes
 
 - Marketing layout: public pages with a compact header.
 - Auth layout: sign-in and registration pages without the app header.
-- Dashboard layout: authenticated pages with sidebar navigation and a route guard.
+- Dashboard layout (`/demo/dashboard`): authenticated demo pages with sidebar navigation and a route guard.
 
-Add new protected pages under the `dashboard` route so the layout loader guards the section. Still call `requireAuth(request)` in actions or loaders that access user-owned data.
+The `/demo/dashboard` tree is a self-contained sample — routes in `app/routes/demo/dashboard/`, UI in `app/ui/demo/dashboard/`, and demo logic in `app/lib/demo/`. It can be deleted as a unit when adapting the template to a real product. Still call `requireAuth(request)` in actions or loaders that access user-owned data.
 
 ## Data And Forms
 

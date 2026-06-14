@@ -44,7 +44,7 @@ describe("requireAuth", () => {
     getSession.mockResolvedValueOnce(session);
 
     await expect(
-      requireAuth(new Request("http://localhost:5173/dashboard")),
+      requireAuth(new Request("http://localhost:5173/demo/dashboard")),
     ).resolves.toBe(session);
   });
 
@@ -52,7 +52,7 @@ describe("requireAuth", () => {
     getSession.mockResolvedValueOnce(null);
 
     await expect(
-      requireAuth(new Request("http://localhost:5173/dashboard/projects")),
+      requireAuth(new Request("http://localhost:5173/demo/dashboard/projects")),
     ).rejects.toMatchObject({
       status: 302,
     });
@@ -73,10 +73,10 @@ describe("requireAnonymous", () => {
 
 describe("getSafeRedirectTo", () => {
   it("accepts same-origin paths only", () => {
-    expect(getSafeRedirectTo("/dashboard/projects")).toBe(
-      "/dashboard/projects",
+    expect(getSafeRedirectTo("/demo/dashboard/projects")).toBe(
+      "/demo/dashboard/projects",
     );
-    expect(getSafeRedirectTo("https://example.com")).toBe("/dashboard");
-    expect(getSafeRedirectTo("//example.com")).toBe("/dashboard");
+    expect(getSafeRedirectTo("https://example.com")).toBe("/");
+    expect(getSafeRedirectTo("//example.com")).toBe("/");
   });
 });

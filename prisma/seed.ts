@@ -4,7 +4,7 @@ import { hashPassword } from "better-auth/crypto";
 import { Kysely, PostgresDialect } from "kysely";
 import { Pool } from "pg";
 import type { DB } from "../app/lib/db/database-types";
-import { PROJECT_STATUS } from "../app/lib/projects";
+import { PROJECT_STATUS } from "../app/lib/demo/projects";
 
 const DEMO_EMAIL = process.env.SEED_USER_EMAIL ?? "demo@example.com";
 const DEMO_NAME = process.env.SEED_USER_NAME ?? "Demo User";

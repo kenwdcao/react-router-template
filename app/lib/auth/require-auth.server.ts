@@ -26,10 +26,7 @@ export async function requireAuth(
   return session;
 }
 
-export async function requireAnonymous(
-  request: Request,
-  redirectTo = "/dashboard",
-) {
+export async function requireAnonymous(request: Request, redirectTo = "/") {
   const session = await getSession(request);
 
   if (session) {

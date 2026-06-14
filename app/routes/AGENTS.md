@@ -49,7 +49,7 @@ layout routes.
 
 ## Auth And Ownership
 
-- Call `requireAuth(request)` in every loader/action that reads or mutates user-owned data, even under protected dashboard layouts.
+- Call `requireAuth(request)` in every loader/action that reads or mutates user-owned data, even under protected layouts such as `demo/dashboard`.
 - Scope reads, updates, and deletes by authenticated user id in the server helper that performs the database query.
 - Treat client-supplied ids, form fields, and search params as untrusted input.
 
@@ -62,7 +62,7 @@ layout routes.
 
 ## UI Boundaries
 
-- Layout routes should own section-level shells such as marketing, auth, and dashboard navigation.
+- Layout routes should own section-level shells such as marketing, auth, and `demo/dashboard` navigation.
 - Route files may contain UI that is specific to that route.
 - Shared controls, visual components, and theme-aware primitives belong in `app/ui`.
 - Follow `app/ui/AGENTS.md` for component, Mantine, icon, and accessibility rules.

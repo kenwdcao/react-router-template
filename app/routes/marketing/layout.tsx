@@ -60,7 +60,7 @@ export default function MarketingLayout() {
           <Button
             variant="subtle"
             component={Link}
-            to="/dashboard"
+            to="/demo/dashboard"
             leftSection={<LayoutDashboard size={16} />}
             visibleFrom="sm"
             className="justify-self-center"
@@ -92,7 +92,7 @@ export default function MarketingLayout() {
         <Stack gap="sm">
           <NavLink
             component={Link}
-            to="/dashboard"
+            to="/demo/dashboard"
             label="Dashboard"
             leftSection={<LayoutDashboard size={18} />}
             onClick={closeDrawer}

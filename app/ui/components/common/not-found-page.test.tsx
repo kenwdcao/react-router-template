@@ -40,6 +40,6 @@ describe("NotFoundPage", () => {
     const dashboardLink = screen.getByRole("link", {
       name: /open dashboard/i,
     });
-    expect(dashboardLink).toHaveAttribute("href", "/dashboard");
+    expect(dashboardLink).toHaveAttribute("href", "/demo/dashboard");
   });
 });

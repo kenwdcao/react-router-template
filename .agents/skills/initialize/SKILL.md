@@ -65,9 +65,10 @@ Update these files when relevant:
 - `app/ui/**`: brand text, theme defaults, reusable components, and copy.
 - `app/lib/ai/**`: remove, rename, or adapt assistant knowledge/provider logic
   when the AI demo decision changes.
-- `app/lib/projects.ts` and `app/lib/projects.server.ts`: rename the sample
-  domain consistently, keeping shared constants separate from Kysely-derived
-  result types.
+- `app/lib/demo/projects.ts` and `app/lib/demo/projects.server.ts`: rename the
+  sample domain consistently, keeping shared constants separate from
+  Kysely-derived result types. The entire `app/lib/demo/`, `app/ui/demo/`, and
+  `app/routes/demo/` trees can be deleted or renamed as a unit.
 - `prisma/schema.prisma`: domain models and relations, followed by migrations
   and regenerated Kysely types.
 - `prisma/seed.ts`: remove, rename, or adapt demo users and sample domain data.
@@ -93,8 +94,8 @@ product decisions:
   demo with server-only env docs, or converted into a product feature with
   matching README, AGENTS, env, routes, navigation, and tests.
 - Domain result types have one source of truth. For the sample project domain,
-  `ProjectSummary` is derived from `app/lib/projects.server.ts`; do not recreate
-  a parallel interface in the shared constants module.
+  `ProjectSummary` is derived from `app/lib/demo/projects.server.ts`; do not
+  recreate a parallel interface in the shared constants module.
 - CI, Docker, migration commands, and generated-type checks still match the
   chosen database and deployment path.
 - Prisma migration ownership, Kysely runtime-query ownership, React Router route

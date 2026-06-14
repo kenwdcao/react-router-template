@@ -1,6 +1,6 @@
 export function getSafeRedirectTo(
   redirectTo: FormDataEntryValue | string | null,
-  fallback = "/dashboard",
+  fallback = "/",
 ) {
   if (typeof redirectTo !== "string") {
     return fallback;

@@ -31,8 +31,8 @@ queries, better-auth, Vitest, Playwright, ESLint, and Prettier.
 - [OPTIONAL] Demo seed data:
   [REPLACE: remove, rename, or adapt `prisma/seed.ts` to the real domain].
 - [OPTIONAL] AI assistant/demo:
-  [REPLACE: remove, keep as optional `/dashboard/chat` demo, or convert into a
-  real assistant; document provider env vars if kept].
+  [REPLACE: remove, keep as optional `/demo/dashboard` chat sidebar demo, or
+  convert into a real assistant; document provider env vars if kept].
 - [REPLACE] Branding:
   [PRODUCT_NAME], navigation labels, page titles, metadata, and empty states.
 
@@ -73,7 +73,7 @@ queries, better-auth, Vitest, Playwright, ESLint, and Prettier.
 - Global providers, document shell, fonts, and root pending UI belong in
   `app/root.tsx`.
 - Section-level UI belongs in nested layout routes such as `marketing`, `auth`,
-  and `dashboard`.
+  and `demo/dashboard` (the latter is a deletable sample).
 - Keep shared presentational components in `app/ui`.
 - Use `~/*` imports for code under `app`.
 - Keep generated files out of manual edits.

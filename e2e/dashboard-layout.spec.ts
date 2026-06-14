@@ -3,7 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 test.describe("Dashboard Layout", () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
-    await page.goto("/dashboard");
+    await page.goto("/demo/dashboard");
   });
 
   test("sidebar groups are visible", async ({ page }) => {
@@ -32,12 +32,12 @@ test.describe("Dashboard Layout", () => {
   });
 
   test("breadcrumbs reflect current route", async ({ page }) => {
-    await page.goto("/dashboard/projects");
+    await page.goto("/demo/dashboard/projects");
     const main = page.getByRole("main");
     await expect(main.getByRole("link", { name: "Dashboard" })).toBeVisible();
     await expect(main.getByRole("heading", { name: "Projects" })).toBeVisible();
 
-    await page.goto("/dashboard/settings");
+    await page.goto("/demo/dashboard/settings");
     await expect(
       page
         .getByRole("main")
@@ -47,7 +47,7 @@ test.describe("Dashboard Layout", () => {
   });
 
   test("active nav link is highlighted", async ({ page }) => {
-    await page.goto("/dashboard/projects");
+    await page.goto("/demo/dashboard/projects");
     const projectsLink = page.getByRole("link", {
       name: "Projects",
       exact: true,
@@ -68,5 +68,6 @@ async function login(page: Page) {
   await page.locator('input[name="password"]').fill("password-12345");
   await page.locator('input[name="confirmPassword"]').fill("password-12345");
   await page.getByRole("button", { name: "Create account" }).click();
-  await expect(page).toHaveURL(/\/dashboard$/, { timeout: 20_000 });
+  // Registration now redirects to the homepage (default post-auth destination).
+  await expect(page).toHaveURL(/\/$/, { timeout: 20_000 });
 }

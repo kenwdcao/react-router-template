@@ -43,7 +43,7 @@ export function Hero() {
             <Button
               size="lg"
               component={Link}
-              to="/dashboard"
+              to="/demo/dashboard"
               leftSection={<LayoutDashboard size={18} />}
               tabIndex={-1}
             >
@@ -65,7 +65,7 @@ export function Hero() {
               size="md"
               fullWidth
               component={Link}
-              to="/dashboard"
+              to="/demo/dashboard"
               leftSection={<LayoutDashboard size={18} />}
               styles={{ label: { whiteSpace: "normal" } }}
             >

@@ -4,9 +4,11 @@ import { createProjectViaModal } from "./helpers/projects";
 const ACTION_TIMEOUT = 20_000;
 
 test("redirects anonymous project access to sign in", async ({ page }) => {
-  await page.goto("/dashboard/projects");
+  await page.goto("/demo/dashboard/projects");
 
-  await expect(page).toHaveURL(/\/login\?redirectTo=%2Fdashboard%2Fprojects$/);
+  await expect(page).toHaveURL(
+    /\/login\?redirectTo=%2Fdemo%2Fdashboard%2Fprojects$/,
+  );
   await expect(
     page.getByRole("heading", { name: "Welcome back" }),
   ).toBeVisible();
@@ -25,7 +27,7 @@ test("registers users and manages owner-scoped projects", async ({ page }) => {
     name: "Owner User",
     password: "password-12345",
   });
-  await page.goto("/dashboard/projects");
+  await page.goto("/demo/dashboard/projects");
 
   await createProjectViaModal(page, {
     name: ownerProjectName,
@@ -39,7 +41,7 @@ test("registers users and manages owner-scoped projects", async ({ page }) => {
     name: "Member User",
     password: "password-12345",
   });
-  await page.goto("/dashboard/projects");
+  await page.goto("/demo/dashboard/projects");
   await expect(page.getByText(ownerProjectName, { exact: true })).toHaveCount(
     0,
   );
@@ -96,5 +98,6 @@ async function registerUser(
   await page.locator('input[name="password"]').fill(user.password);
   await page.locator('input[name="confirmPassword"]').fill(user.password);
   await page.getByRole("button", { name: "Create account" }).click();
-  await expect(page).toHaveURL(/\/dashboard$/, { timeout: 20_000 });
+  // Registration now redirects to the homepage (default post-auth destination).
+  await expect(page).toHaveURL(/\/$/, { timeout: 20_000 });
 }

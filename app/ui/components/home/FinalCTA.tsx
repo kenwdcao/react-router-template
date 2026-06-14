@@ -31,7 +31,7 @@ export function FinalCTA() {
               <Button
                 variant="default"
                 component={Link}
-                to="/dashboard"
+                to="/demo/dashboard"
                 tabIndex={-1}
               >
                 View dashboard demo
@@ -46,7 +46,7 @@ export function FinalCTA() {
               fullWidth
               variant="default"
               component={Link}
-              to="/dashboard"
+              to="/demo/dashboard"
             >
               View dashboard demo
             </Button>
