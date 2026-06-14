@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { slugify } from "~/lib/admin/types";
 import { db } from "~/lib/db/index.server";
 import { PROJECT_STATUS, type ProjectStatus } from "~/lib/demo/projects";
 
@@ -54,14 +55,19 @@ export async function createProject({
   description: string | null;
 }) {
   const now = new Date();
+  const id = randomUUID();
+  // Slug must be unique; suffix with a short slice of the id to avoid collisions
+  // when two owners create projects with the same name.
+  const slug = `${slugify(name)}-${id.slice(0, 8)}`;
 
   return db
     .insertInto("project")
     .values({
-      id: randomUUID(),
+      id,
       ownerId,
       name,
       description,
+      slug,
       status: PROJECT_STATUS.active,
       createdAt: now,
       updatedAt: now,

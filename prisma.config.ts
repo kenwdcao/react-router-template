@@ -17,5 +17,10 @@ export default defineConfig({
   },
   datasource: {
     url: databaseUrl,
+    // Shadow database used by `prisma migrate dev`/`migrate diff` to detect
+    // schema drift. Points at a throwaway database alongside the dev DB.
+    shadowDatabaseUrl:
+      process.env.SHADOW_DATABASE_URL ??
+      databaseUrl?.replace(/\/[^/]*$/, "/app_shadow"),
   },
 });

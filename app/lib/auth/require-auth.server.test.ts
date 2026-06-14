@@ -24,6 +24,7 @@ function createMockSession(overrides?: Partial<AuthSession>): AuthSession {
       updatedAt: new Date(),
       ipAddress: "127.0.0.1",
       userAgent: "test",
+      impersonatedBy: null,
     },
     user: {
       id: "user-id",
@@ -33,6 +34,10 @@ function createMockSession(overrides?: Partial<AuthSession>): AuthSession {
       createdAt: new Date(),
       updatedAt: new Date(),
       image: null,
+      role: "user",
+      banned: false,
+      banReason: null,
+      banExpires: null,
     },
     ...overrides,
   } satisfies AuthSession;

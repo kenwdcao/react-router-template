@@ -23,5 +23,10 @@ export default [
     route("settings", "routes/demo/dashboard/settings.tsx"),
     route("components", "routes/demo/dashboard/components.tsx"),
   ]),
+  route("admin", "routes/admin/layout.tsx", [
+    index("routes/admin/index.tsx"),
+    route("users", "routes/admin/users.tsx"),
+    route("projects", "routes/admin/projects.tsx"),
+  ]),
   route("api/chat", "routes/api.chat.ts"),
 ] satisfies RouteConfig;

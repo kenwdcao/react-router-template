@@ -14,12 +14,14 @@ const seedProjects = [
   {
     id: "seed-project-customer-portal",
     name: "Customer portal",
+    slug: "customer-portal",
     description: "Track the public launch checklist and owner handoffs.",
     status: PROJECT_STATUS.active,
   },
   {
     id: "seed-project-internal-tools",
     name: "Internal tools refresh",
+    slug: "internal-tools-refresh",
     description: "Archived example showing owner-scoped project history.",
     status: PROJECT_STATUS.archived,
   },

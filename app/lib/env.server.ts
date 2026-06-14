@@ -39,6 +39,19 @@ const envSchema = z.object({
   AI_BASE_URL: optionalEnvUrl,
   AI_API_KEY: optionalEnvString,
   AI_MODEL_ID: optionalEnvString,
+  // Space-separated allow-list of admin emails. Whitespace-separated so a single
+  // value can hold multiple addresses without comma/quoting friction in shells.
+  ADMIN_EMAILS: z
+    .string()
+    .optional()
+    .transform((value) =>
+      value
+        ? value
+            .split(/\s+/)
+            .map((email) => email.trim().toLowerCase())
+            .filter(Boolean)
+        : [],
+    ),
 });
 
 export type ServerEnv = z.infer<typeof envSchema>;

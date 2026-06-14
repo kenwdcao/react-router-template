@@ -9,6 +9,7 @@ export {
   parseChatOpenCookie,
 } from "./chat-sidebar";
 export { readFormString } from "./form-data";
+export { formatDate, formatDateTime } from "./format";
 export {
   DEFAULT_SIDEBAR_COLLAPSED,
   SIDEBAR_COLLAPSE_COOKIE_NAME,

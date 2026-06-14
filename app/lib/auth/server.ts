@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { admin } from "better-auth/plugins";
 import { pool } from "~/lib/db/index.server";
 import { env } from "~/lib/env.server";
 import { getMicrosoftOAuthUserInfo } from "./microsoft-profile.server";
@@ -30,6 +31,12 @@ export const auth = betterAuth({
     },
   },
   trustedOrigins: env.BETTER_AUTH_TRUSTED_ORIGINS,
+  // The admin plugin is enabled solely to provide the `banned`/`banReason`/
+  // `banExpires` user columns, the `impersonatedBy` session column, and the
+  // automatic login-time ban check. Admin authorization itself is gated by the
+  // ADMIN_EMAILS env list (see app/lib/auth/require-admin.server.ts), not by
+  // the plugin's role-based checks.
+  plugins: [admin()],
   ...(isMicrosoftSSOConfigured
     ? {
         socialProviders: {

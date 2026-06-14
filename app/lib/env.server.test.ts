@@ -22,6 +22,7 @@ describe("parseEnv", () => {
       MICROSOFT_CLIENT_ID: undefined,
       MICROSOFT_CLIENT_SECRET: undefined,
       MICROSOFT_TENANT_ID: undefined,
+      ADMIN_EMAILS: [],
     });
   });
 
@@ -78,5 +79,26 @@ describe("parseEnv", () => {
         BETTER_AUTH_SECRET: "",
       }),
     ).toThrow(/BETTER_AUTH_SECRET/);
+  });
+
+  it("splits ADMIN_EMAILS on whitespace and lowercases entries", () => {
+    expect(
+      parseEnv({
+        DATABASE_URL: "postgresql://app:password@localhost:5432/app_test",
+        BETTER_AUTH_SECRET: "secret-at-least-thirty-two-characters",
+        ADMIN_EMAILS: "Alice@Example.com  bob@example.com   ",
+      }),
+    ).toMatchObject({
+      ADMIN_EMAILS: ["alice@example.com", "bob@example.com"],
+    });
+  });
+
+  it("defaults ADMIN_EMAILS to an empty array when blank", () => {
+    expect(
+      parseEnv({
+        DATABASE_URL: "postgresql://app:password@localhost:5432/app_test",
+        BETTER_AUTH_SECRET: "secret-at-least-thirty-two-characters",
+      }),
+    ).toMatchObject({ ADMIN_EMAILS: [] });
   });
 });
