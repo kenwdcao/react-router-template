@@ -36,13 +36,7 @@ export function NavigationDemo() {
           </Text>
           <Breadcrumbs separator="/" separatorMargin="xs">
             {breadcrumbItems.map((item) => (
-              <Anchor
-                key={item.title}
-                component={Link}
-                to={item.to}
-                size="sm"
-                aria-label={item.title}
-              >
+              <Anchor key={item.title} component={Link} to={item.to} size="sm">
                 {item.title}
               </Anchor>
             ))}

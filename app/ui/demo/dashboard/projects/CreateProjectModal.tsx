@@ -26,6 +26,14 @@ export function CreateProjectModal({
   const isBusy = navigation.state !== "idle";
   const wasBusyRef = useRef(false);
 
+  // The route action handles create/update/delete on a shared actionData
+  // object. Update responses always carry values.projectId; create responses
+  // never do, so its absence identifies data belonging to this form. Without
+  // this filter, errors/values from an edit or delete would bleed into the
+  // create modal. Mirrors EditProjectDrawer's projectId scoping.
+  const createActionData =
+    actionData && !actionData.values?.projectId ? actionData : undefined;
+
   useEffect(() => {
     if (!opened) {
       wasBusyRef.current = false;
@@ -37,11 +45,11 @@ export function CreateProjectModal({
       return;
     }
 
-    if (wasBusyRef.current && !actionData?.errors) {
+    if (wasBusyRef.current && !createActionData?.errors) {
       wasBusyRef.current = false;
       onClose();
     }
-  }, [opened, isBusy, actionData, onClose]);
+  }, [opened, isBusy, createActionData, onClose]);
 
   return (
     <Modal
@@ -56,21 +64,21 @@ export function CreateProjectModal({
             name="name"
             label="Project name"
             placeholder="Customer portal"
-            defaultValue={actionData?.values?.name}
-            error={actionData?.errors?.name}
+            defaultValue={createActionData?.values?.name}
+            error={createActionData?.errors?.name}
             required
           />
           <Textarea
             name="description"
             label="Description"
             placeholder="Internal launch checklist"
-            defaultValue={actionData?.values?.description}
+            defaultValue={createActionData?.values?.description}
             autosize
             minRows={2}
           />
-          {actionData?.errors?.form ? (
+          {createActionData?.errors?.form ? (
             <Text c="red" size="sm">
-              {actionData.errors.form}
+              {createActionData.errors.form}
             </Text>
           ) : null}
           <Group justify="flex-end">
