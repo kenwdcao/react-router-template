@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { Pencil } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useFetcher } from "react-router";
 import type {
   ProjectManagerOption,
@@ -66,6 +66,12 @@ export function EditProjectDrawer({
   });
 
   const fetcher = useFetcher<{ success: boolean }>();
+  // Track whether the current fetcher submission belongs to *this* open of the
+  // drawer. Without this, a successful update leaves `fetcher.data.success`
+  // true after close, so reopening the drawer would trip the close-effect and
+  // immediately bounce shut.
+  const submissionId = useRef<string | null>(null);
+  const lastHandled = useRef<string | null>(null);
 
   // Re-seed the form whenever a different project is opened.
   useEffect(() => {
@@ -77,7 +83,13 @@ export function EditProjectDrawer({
   }, [opened, project?.id, getInitialValues]);
 
   useEffect(() => {
-    if (fetcher.data?.success && fetcher.state === "idle") {
+    if (
+      submissionId.current &&
+      submissionId.current !== lastHandled.current &&
+      fetcher.data?.success &&
+      fetcher.state === "idle"
+    ) {
+      lastHandled.current = submissionId.current;
       onClose();
     }
   }, [fetcher.data, fetcher.state, onClose]);
@@ -126,7 +138,9 @@ export function EditProjectDrawer({
             const validation = form.validate();
             if (validation.hasErrors) {
               e.preventDefault();
+              return;
             }
+            submissionId.current = crypto.randomUUID();
           }}
         >
           <Stack gap="lg">

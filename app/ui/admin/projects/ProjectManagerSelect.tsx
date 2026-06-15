@@ -42,9 +42,19 @@ export function ProjectManagerSelect({
       manager.email.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const selectedManagers = availableManagers.filter((m) =>
-    selectedIds.includes(m.id),
-  );
+  // Active managers that are still in the candidate list.
+  const availableById = new Map(availableManagers.map((m) => [m.id, m]));
+  // Managers currently selected but no longer selectable (e.g. banned since
+  // assignment). They must stay visible and removable in the UI — otherwise
+  // the admin cannot unbind them, and server-side validation would reject the
+  // save outright.
+  const removedManagers: ProjectManagerOption[] = selectedIds
+    .filter((id) => !availableById.has(id))
+    .map((id) => ({ id, name: "Removed user", email: id, image: null }));
+  const selectedManagers = [
+    ...availableManagers.filter((m) => selectedIds.includes(m.id)),
+    ...removedManagers,
+  ];
 
   const handleSelect = (managerId: string) => {
     if (selectedIds.includes(managerId)) {

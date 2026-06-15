@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { Plus } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useFetcher } from "react-router";
 import type { ProjectManagerOption } from "~/lib/admin/types";
 import { slugify } from "~/lib/admin/types";
@@ -51,6 +51,12 @@ export function CreateProjectModal({
   });
 
   const fetcher = useFetcher<{ success: boolean }>();
+  // Track whether the current fetcher submission belongs to *this* open of the
+  // modal. Without this, a successful create leaves `fetcher.data.success` true
+  // after the modal closes, so reopening it would trip the close-effect again
+  // and immediately bounce shut.
+  const submissionId = useRef<string | null>(null);
+  const lastHandled = useRef<string | null>(null);
 
   // Auto-generate slug from name unless the user has manually edited it.
   const handleNameChange = (value: string) => {
@@ -87,7 +93,13 @@ export function CreateProjectModal({
   };
 
   useEffect(() => {
-    if (fetcher.data?.success && fetcher.state === "idle") {
+    if (
+      submissionId.current &&
+      submissionId.current !== lastHandled.current &&
+      fetcher.data?.success &&
+      fetcher.state === "idle"
+    ) {
+      lastHandled.current = submissionId.current;
       form.reset();
       onClose();
     }
@@ -98,7 +110,11 @@ export function CreateProjectModal({
     const validation = form.validate();
     if (validation.hasErrors) {
       e.preventDefault();
+      return;
     }
+    // Tag this submission so the close-effect only reacts to a result from the
+    // current open, not a stale success left over from a previous one.
+    submissionId.current = crypto.randomUUID();
   };
 
   return (
