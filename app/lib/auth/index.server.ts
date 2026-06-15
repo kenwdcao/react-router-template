@@ -3,6 +3,7 @@ export { handleLoginAction } from "./login-action.server";
 export type { LoginActionData } from "./login-action.server";
 export { handleRegisterAction } from "./register-action.server";
 export type { RegisterActionData } from "./register-action.server";
+export { isAdminEmail, requireAdmin } from "./require-admin.server";
 export {
   getSession,
   requireAnonymous,

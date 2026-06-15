@@ -15,7 +15,7 @@ import { Bot, ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, Outlet, useLoaderData, useNavigate } from "react-router";
 import { signOut } from "~/lib/auth";
-import { requireAuth } from "~/lib/auth/index.server";
+import { isAdminEmail, requireAuth } from "~/lib/auth/index.server";
 import {
   buildChatExpandedCookie,
   buildChatOpenCookie,
@@ -26,7 +26,7 @@ import {
   parseChatOpenCookie,
   parseSidebarCollapsedCookie,
 } from "~/lib/utils";
-import { ThemeSelector } from "~/ui/components/common";
+import { ThemeSelector, TopNav } from "~/ui/components/common";
 import { Breadcrumbs, Sidebar } from "~/ui/demo/dashboard";
 import { ChatSidebarPanel } from "~/ui/demo/dashboard/chat";
 import type { Route } from "./+types/layout";
@@ -40,6 +40,8 @@ export async function loader({ request }: Route.LoaderArgs) {
       email: session.user.email,
       name: session.user.name,
     },
+    // Only the boolean crosses to the client; the ADMIN_EMAILS list stays server-side.
+    isAdmin: isAdminEmail(session.user.email),
     sidebarCollapsed: parseSidebarCollapsedCookie(
       request.headers.get("cookie"),
     ),
@@ -49,7 +51,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export default function DashboardLayout() {
-  const { user, sidebarCollapsed, chatOpen, chatExpanded } =
+  const { user, isAdmin, sidebarCollapsed, chatOpen, chatExpanded } =
     useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const [opened, { toggle }] = useDisclosure();
@@ -123,14 +125,7 @@ export default function DashboardLayout() {
             </UnstyledButton>
           </Group>
 
-          <Button
-            variant="subtle"
-            component={Link}
-            to="/demo/dashboard"
-            className="justify-self-center hidden sm:block"
-          >
-            Dashboard
-          </Button>
+          <TopNav isAdmin={isAdmin} />
 
           <Group
             gap="sm"

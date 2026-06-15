@@ -1,0 +1,13 @@
+.pageSizeInput {
+  width: 70px;
+}
+
+.pageSizeOption {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.gotoInput {
+  width: 56px;
+  text-align: center;
+}

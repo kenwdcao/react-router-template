@@ -22,15 +22,16 @@ model account {
 }
 
 model session {
-  id        String   @id
-  expiresAt DateTime @db.Timestamptz(6)
-  token     String   @unique
-  createdAt DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime @db.Timestamptz(6)
-  ipAddress String?
-  userAgent String?
-  userId    String
-  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id            String   @id
+  expiresAt     DateTime @db.Timestamptz(6)
+  token         String   @unique
+  createdAt     DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime @db.Timestamptz(6)
+  ipAddress     String?
+  userAgent     String?
+  userId        String
+  impersonatedBy String?
+  user          user     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([userId])
 }
@@ -41,11 +42,19 @@ model user {
   email         String    @unique
   emailVerified Boolean
   image         String?
+  // Added by the Better Auth admin plugin. `banned`/`banReason`/`banExpires`
+  // are toggled by admin actions; `role` is informational (admin access is
+  // granted via the ADMIN_EMAILS env list, not this column).
+  role          String    @default("user")
+  banned        Boolean   @default(false)
+  banReason     String?
+  banExpires    DateTime? @db.Timestamptz(6)
   createdAt     DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt     DateTime  @default(now()) @db.Timestamptz(6)
   account       account[]
   project       project[]
   session       session[]
+  project_manager project_manager[]
 }
 
 model verification {
@@ -68,6 +77,23 @@ model project {
   createdAt   DateTime @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime @default(now()) @db.Timestamptz(6)
   owner       user     @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  // Admin-managed project fields.
+  slug        String   @unique
+  archived    Boolean  @default(false)
+  metadata    Json?
+  project_manager project_manager[]
 
   @@index([ownerId])
+}
+
+model project_manager {
+  projectId    String
+  userId       String
+  terminatedAt DateTime? @db.Timestamptz(6)
+  createdAt    DateTime  @default(now()) @db.Timestamptz(6)
+  project      project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user         user      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, userId])
+  @@index([userId])
 }

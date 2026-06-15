@@ -7,6 +7,7 @@ process.env.BETTER_AUTH_URL ??= "http://localhost:5173";
 process.env.AI_BASE_URL ??= "http://localhost:11434";
 process.env.AI_API_KEY ??= "test-key";
 process.env.AI_MODEL_ID ??= "test-model";
+process.env.ADMIN_EMAILS ??= "";
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,

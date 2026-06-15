@@ -28,11 +28,13 @@ vi.mock("~/lib/auth/index.server", () => ({
   requireAuth: vi.fn().mockResolvedValue({
     user: { email: "user@example.com", name: "Test User" },
   }),
+  isAdminEmail: vi.fn().mockReturnValue(false),
 }));
 
 // Keep the test focused on the layout's collapse behavior; stub the children.
 vi.mock("~/ui/components/common", () => ({
   ThemeSelector: () => <div data-testid="theme-selector" />,
+  TopNav: () => <nav data-testid="top-nav" />,
 }));
 
 vi.mock("~/ui/demo/dashboard", () => ({

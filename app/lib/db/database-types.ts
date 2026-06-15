@@ -9,6 +9,18 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
 
+export type Json = JsonValue;
+
+export type JsonArray = JsonValue[];
+
+export type JsonObject = {
+  [x: string]: JsonValue | undefined;
+};
+
+export type JsonPrimitive = boolean | number | string | null;
+
+export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
+
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface _PrismaMigrations {
@@ -39,19 +51,30 @@ export interface Account {
 }
 
 export interface Project {
+  archived: Generated<boolean>;
   createdAt: Generated<Timestamp>;
   description: string | null;
   id: string;
+  metadata: Json | null;
   name: string;
   ownerId: string;
+  slug: string;
   status: Generated<string>;
   updatedAt: Generated<Timestamp>;
+}
+
+export interface ProjectManager {
+  createdAt: Generated<Timestamp>;
+  projectId: string;
+  terminatedAt: Timestamp | null;
+  userId: string;
 }
 
 export interface Session {
   createdAt: Generated<Timestamp>;
   expiresAt: Timestamp;
   id: string;
+  impersonatedBy: string | null;
   ipAddress: string | null;
   token: string;
   updatedAt: Timestamp;
@@ -60,12 +83,16 @@ export interface Session {
 }
 
 export interface User {
+  banExpires: Timestamp | null;
+  banned: Generated<boolean>;
+  banReason: string | null;
   createdAt: Generated<Timestamp>;
   email: string;
   emailVerified: boolean;
   id: string;
   image: string | null;
   name: string;
+  role: Generated<string>;
   updatedAt: Generated<Timestamp>;
 }
 
@@ -82,6 +109,7 @@ export interface DB {
   _prisma_migrations: _PrismaMigrations;
   account: Account;
   project: Project;
+  project_manager: ProjectManager;
   session: Session;
   user: User;
   verification: Verification;
