@@ -9,6 +9,7 @@ import {
   Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 import { Pencil } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useFetcher } from "react-router";
@@ -65,7 +66,7 @@ export function EditProjectDrawer({
     },
   });
 
-  const fetcher = useFetcher<{ success: boolean }>();
+  const fetcher = useFetcher<{ success: boolean; error?: string }>();
   // Track whether the current fetcher submission belongs to *this* open of the
   // drawer. Without this, a successful update leaves `fetcher.data.success`
   // true after close, so reopening the drawer would trip the close-effect and
@@ -84,13 +85,24 @@ export function EditProjectDrawer({
 
   useEffect(() => {
     if (
-      submissionId.current &&
-      submissionId.current !== lastHandled.current &&
-      fetcher.data?.success &&
-      fetcher.state === "idle"
+      !submissionId.current ||
+      submissionId.current === lastHandled.current ||
+      fetcher.state !== "idle"
     ) {
-      lastHandled.current = submissionId.current;
+      return;
+    }
+    lastHandled.current = submissionId.current;
+    if (fetcher.data?.success) {
       onClose();
+    } else if (fetcher.data && !fetcher.data.success) {
+      // Surface server-side validation / DB failures instead of silently
+      // resetting the submit button. The drawer stays open so the admin can
+      // correct and retry.
+      notifications.show({
+        color: "red",
+        title: "Failed to save project",
+        message: fetcher.data.error ?? "An unexpected error occurred.",
+      });
     }
   }, [fetcher.data, fetcher.state, onClose]);
 

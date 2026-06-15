@@ -8,6 +8,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 import { Plus } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useFetcher } from "react-router";
@@ -50,7 +51,7 @@ export function CreateProjectModal({
     },
   });
 
-  const fetcher = useFetcher<{ success: boolean }>();
+  const fetcher = useFetcher<{ success: boolean; error?: string }>();
   // Track whether the current fetcher submission belongs to *this* open of the
   // modal. Without this, a successful create leaves `fetcher.data.success` true
   // after the modal closes, so reopening it would trip the close-effect again
@@ -94,14 +95,25 @@ export function CreateProjectModal({
 
   useEffect(() => {
     if (
-      submissionId.current &&
-      submissionId.current !== lastHandled.current &&
-      fetcher.data?.success &&
-      fetcher.state === "idle"
+      !submissionId.current ||
+      submissionId.current === lastHandled.current ||
+      fetcher.state !== "idle"
     ) {
-      lastHandled.current = submissionId.current;
+      return;
+    }
+    lastHandled.current = submissionId.current;
+    if (fetcher.data?.success) {
       form.reset();
       onClose();
+    } else if (fetcher.data && !fetcher.data.success) {
+      // Surface server-side validation / DB failures instead of silently
+      // resetting the submit button. The modal stays open so the admin can
+      // correct and retry.
+      notifications.show({
+        color: "red",
+        title: "Failed to create project",
+        message: fetcher.data.error ?? "An unexpected error occurred.",
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetcher.data, fetcher.state, onClose]);
