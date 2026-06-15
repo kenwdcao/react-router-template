@@ -1,9 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
 
-test.describe("Dashboard Settings", () => {
+test.describe("Settings", () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
-    await page.goto("/demo/dashboard/settings");
+    await page.goto("/settings");
   });
 
   test("renders all setting tabs", async ({ page }) => {

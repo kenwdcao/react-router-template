@@ -1,5 +1,14 @@
+import {
+  AppShell,
+  Box,
+  Container,
+  Group,
+  Text,
+  UnstyledButton,
+} from "@mantine/core";
 import { useCallback } from "react";
 import {
+  Link,
   redirect,
   useActionData,
   useLoaderData,
@@ -8,10 +17,12 @@ import {
 import {
   auth,
   getAuthErrorMessage,
+  isAdminEmail,
   requireAuth,
 } from "~/lib/auth/index.server";
 import { readFormString } from "~/lib/utils";
-import { SettingsTabs } from "~/ui/demo/dashboard/settings";
+import { ThemeSelector, TopNav, UserMenu } from "~/ui/components/common";
+import { SettingsTabs } from "~/ui/settings";
 import type { Route } from "./+types/settings";
 
 export function meta() {
@@ -20,6 +31,7 @@ export function meta() {
 
 interface SettingsLoaderData {
   user: { name: string; email: string };
+  isAdmin: boolean;
   success?: string;
 }
 
@@ -39,6 +51,8 @@ export async function loader({
       name: session.user.name,
       email: session.user.email,
     },
+    // Only the boolean crosses to the client; the ADMIN_EMAILS list stays server-side.
+    isAdmin: isAdminEmail(session.user.email),
     success,
   };
 }
@@ -63,7 +77,7 @@ export async function action({
         headers: request.headers,
         body: { name },
       });
-      return redirect("/demo/dashboard/settings?updated=profile");
+      return redirect("/settings?updated=profile");
     } catch (error) {
       return {
         errors: {
@@ -89,11 +103,61 @@ export default function SettingsRoute() {
   }, [setSearchParams]);
 
   return (
-    <SettingsTabs
-      user={loaderData.user}
-      actionData={actionData}
-      success={loaderData.success}
-      onDismissSuccess={handleDismissSuccess}
-    />
+    <SettingsLayout user={loaderData.user} isAdmin={loaderData.isAdmin}>
+      <SettingsTabs
+        user={loaderData.user}
+        actionData={actionData}
+        success={loaderData.success}
+        onDismissSuccess={handleDismissSuccess}
+      />
+    </SettingsLayout>
+  );
+}
+
+/**
+ * Standalone chrome for the global Settings page. Settings is a top-level
+ * route (reached from the user avatar menu), so it ships its own slim header
+ * with the logo, top nav, theme selector, and avatar menu — no sidebar,
+ * breadcrumbs, or AI chat aside.
+ */
+function SettingsLayout({
+  user,
+  isAdmin,
+  children,
+}: {
+  user: { name: string; email: string };
+  isAdmin: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <AppShell header={{ height: 56 }} padding="md">
+      <AppShell.Header>
+        <div className="grid h-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-4">
+          <Group gap="sm" className="min-w-0 justify-self-start">
+            <UnstyledButton component={Link} to="/" aria-label="Home">
+              <Text fw={700} visibleFrom="sm">
+                React Router Template
+              </Text>
+            </UnstyledButton>
+          </Group>
+
+          <TopNav isAdmin={isAdmin} />
+
+          <Group
+            gap="sm"
+            className="min-w-0 justify-self-end"
+            justify="flex-end"
+          >
+            <ThemeSelector />
+            <UserMenu user={user} />
+          </Group>
+        </div>
+      </AppShell.Header>
+      <AppShell.Main>
+        <Container size={640}>
+          <Box py="md">{children}</Box>
+        </Container>
+      </AppShell.Main>
+    </AppShell>
   );
 }

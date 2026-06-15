@@ -10,7 +10,6 @@ const routeLabels: Record<string, string> = {
   [ROOT_PATH]: "Dashboard",
   "/demo/dashboard/projects": "Projects",
   "/demo/dashboard/activity": "Activity",
-  "/demo/dashboard/settings": "Settings",
   "/demo/dashboard/components": "Components",
 };
 

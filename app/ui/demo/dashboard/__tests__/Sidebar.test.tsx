@@ -26,7 +26,6 @@ describe("Sidebar", () => {
 
     expect(screen.getByText("Workspace")).toBeInTheDocument();
     expect(screen.getByText("Demos")).toBeInTheDocument();
-    expect(screen.getByText("Account")).toBeInTheDocument();
   });
 
   it("renders all navigation items", () => {
@@ -36,6 +35,5 @@ describe("Sidebar", () => {
     expect(screen.getAllByText("Projects").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Activity").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Components").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Settings").length).toBeGreaterThan(0);
   });
 });

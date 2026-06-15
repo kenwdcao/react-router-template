@@ -34,8 +34,8 @@ export function getProjectKnowledge(): string {
 - /demo/dashboard — Auth-gated layout with AppShell (sidebar + header)
 - /demo/dashboard/projects — Full CRUD demo (Kysely queries, React Router actions/loaders)
 - /demo/dashboard/activity — Activity timeline
-- /demo/dashboard/settings — Profile and preferences
 - /demo/dashboard/components — Mantine component gallery
+- /settings — Global profile and preferences page (reached from the user avatar menu)
 - AI chat sidebar — Toggle from the dashboard header Bot button (requires AI env config)
 - /api/chat — Streaming chat endpoint (AI SDK)
 - /api/auth/* — better-auth handlers

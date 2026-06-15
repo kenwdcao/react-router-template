@@ -1,32 +1,27 @@
 import {
   ActionIcon,
   AppShell,
-  Avatar,
   Burger,
-  Button,
   Group,
-  Indicator,
   ScrollArea,
   Text,
   UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Bot, ChevronLeft, ChevronRight, LogOut } from "lucide-react";
+import { Bot, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, Outlet, useLoaderData, useNavigate } from "react-router";
-import { signOut } from "~/lib/auth";
+import { Link, Outlet, useLoaderData } from "react-router";
 import { isAdminEmail, requireAuth } from "~/lib/auth/index.server";
 import {
   buildChatExpandedCookie,
   buildChatOpenCookie,
   buildSidebarCollapsedCookie,
-  getAvatarInitial,
   migrateSidebarCollapsedFromLocalStorage,
   parseChatExpandedCookie,
   parseChatOpenCookie,
   parseSidebarCollapsedCookie,
 } from "~/lib/utils";
-import { ThemeSelector, TopNav } from "~/ui/components/common";
+import { ThemeSelector, TopNav, UserMenu } from "~/ui/components/common";
 import { Breadcrumbs, Sidebar } from "~/ui/demo/dashboard";
 import { ChatSidebarPanel } from "~/ui/demo/dashboard/chat";
 import type { Route } from "./+types/layout";
@@ -53,7 +48,6 @@ export async function loader({ request }: Route.LoaderArgs) {
 export default function DashboardLayout() {
   const { user, isAdmin, sidebarCollapsed, chatOpen, chatExpanded } =
     useLoaderData<typeof loader>();
-  const navigate = useNavigate();
   const [opened, { toggle }] = useDisclosure();
   // Initial value comes from the loader (cookie-derived), so the server render
   // and the first client render agree — no expand→collapse flash on refresh.
@@ -143,44 +137,7 @@ export default function DashboardLayout() {
               <Bot size={16} />
             </ActionIcon>
             <ThemeSelector />
-            <Indicator
-              processing
-              size={8}
-              offset={4}
-              color="green"
-              position="bottom-end"
-            >
-              <Avatar size="sm" radius="xl">
-                {getAvatarInitial(user.name, user.email)}
-              </Avatar>
-            </Indicator>
-            <Text size="sm" visibleFrom="md">
-              {user.name || user.email}
-            </Text>
-            <ActionIcon
-              variant="subtle"
-              size="sm"
-              hiddenFrom="sm"
-              aria-label="Sign out"
-              onClick={async () => {
-                await signOut();
-                void navigate("/");
-              }}
-            >
-              <LogOut size={16} />
-            </ActionIcon>
-            <Button
-              variant="subtle"
-              size="compact-sm"
-              leftSection={<LogOut size={16} />}
-              visibleFrom="sm"
-              onClick={async () => {
-                await signOut();
-                void navigate("/");
-              }}
-            >
-              Sign out
-            </Button>
+            <UserMenu user={user} />
           </Group>
         </div>
       </AppShell.Header>
