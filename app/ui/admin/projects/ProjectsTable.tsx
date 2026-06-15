@@ -9,7 +9,6 @@ import { getAvatarInitial } from "~/lib/utils";
 import { EditProjectDrawer } from "./EditProjectDrawer";
 import { EditProjectDrawerButton } from "./EditProjectDrawerButton";
 import { ProjectArchiveButton } from "./ProjectArchiveButton";
-import { ViewProjectButton } from "./ViewProjectButton";
 
 interface ProjectsTableProps {
   projects: ProjectWithManagers[];
@@ -122,7 +121,6 @@ export function ProjectsTable({
               </Table.Td>
               <Table.Td>
                 <Group gap="xs">
-                  <ViewProjectButton />
                   <EditProjectDrawerButton
                     onClick={() => setEditingProject(project)}
                   />
