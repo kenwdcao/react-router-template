@@ -46,6 +46,7 @@ export function ProjectSlugInput({
         </Text>
         <Input
           aria-label="Project URL slug"
+          size="xs"
           value={slug}
           onChange={(e) => onSlugChange(e.currentTarget.value)}
           className="flex-1"
@@ -53,10 +54,10 @@ export function ProjectSlugInput({
         />
         <Button
           variant="default"
-          size="xs"
+          size="compact-xs"
           onClick={handleButtonClick}
           leftSection={
-            isEditingSlug ? <RotateCcw size={14} /> : <Pencil size={14} />
+            isEditingSlug ? <RotateCcw size={12} /> : <Pencil size={12} />
           }
         >
           {isEditingSlug ? "Reset" : "Edit"}
