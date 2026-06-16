@@ -20,9 +20,9 @@ export default [
     index("routes/demo/dashboard/index.tsx"),
     route("projects", "routes/demo/dashboard/projects.tsx"),
     route("activity", "routes/demo/dashboard/activity.tsx"),
-    route("settings", "routes/demo/dashboard/settings.tsx"),
     route("components", "routes/demo/dashboard/components.tsx"),
   ]),
+  route("settings", "routes/settings.tsx"),
   route("admin", "routes/admin/layout.tsx", [
     index("routes/admin/index.tsx"),
     route("users", "routes/admin/users.tsx"),

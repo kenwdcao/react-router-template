@@ -1,11 +1,5 @@
 import { NavLink as MantineNavLink, Stack, Text, Tooltip } from "@mantine/core";
-import {
-  Activity,
-  Component,
-  FolderKanban,
-  Home,
-  Settings,
-} from "lucide-react";
+import { Activity, Component, FolderKanban, Home } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import classes from "./Sidebar.module.css";
 
@@ -38,12 +32,6 @@ const groups: NavGroup[] = [
         label: "Components",
         icon: Component,
       },
-    ],
-  },
-  {
-    label: "Account",
-    items: [
-      { to: "/demo/dashboard/settings", label: "Settings", icon: Settings },
     ],
   },
 ];

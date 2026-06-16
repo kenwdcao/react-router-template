@@ -1,29 +1,24 @@
 import {
   ActionIcon,
   AppShell,
-  Avatar,
   Burger,
-  Button,
   Container,
   Group,
-  Indicator,
   ScrollArea,
   Text,
   UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { ChevronLeft, ChevronRight, LogOut } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
-import { Link, Outlet, useLoaderData, useNavigate } from "react-router";
-import { signOut } from "~/lib/auth";
+import { Link, Outlet, useLoaderData } from "react-router";
 import { requireAdmin } from "~/lib/auth/index.server";
 import {
   buildAdminSidebarCollapsedCookie,
-  getAvatarInitial,
   parseAdminSidebarCollapsedCookie,
 } from "~/lib/utils";
 import { Sidebar } from "~/ui/admin";
-import { ThemeSelector, TopNav } from "~/ui/components/common";
+import { ThemeSelector, TopNav, UserMenu } from "~/ui/components/common";
 import type { Route } from "./+types/layout";
 import classes from "./layout.module.css";
 
@@ -43,7 +38,6 @@ export function meta() {
 
 export default function AdminLayout() {
   const { user, sidebarCollapsed } = useLoaderData<typeof loader>();
-  const navigate = useNavigate();
   const [opened, { toggle }] = useDisclosure();
   // Initial value comes from the loader (cookie-derived), so the server render
   // and the first client render agree — no expand→collapse flash on refresh.
@@ -93,44 +87,7 @@ export default function AdminLayout() {
             justify="flex-end"
           >
             <ThemeSelector />
-            <Indicator
-              processing
-              size={8}
-              offset={4}
-              color="green"
-              position="bottom-end"
-            >
-              <Avatar size="sm" radius="xl">
-                {getAvatarInitial(user.name, user.email)}
-              </Avatar>
-            </Indicator>
-            <Text size="sm" visibleFrom="md">
-              {user.name || user.email}
-            </Text>
-            <ActionIcon
-              variant="subtle"
-              size="sm"
-              hiddenFrom="sm"
-              aria-label="Sign out"
-              onClick={async () => {
-                await signOut();
-                void navigate("/");
-              }}
-            >
-              <LogOut size={16} />
-            </ActionIcon>
-            <Button
-              variant="subtle"
-              size="compact-sm"
-              leftSection={<LogOut size={16} />}
-              visibleFrom="sm"
-              onClick={async () => {
-                await signOut();
-                void navigate("/");
-              }}
-            >
-              Sign out
-            </Button>
+            <UserMenu user={user} />
           </Group>
         </div>
       </AppShell.Header>

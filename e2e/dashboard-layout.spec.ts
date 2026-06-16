@@ -9,7 +9,6 @@ test.describe("Dashboard Layout", () => {
   test("sidebar groups are visible", async ({ page }) => {
     await expect(page.getByText("Workspace")).toBeVisible();
     await expect(page.getByText("Demos")).toBeVisible();
-    await expect(page.getByText("Account")).toBeVisible();
   });
 
   test("sidebar navigation items are present", async ({ page }) => {
@@ -26,9 +25,6 @@ test.describe("Dashboard Layout", () => {
     await expect(
       navigation.getByRole("link", { name: "Components", exact: true }),
     ).toBeVisible();
-    await expect(
-      navigation.getByRole("link", { name: "Settings", exact: true }),
-    ).toBeVisible();
   });
 
   test("breadcrumbs reflect current route", async ({ page }) => {
@@ -36,14 +32,6 @@ test.describe("Dashboard Layout", () => {
     const main = page.getByRole("main");
     await expect(main.getByRole("link", { name: "Dashboard" })).toBeVisible();
     await expect(main.getByRole("heading", { name: "Projects" })).toBeVisible();
-
-    await page.goto("/demo/dashboard/settings");
-    await expect(
-      page
-        .getByRole("main")
-        .locator(".mantine-Breadcrumbs-root")
-        .getByText("Settings", { exact: true }),
-    ).toBeVisible();
   });
 
   test("active nav link is highlighted", async ({ page }) => {

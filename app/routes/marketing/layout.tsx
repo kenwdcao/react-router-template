@@ -1,7 +1,5 @@
 import {
-  ActionIcon,
   AppShell,
-  Avatar,
   Burger,
   Button,
   Drawer,
@@ -12,12 +10,10 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { LayoutDashboard, LogOut, ShieldCheck } from "lucide-react";
-import { Link, Outlet, useLoaderData, useNavigate } from "react-router";
-import { signOut } from "~/lib/auth";
+import { LayoutDashboard, ShieldCheck } from "lucide-react";
+import { Link, Outlet, useLoaderData } from "react-router";
 import { getSession, isAdminEmail } from "~/lib/auth/index.server";
-import { getAvatarInitial } from "~/lib/utils";
-import { ThemeSelector, TopNav } from "~/ui/components/common";
+import { ThemeSelector, TopNav, UserMenu } from "~/ui/components/common";
 import type { Route } from "./+types/layout";
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -113,45 +109,8 @@ function MarketingAuthActions({
     name: string;
   } | null;
 }) {
-  const navigate = useNavigate();
-
   if (user) {
-    const displayName = user.name || user.email;
-
-    return (
-      <Group gap="sm">
-        <Avatar size="sm" radius="xl">
-          {getAvatarInitial(user.name, user.email)}
-        </Avatar>
-        <Text size="sm" visibleFrom="md">
-          {displayName}
-        </Text>
-        <ActionIcon
-          variant="subtle"
-          size="sm"
-          hiddenFrom="sm"
-          aria-label="Sign out"
-          onClick={async () => {
-            await signOut();
-            void navigate("/");
-          }}
-        >
-          <LogOut size={16} />
-        </ActionIcon>
-        <Button
-          variant="subtle"
-          size="compact-sm"
-          leftSection={<LogOut size={16} />}
-          visibleFrom="sm"
-          onClick={async () => {
-            await signOut();
-            void navigate("/");
-          }}
-        >
-          Sign out
-        </Button>
-      </Group>
-    );
+    return <UserMenu user={user} />;
   }
 
   return (

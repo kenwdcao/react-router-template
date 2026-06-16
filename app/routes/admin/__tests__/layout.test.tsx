@@ -33,6 +33,7 @@ vi.mock("~/lib/auth/index.server", () => ({
 vi.mock("~/ui/components/common", () => ({
   ThemeSelector: () => <div data-testid="theme-selector" />,
   TopNav: () => <nav data-testid="top-nav" />,
+  UserMenu: () => <div data-testid="user-menu" />,
 }));
 
 vi.mock("~/ui/admin", () => ({

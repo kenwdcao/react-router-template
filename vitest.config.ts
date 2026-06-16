@@ -3,6 +3,13 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [react()],
+  // Force the React development build under Vitest. The production React
+  // bundle does not export `act`, which @testing-library/react requires, so
+  // every component test fails with `TypeError: React.act is not a function`
+  // when NODE_ENV is left at "production".
+  define: {
+    "process.env.NODE_ENV": JSON.stringify("test"),
+  },
   resolve: {
     tsconfigPaths: true,
   },

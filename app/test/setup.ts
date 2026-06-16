@@ -1,4 +1,14 @@
 import "@testing-library/jest-dom/vitest";
+import { cleanup } from "@testing-library/react";
+import { afterEach } from "vitest";
+
+// @testing-library/react only auto-registers cleanup when `afterEach` is a
+// global (e.g. with vitest `globals: true`). This project imports test hooks
+// explicitly, so register cleanup manually to keep the DOM isolated between
+// tests and avoid leaked Mantine portals causing "multiple elements" errors.
+afterEach(() => {
+  cleanup();
+});
 
 process.env.DATABASE_URL ??=
   "postgresql://app:password@localhost:5432/app_test";
