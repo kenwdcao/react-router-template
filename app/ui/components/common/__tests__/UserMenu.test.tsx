@@ -1,5 +1,5 @@
 import { MantineProvider } from "@mantine/core";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 const mockNavigate = vi.fn();
@@ -44,29 +44,38 @@ describe("UserMenu", () => {
     expect(screen.getByText("jane@example.com")).toBeInTheDocument();
   });
 
-  it("opens a dropdown linking to /settings and exposing sign out", () => {
+  it("opens a dropdown linking to /settings and exposing sign out", async () => {
     renderWithMantine(<UserMenu user={user} />);
 
     fireEvent.click(screen.getByRole("button", { name: "Open account menu" }));
 
-    // Settings is a real anchor (rendered via Link → href).
-    const settingsLink = screen.getByTestId("link-/settings");
-    expect(settingsLink).toHaveAttribute("href", "/settings");
-    expect(settingsLink).toHaveTextContent("Settings");
+    // Mantine renders the dropdown into a portal and animates it open. Query the
+    // rendered items visibility-agnostically: the Settings item is a Menu.Item
+    // rendered with component={Link} (surfaces as the anchor, no explicit
+    // menuitem role in the mocked Link); Sign out is queried by text to match.
+    const settingsItem = await screen.findByTestId("link-/settings");
+    expect(settingsItem).toHaveAttribute("href", "/settings");
+    expect(settingsItem).toHaveTextContent("Settings");
 
-    // Sign out is present as a menu item.
-    expect(
-      screen.getByRole("menuitem", { name: /sign out/i }),
-    ).toBeInTheDocument();
+    expect(await screen.findByText("Sign out")).toBeInTheDocument();
   });
 
-  it("signs out and navigates home when sign out is clicked", () => {
+  it("signs out and navigates home when sign out is clicked", async () => {
     renderWithMantine(<UserMenu user={user} />);
 
     fireEvent.click(screen.getByRole("button", { name: "Open account menu" }));
-    fireEvent.click(screen.getByRole("menuitem", { name: /sign out/i }));
+
+    // The dropdown items render into a portal asynchronously after opening.
+    // Query visibility-agnostically (Mantine animates open via display toggling
+    // which can lag in jsdom) and click the Sign out item once it appears.
+    const signOutItem = await screen.findByText("Sign out");
+    fireEvent.click(signOutItem);
 
     expect(signOutMock).toHaveBeenCalledTimes(1);
-    expect(mockNavigate).toHaveBeenCalledWith("/");
+    // handleSignOut awaits signOut() before calling navigate("/"), so the
+    // navigation happens on a later microtask than the click.
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith("/");
+    });
   });
 });
