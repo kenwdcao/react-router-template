@@ -42,10 +42,10 @@ export function AdminUsersView({
 
   return (
     <>
-      <Title order={2} mb="md" size="h4">
+      <Title order={2} mb="xs" size="h5">
         User Management
       </Title>
-      <Group mb="md" className="w-full">
+      <Group mb="xs" className="w-full">
         <AdminSearchInput placeholder="Search by name or email..." />
       </Group>
       {pagination.totalCount > 0 && (

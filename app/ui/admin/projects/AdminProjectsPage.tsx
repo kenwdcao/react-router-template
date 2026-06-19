@@ -55,10 +55,10 @@ export function AdminProjectsPage({
       <Group
         justify="space-between"
         align="center"
-        mb="md"
+        mb="xs"
         className="flex-wrap gap-y-2"
       >
-        <Title order={2} size="h4">
+        <Title order={2} size="h5">
           Project Management
         </Title>
         <Button
@@ -68,7 +68,7 @@ export function AdminProjectsPage({
           Create Project
         </Button>
       </Group>
-      <Group mb="md" className="w-full">
+      <Group mb="xs" className="w-full">
         <AdminSearchInput placeholder="Search by name, client, or PM..." />
       </Group>
       {pagination.totalCount > 0 && (

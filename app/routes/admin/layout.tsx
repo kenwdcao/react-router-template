@@ -59,7 +59,7 @@ export default function AdminLayout() {
         breakpoint: "sm",
         collapsed: { mobile: !opened },
       }}
-      padding="md"
+      padding="xs"
       transitionDuration={200}
     >
       <AppShell.Header>
@@ -121,10 +121,8 @@ export default function AdminLayout() {
         </ActionIcon>
       </AppShell.Navbar>
       <AppShell.Main>
-        <Container size="xl" className="mx-auto w-full px-0">
-          <div className="pt-4">
-            <Outlet />
-          </div>
+        <Container fluid className="mx-auto w-full px-0">
+          <Outlet />
         </Container>
       </AppShell.Main>
     </AppShell>
