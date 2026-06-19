@@ -10,15 +10,25 @@ const loaderState = {
 };
 
 // Mocks are hoisted. The factory closures read the shared objects lazily, so the
-// mutable values are picked up at render time once the tests assign them.
-vi.mock("react-router", () => ({
-  useLoaderData: () => loaderState,
-  useNavigate: () => () => {},
-  Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
-    <a href={to}>{children}</a>
-  ),
-  Outlet: () => null,
-}));
+// mutable values are picked up at render time once the tests assign them. The
+// real `RouterContextProvider` is passed through so the manually-built loader
+// args can construct a valid v8 middleware `context`.
+vi.mock("react-router", async (importOriginal) => {
+  // Pass the real `RouterContextProvider` through so the manually-built loader
+  // args can construct a valid v8 middleware `context`.
+  const actual = await importOriginal<{
+    RouterContextProvider: new () => Route.LoaderArgs["context"];
+  }>();
+  return {
+    RouterContextProvider: actual.RouterContextProvider,
+    useLoaderData: () => loaderState,
+    useNavigate: () => () => {},
+    Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
+      <a href={to}>{children}</a>
+    ),
+    Outlet: () => null,
+  };
+});
 
 vi.mock("~/lib/auth", () => ({
   signOut: vi.fn(),
@@ -51,6 +61,7 @@ vi.mock("~/ui/demo/dashboard/chat", () => ({
   ChatSidebarPanel: () => <div data-testid="chat-sidebar-panel" />,
 }));
 
+import { RouterContextProvider } from "react-router";
 import type { Route } from "../+types/layout";
 import { default as DashboardLayout, loader } from "../layout";
 
@@ -65,7 +76,7 @@ function buildLoaderArgs(cookieHeader?: string): Route.LoaderArgs {
   return {
     request,
     params: {},
-    context: {},
+    context: new RouterContextProvider(),
     url: new URL(request.url),
     pattern: "/demo/dashboard",
   };

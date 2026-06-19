@@ -55,8 +55,8 @@ const projectUpdateSchema = projectFieldsSchema.extend({
   status: projectStatusSchema,
 });
 
-export async function loadProjectsPage(request: Request) {
-  const session = await requireAuth(request);
+export async function loadProjectsPage(request: Request, redirectTo = "/") {
+  const session = await requireAuth(request, redirectTo);
   const projects = await listProjectsForUser(session.user.id);
 
   return {
@@ -69,8 +69,8 @@ export async function loadProjectsPage(request: Request) {
   };
 }
 
-export async function handleProjectsAction(request: Request) {
-  const session = await requireAuth(request);
+export async function handleProjectsAction(request: Request, redirectTo = "/") {
+  const session = await requireAuth(request, redirectTo);
   const formData = await request.formData();
   const intent = readFormString(formData, "_intent");
 

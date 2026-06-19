@@ -41,9 +41,9 @@ interface SettingsActionData {
 
 export async function loader({
   request,
+  url,
 }: Route.LoaderArgs): Promise<SettingsLoaderData> {
-  const session = await requireAuth(request);
-  const url = new URL(request.url);
+  const session = await requireAuth(request, url.pathname);
   const success = url.searchParams.get("updated") ?? undefined;
 
   return {
@@ -59,8 +59,9 @@ export async function loader({
 
 export async function action({
   request,
+  url,
 }: Route.ActionArgs): Promise<Response | SettingsActionData> {
-  await requireAuth(request);
+  await requireAuth(request, url.pathname);
   const formData = await request.formData();
   const intent = readFormString(formData, "_intent");
 

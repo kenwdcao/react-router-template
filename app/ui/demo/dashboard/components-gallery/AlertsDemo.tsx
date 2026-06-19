@@ -26,7 +26,7 @@ export function AlertsDemo() {
           title="Information"
           icon={<Info size={18} />}
         >
-          This template uses React Router v7 framework mode with TypeScript for
+          This template uses React Router v8 framework mode with TypeScript for
           full-stack development.
         </Alert>
 
@@ -91,7 +91,7 @@ export function AlertsDemo() {
           </Text>
           <Highlight highlight="React Router" size="sm" c="dimmed">
             React Router is a full-stack framework for building modern web
-            applications with React Router v7.
+            applications with React Router v8.
           </Highlight>
         </div>
 

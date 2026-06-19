@@ -26,9 +26,8 @@ export function meta() {
   return [{ title: "Admin | User Management" }];
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const currentUser = await requireAdmin(request);
-  const url = new URL(request.url);
+export async function loader({ request, url }: Route.LoaderArgs) {
+  const currentUser = await requireAdmin(request, url.pathname);
   const page = Math.max(1, parseIntegerParam(url.searchParams.get("page"), 1));
   const pageSize = Math.min(
     MAX_PAGE_SIZE,
@@ -64,8 +63,8 @@ export async function loader({ request }: Route.LoaderArgs) {
   };
 }
 
-export async function action({ request }: Route.ActionArgs) {
-  const currentUser = await requireAdmin(request);
+export async function action({ request, url }: Route.ActionArgs) {
+  const currentUser = await requireAdmin(request, url.pathname);
   const formData = Object.fromEntries(await request.formData());
   const result = actionSchema.safeParse(formData);
   if (!result.success) {

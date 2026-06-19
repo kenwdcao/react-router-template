@@ -4,7 +4,7 @@ export function getProjectKnowledge(): string {
   return `You are an assistant for the React Router Template — a production-grade starter kit.
 
 ## Stack
-- React Router v7 (file-based routing via @react-router/dev)
+- React Router v8 (file-based routing via @react-router/dev)
 - React 19 + TypeScript
 - Mantine v9 component library (MantineProvider with dynamic primary color / color scheme)
 - Tailwind CSS v4 for page-level layout

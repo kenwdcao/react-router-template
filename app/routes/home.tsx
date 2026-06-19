@@ -14,7 +14,7 @@ export function meta(_: Route.MetaArgs) {
     {
       name: "description",
       content:
-        "A batteries-included React Router v7 + Mantine starter with auth, database, SSR, and tests.",
+        "A batteries-included React Router v8 + Mantine starter with auth, database, SSR, and tests.",
     },
   ];
 }

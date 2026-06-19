@@ -31,7 +31,7 @@ const features = [
     icon: <Route size={20} />,
     title: "Routing & SSR",
     description:
-      "React Router v7 with server-side rendering and file-based routing.",
+      "React Router v8 with server-side rendering and file-based routing.",
   },
   {
     icon: <Palette size={20} />,
