@@ -115,3 +115,12 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 - Keep complex loader/action logic in `app/lib` so it can be unit tested without rendering a route.
 - Update tests during template initialization when app name, navigation labels, routes, auth behavior, or the sample project domain changes.
 - Do not commit generated test artifacts such as `test-results/` or `playwright-report/`.
+
+## Dependency Notes
+
+- ESLint remains on the latest v9.x release because the current React/JSX plugin stack is not yet compatible with ESLint v10:
+  - `eslint-plugin-react@7.37.5` calls `context.getFilename()`, which was removed in ESLint 10 ([jsx-eslint/eslint-plugin-react#3979](https://github.com/jsx-eslint/eslint-plugin-react/issues/3979)).
+  - `eslint-plugin-jsx-a11y@6.10.2` declares `eslint: ^9` only ([jsx-eslint/eslint-plugin-jsx-a11y#1075](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/1075)).
+  - `eslint-config-mantine@4.0.3` depends on both of the above and requires `eslint: ^9.9.1`.
+- The local `eslint-rules/max-file-lines.js` rule has been updated to use `context.filename` directly so it is ready for ESLint 10.
+- Re-evaluate the ESLint 10 upgrade when the upstream plugins publish compatible versions or when the project decides to migrate to `@eslint-react/eslint-plugin`.

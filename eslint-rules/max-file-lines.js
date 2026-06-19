@@ -26,7 +26,7 @@ export default {
   },
   create(context) {
     const max = context.options[0]?.max ?? 500;
-    const filename = context.filename || context.getFilename();
+    const filename = context.filename;
     const normalized = filename.replace(/\\/g, "/");
 
     // Exemptions: barrel files, test files, generated types, migrations
