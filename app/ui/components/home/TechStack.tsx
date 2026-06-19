@@ -3,9 +3,9 @@ import { Badge, Container, Group, Title } from "@mantine/core";
 // Keep in sync with package.json
 const deps = [
   "React 19",
-  "React Router 7.15",
+  "React Router v8",
   "Mantine 9.2",
-  "Tailwind 4.2",
+  "Tailwind 4.3",
   "Prisma 7",
   "Kysely 0.29",
   "better-auth 1.6",
