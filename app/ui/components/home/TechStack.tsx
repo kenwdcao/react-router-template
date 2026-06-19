@@ -11,7 +11,7 @@ const deps = [
   "better-auth 1.6",
   "Vitest 4",
   "Playwright 1.60",
-  "TypeScript 5.9",
+  "TypeScript 6.0",
 ];
 
 export function TechStack() {
