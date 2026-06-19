@@ -48,3 +48,36 @@ Object.defineProperty(globalThis, "ResizeObserver", {
   writable: true,
   value: ResizeObserver,
 });
+
+// Node 24 exposes an experimental global `localStorage` that jsdom does not
+// reliably override, so under concurrent test workers `window.localStorage` is
+// intermittently left `undefined`. That makes the sidebar-collapse migration
+// tests flake with "Cannot read properties of undefined (reading 'setItem')".
+// Provide a minimal in-memory polyfill whenever jsdom hasn't supplied one.
+if (typeof window !== "undefined" && !window.localStorage) {
+  const store = new Map<string, string>();
+  const localStoragePolyfill: Storage = {
+    get length() {
+      return store.size;
+    },
+    clear() {
+      store.clear();
+    },
+    getItem(key: string) {
+      return store.has(key) ? (store.get(key) as string) : null;
+    },
+    key(index: number) {
+      return [...store.keys()][index] ?? null;
+    },
+    removeItem(key: string) {
+      store.delete(key);
+    },
+    setItem(key: string, value: string) {
+      store.set(key, String(value));
+    },
+  };
+  Object.defineProperty(window, "localStorage", {
+    configurable: true,
+    value: localStoragePolyfill,
+  });
+}

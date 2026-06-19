@@ -22,8 +22,8 @@ import { ThemeSelector, TopNav, UserMenu } from "~/ui/components/common";
 import type { Route } from "./+types/layout";
 import classes from "./layout.module.css";
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const session = await requireAdmin(request);
+export async function loader({ request, url }: Route.LoaderArgs) {
+  const session = await requireAdmin(request, url.pathname);
   return {
     user: { email: session.user.email, name: session.user.name },
     sidebarCollapsed: parseAdminSidebarCollapsedCookie(

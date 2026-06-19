@@ -23,12 +23,12 @@ export function meta() {
   return [{ title: "Projects" }];
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-  return loadProjectsPage(request);
+export async function loader({ request, url }: Route.LoaderArgs) {
+  return loadProjectsPage(request, url.pathname);
 }
 
-export async function action({ request }: Route.ActionArgs) {
-  return handleProjectsAction(request);
+export async function action({ request, url }: Route.ActionArgs) {
+  return handleProjectsAction(request, url.pathname);
 }
 
 export default function ProjectsRoute() {

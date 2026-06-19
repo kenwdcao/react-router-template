@@ -1,6 +1,6 @@
 # React Router Template
 
-A full-stack React Router v7 starter with SSR, Mantine v9, Tailwind CSS v4, PostgreSQL, Prisma migrations, Kysely queries, better-auth, Vite, Vitest, Playwright, Docker, and CI.
+A full-stack React Router v8 starter with SSR, Mantine v9, Tailwind CSS v4, PostgreSQL, Prisma migrations, Kysely queries, better-auth, Vite, Vitest, Playwright, Docker, and CI.
 
 ## Getting Started
 

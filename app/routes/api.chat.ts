@@ -29,8 +29,8 @@ async function readJson(request: Request): Promise<JsonResult> {
   }
 }
 
-export async function action({ request }: Route.ActionArgs) {
-  await requireAuth(request);
+export async function action({ request, url }: Route.ActionArgs) {
+  await requireAuth(request, url.pathname);
 
   const body = await readJson(request);
   if (!body.ok) {

@@ -13,8 +13,8 @@ export function meta() {
   return [{ title: "Activity" }];
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const session = await requireAuth(request);
+export async function loader({ request, url }: Route.LoaderArgs) {
+  const session = await requireAuth(request, url.pathname);
   const projects = await listProjectsForUser(session.user.id);
   const recent = projects.slice(0, 10);
 

@@ -1,6 +1,6 @@
 # Project Instructions
 
-This is a full-stack React Router v7 template using React 19, TypeScript,
+This is a full-stack React Router v8 template using React 19, TypeScript,
 Mantine v9, Tailwind CSS v4, PostgreSQL, Prisma migrations, Kysely runtime
 queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 

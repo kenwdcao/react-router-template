@@ -27,8 +27,8 @@ import { ChatSidebarPanel } from "~/ui/demo/dashboard/chat";
 import type { Route } from "./+types/layout";
 import classes from "./layout.module.css";
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const session = await requireAuth(request);
+export async function loader({ request, url }: Route.LoaderArgs) {
+  const session = await requireAuth(request, url.pathname);
 
   return {
     user: {

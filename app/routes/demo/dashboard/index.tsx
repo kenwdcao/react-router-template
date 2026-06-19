@@ -8,13 +8,14 @@ import {
 } from "~/lib/demo/projects.server";
 import { env } from "~/lib/env.server";
 import { QuickActions, RecentProjects, StatCards } from "~/ui/demo/dashboard";
+import type { Route } from "./+types/index";
 
 export function meta() {
   return [{ title: "Dashboard" }];
 }
 
-export async function loader({ request }: { request: Request }) {
-  const session = await requireAuth(request);
+export async function loader({ request, url }: Route.LoaderArgs) {
+  const session = await requireAuth(request, url.pathname);
   const [projectCount, recentProjects] = await Promise.all([
     countProjectsForUser(session.user.id),
     listRecentProjectsForUser(session.user.id, 5),

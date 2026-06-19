@@ -53,14 +53,25 @@ describe("requireAuth", () => {
     ).resolves.toBe(session);
   });
 
-  it("redirects anonymous users to login", async () => {
+  it("redirects anonymous users to /login, preserving the requested path", async () => {
+    // The redirectTo is the normalized pathname (url.pathname from the loader),
+    // not request.url — which under v8 pass-through requests would otherwise
+    // carry a `.data` suffix on data requests.
     getSession.mockResolvedValueOnce(null);
 
-    await expect(
-      requireAuth(new Request("http://localhost:5173/demo/dashboard/projects")),
-    ).rejects.toMatchObject({
-      status: 302,
-    });
+    const result = await requireAuth(
+      new Request("http://localhost:5173/demo/dashboard/projects"),
+      "/demo/dashboard/projects",
+    ).then(
+      () => "unexpectedly resolved",
+      (error: unknown) => error,
+    );
+
+    expect(result).toBeInstanceOf(Response);
+    expect((result as Response).status).toBe(302);
+    expect((result as Response).headers.get("Location")).toBe(
+      `/login?redirectTo=${encodeURIComponent("/demo/dashboard/projects")}`,
+    );
   });
 });
 

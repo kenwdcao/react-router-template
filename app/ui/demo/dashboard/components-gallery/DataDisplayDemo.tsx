@@ -130,14 +130,14 @@ export function DataDisplayDemo() {
           <Accordion.Item value="what">
             <Accordion.Control>What is this template?</Accordion.Control>
             <Accordion.Panel>
-              A production-grade full-stack React Router v7 starter with
+              A production-grade full-stack React Router v8 starter with
               TypeScript, Mantine, and more.
             </Accordion.Panel>
           </Accordion.Item>
           <Accordion.Item value="stack">
             <Accordion.Control>What stack does it use?</Accordion.Control>
             <Accordion.Panel>
-              React Router v7, React 19, TypeScript, Mantine v9, Tailwind CSS
+              React Router v8, React 19, TypeScript, Mantine v9, Tailwind CSS
               v4, Kysely, Prisma, and better-auth.
             </Accordion.Panel>
           </Accordion.Item>

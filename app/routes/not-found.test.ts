@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { loader } from "./not-found";
 
-function createLoaderArgs(url: string) {
-  return { request: new Request(url) } as Parameters<typeof loader>[0];
+function createLoaderArgs(requestUrl: string) {
+  return {
+    request: new Request(requestUrl),
+    url: new URL(requestUrl),
+  } as Parameters<typeof loader>[0];
 }
 
 describe("not-found loader", () => {
