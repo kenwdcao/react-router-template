@@ -7,7 +7,7 @@ A full-stack React Router v8 starter with SSR, Mantine v9, Tailwind CSS v4, Post
 Install dependencies:
 
 ```bash
-node --version              # Use Node.js 22; see .nvmrc and .node-version.
+node --version              # Use Node.js 24; see .nvmrc and .node-version.
 pnpm install
 ```
 
