@@ -42,7 +42,7 @@ jobs:
           version: 11.1.2
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          node-version: 24.11
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       # The CI Postgres service is disposable; migrate deploy validates the committed migration set.

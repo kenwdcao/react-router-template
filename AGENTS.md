@@ -7,7 +7,7 @@ queries, better-auth, Vite, Vitest, Playwright, ESLint, and Prettier.
 ## Commands
 
 - Install dependencies with `pnpm install`.
-- Use Node.js 24 locally; `.nvmrc`, `.node-version`, Docker, and CI are aligned on that major version.
+- Use Node.js 24.11+ locally; `.nvmrc`, `.node-version`, Docker, and CI are aligned on Node 24.11+.
 - Start local PostgreSQL with `pnpm db:up`.
 - Apply development migrations with `pnpm db:migrate`.
 - Regenerate Kysely database types with `pnpm db:generate`.
