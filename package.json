@@ -4,7 +4,7 @@
   "packageManager": "pnpm@11.1.2",
   "type": "module",
   "engines": {
-    "node": ">=24"
+    "node": ">=24.11.0"
   },
   "scripts": {
     "dev": "pnpm run docker:db && react-router dev",
