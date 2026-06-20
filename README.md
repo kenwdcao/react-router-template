@@ -54,6 +54,10 @@ starts. When using an Agent, start with the local `.agents/skills/initialize`
 skill so it gathers product-specific details and updates the template in one
 coherent pass.
 
+After a PR is open, use `.agents/skills/address-pr-comments` to collect review
+feedback from humans and bots, triage actionable comments, fix and push changes,
+reply on each thread, and post a PR summary.
+
 The initialization pass should cover:
 
 - Project name, package name, product purpose, primary user roles, and route map.
