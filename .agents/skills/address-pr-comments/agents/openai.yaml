@@ -1,0 +1,7 @@
+interface:
+  display_name: "Address PR Comments"
+  short_description: "Triage and fix PR review feedback via gh."
+  default_prompt: >-
+    Address review comments on the open PR for my current branch.
+    Check git/gh prerequisites, collect comments, discuss fixes unless
+    yolo mode, then commit, push, reply per thread, and post a summary.
