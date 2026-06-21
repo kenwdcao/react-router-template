@@ -126,9 +126,9 @@ resolve before or during implementation. If none, write "None."
 
 The final optimized prompt must be placed inside a markdown code fence so the user can copy it cleanly. Handle escaping as follows:
 
-- If the optimized prompt contains NO code fences: wrap it in triple backticks with `markdown` language tag.
-- If the optimized prompt contains triple-backtick code fences: wrap the entire output in quadruple backticks (four backticks) so the inner triple backticks do not escape.
-- If the optimized prompt contains quadruple-backtick fences (rare): wrap in quintuple backticks.
+- **No code fences:** triple backticks with a `markdown` language tag.
+- **Triple-backtick fences present:** quadruple backticks so the inner triple backticks do not escape.
+- **Quadruple-backtick fences (rare):** quintuple backticks.
 
 Always verify your output renders correctly -- the outer fence must not be broken by inner content.
 
