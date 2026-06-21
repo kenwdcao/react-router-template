@@ -18,7 +18,7 @@ Take a rough coding prompt from the user, explore the codebase to gather context
 Read the user's raw prompt and extract:
 
 1. **The core goal** -- what does the user want to change, add, or fix?
-2. **The scope boundary** -- which feature module(s) are involved? (Workspace Migration, Assignment History Sync, TLF Review, shared platform services, or cross-cutting?)
+2. **The scope boundary** -- which feature module(s) are involved? Identify the real modules from the codebase (e.g., domain folders under `app/lib/*`, route groups under `app/routes/*`, or shared platform services) rather than assuming a fixed list. Mark as cross-cutting if it spans multiple modules.
 3. **Any implied constraints** -- deadlines, compatibility requirements, or references to existing tasks/docs.
 
 ### Ambiguity Gate
@@ -116,8 +116,8 @@ resolve before or during implementation. If none, write "None."
 ### Content Rules
 
 1. **No implementation instructions.** Do not include "how to" guidance, code snippets showing the solution, or step-by-step implementation plans. Include WHAT, WHERE, and CONTEXT -- never HOW.
-2. **Use file paths relative to the project root** (e.g., `app/lib/tlf-review/routes/session-detail-loader.server.ts`).
-3. **Be specific about patterns.** Instead of "follow existing patterns", name the specific file and function that demonstrates the pattern (e.g., "follow the loader extraction pattern in `app/lib/tlf-review/routes/workspace-page-loader.server.ts`").
+2. **Use file paths relative to the project root** (e.g., `app/lib/<module>/<name>.server.ts`).
+3. **Be specific about patterns.** Instead of "follow existing patterns", name the specific file and function that demonstrates the pattern (e.g., "follow the loader extraction pattern in `app/lib/<module>/routes/<page>-loader.server.ts`").
 4. **Quote relevant AGENTS.md rules** when they directly constrain the task. Keep quotes brief -- one sentence per rule, with the file reference.
 5. **Include type signatures** of existing functions or interfaces that the work will interact with, when those signatures are non-obvious and important for correctness.
 6. **Branch & Commit guidance**: Always include the `Branch & Commit` section. If the task touches 3+ files or has clearly separable phases (e.g., schema change → service logic → UI → tests), suggest step-by-step commits with a descriptive message for each. For small tasks (1-2 files, single concern), a single final commit is sufficient. If the user said to skip branching, omit the branch instruction but keep the commit guidance.
@@ -150,108 +150,101 @@ Below is an example of what the optimized prompt output should look like for a h
 ```markdown
 ## Branch & Commit
 
-- Create a feature branch: `git checkout -b feat/migration-retry-logic`
+- Create a feature branch: `git checkout -b feat/project-due-date`
 - This task has multiple logical steps. Commit after each step:
-  1. After creating the retry module → `feat: add retry with exponential backoff module`
-  2. After integrating retry into the runner → `feat: integrate retry into migration runner`
-  3. After adding tests → `test: add retry module unit tests`
+  1. After adding the schema field and migration → `feat(db): add dueDate to project model`
+  2. After updating the query and service layer → `feat(projects): support dueDate in service layer`
+  3. After wiring the route action and UI → `feat(projects): surface due date in dashboard`
+  4. After adding tests → `test(projects): cover dueDate validation and queries`
 - Run the quality gate (`pnpm lint`, `pnpm typecheck`, `pnpm test`) after the
   final commit.
 
 ## Objective
 
-Add retry logic with exponential backoff to the migration job runner so that
-transient Monday API failures (rate limits, network timeouts) do not cause
-entire migration jobs to fail.
+Add an optional `dueDate` field to the sample projects domain so a user can set
+a deadline on a project, and surface it on the dashboard project list.
 
 ## Context
 
-- The migration runner lives in `app/lib/migrations/` and executes as a
-  server-side background job triggered from route actions.
-- The Monday GraphQL client at `app/lib/monday/client.ts` already handles
-  single-request retries for network errors but does NOT retry on 429
-  (rate limit) responses or 5xx server errors.
-- The job runner uses a database state machine (`migration_jobs` table) to
-  track job status. Current statuses: `pending`, `running`, `completed`,
-  `failed`. There is no `retrying` status.
-- The Monday API daily budget is 25,000 requests/day (hard limit per AGENTS.md).
-  Retries must count against this budget.
-- The assignment history sync runner at `app/lib/assignment-history/runner/`
-  has a similar pattern and would benefit from the same retry logic, but this
-  task is scoped to migration only.
+- The sample projects domain lives in `app/lib/demo/` and is wired through
+  `app/routes/demo/dashboard/projects.tsx`.
+- Route modules must stay thin: `loader`/`action`/`meta`/`ErrorBoundary`
+  exports delegate to focused functions in `app/lib` (root AGENTS.md).
+- Prisma owns the schema under `prisma/schema.prisma`; Kysely owns runtime
+  queries in `app/lib/demo/projects.server.ts` (root AGENTS.md). The
+  `project` model already has `archived`, `slug`, and `metadata` fields.
+- Every loader/action that reads user-owned data must call
+  `requireAuth(request)` (root AGENTS.md), even though the parent dashboard
+  layout is protected. The existing action handler in
+  `app/lib/demo/projects-page.server.ts` shows the `requireAuth` + form-intent
+  pattern to follow.
+- Use `<Form method="post">` for mutations that navigate after submit and
+  `useFetcher` for inline mutations (root AGENTS.md).
 
 ## Affected Files
 
 ### Files to Modify
 
-- `app/lib/migrations/runner.server.ts` -- The main job runner loop. Needs
-  retry wrapping around individual item/subitem migration calls.
-- `app/lib/migrations/types.ts` -- Migration job types. May need a retry
-  count field on the job status type.
-- `app/routes/api/migration/$jobId.ts` -- Job status API route. May need to
-  surface retry information in the response DTO.
+- `prisma/schema.prisma` -- Add `dueDate DateTime? @db.Timestamptz(6)` to the
+  `project` model.
+- `app/lib/demo/projects.server.ts` -- Add `dueDate` to the
+  `projectSelection` list and accept it in `createProject` and
+  `updateProject`.
+- `app/lib/demo/projects-page.server.ts` -- Add optional `dueDate` parsing
+  to the Zod schemas and pass it through to the service functions.
+- `app/routes/demo/dashboard/projects.tsx` -- Route module. Surface `dueDate`
+  in the loader data and the project form.
 
 ### Files to Create
 
-- `app/lib/migrations/retry.server.ts` -- New module for retry logic with
-  backoff configuration, isolated for testability.
+(No new modules required -- the existing `projects.server.ts` query module is
+the right home for the dueDate handling.)
 
 ### Files to Reference
 
-- `app/lib/monday/client.ts` -- Existing network-level retry pattern to stay
-  consistent with.
-- `app/lib/monday/budget.ts` -- Budget tracking. Retries must call
-  `trackBudgetUsage()` so retry requests count against the daily limit.
-- `app/lib/assignment-history/runner/runner.server.ts` -- Parallel runner
-  implementation for pattern reference (do NOT import from it; module
-  boundary rule).
+- `app/lib/auth/index.server.ts` -- Exports `requireAuth`, the auth helper to
+  reuse in the loader and action.
+- `app/lib/utils/index.ts` -- Exports `readFormString`, the form-field parsing
+  helper the existing action handler uses.
 
 ## Requirements
 
-1. When a Monday API call within the migration runner fails with a 429 or
-   5xx response, retry up to 3 times with exponential backoff
-   (1s, 2s, 4s base delays with jitter).
-2. Each retry attempt must count against the Monday API daily budget.
-3. If all retries are exhausted for a single item, mark that item as failed
-   in the migration report and continue with the next item.
-4. The migration job itself must not fail due to transient API errors for
-   individual items -- only a catastrophic failure (e.g., database
-   unreachable) should fail the entire job.
-5. Retry attempts must be logged with structured JSON logs including the
-   item ID, attempt number, and error type.
+1. Add an optional `dueDate` field (nullable timestamptz) to the `project`
+   model and a Prisma migration.
+2. `createProject` and `updateProject` must accept and persist `dueDate`.
+3. The dashboard project list must display `dueDate` when set.
+4. Regenerate Kysely database types (`pnpm db:generate`) so the new column is
+   typed at runtime.
 
 ## Constraints
 
-- Module boundary: `app/lib/migrations/*` must not import from
-  `app/lib/tlf-review/*` or `app/lib/assignment-history/*` (AGENTS.md).
-- Monday API version pinned to `2026-04` (AGENTS.md).
-- All Monday API calls must remain server-side only (AGENTS.md).
-- API keys must never appear in retry logs (security requirement from
-  AGENTS.md). Use secret redaction.
-- pnpm is the package manager. Do not add npm packages via `npm install`.
-- Unit tests required for retry logic: success after N retries, exhaustion
-  after max retries, budget tracking during retries.
+- Module boundary: keep all SQL in `app/lib/demo/projects.server.ts`; do not
+  run raw queries from the route module (root AGENTS.md).
+- Reuse `requireAuth(request)` in both the loader and the action (root
+  AGENTS.md).
+- Use the `~/*` path alias for imports from `app` (root AGENTS.md).
+- pnpm is the package manager. Do not use `npm install`.
+- Do not hand-edit generated files (`app/lib/db/database-types.ts`,
+  `.react-router/**`).
 
 ## Acceptance Criteria
 
-1. Migration runner retries transient Monday API failures (429, 5xx) up to
-   3 times with exponential backoff.
-2. Individual item failures after retry exhaustion are recorded in the
-   migration report without failing the entire job.
-3. Retry attempts are counted against the Monday API daily budget.
-4. Structured JSON logs capture retry attempts with item ID, attempt number,
-   and error type -- without leaking API keys.
-5. `pnpm lint` passes with zero errors.
-6. `pnpm typecheck` passes with zero errors.
-7. `pnpm test` passes, including new unit tests for the retry module.
+1. A project can be created and updated with an optional due date.
+2. The due date renders on the dashboard project list when present.
+3. `pnpm db:generate` succeeds and the `dueDate` column is reflected in the
+   Kysely types.
+4. `pnpm lint` passes with zero errors.
+5. `pnpm typecheck` passes with zero errors.
+6. `pnpm test` passes, including unit tests for dueDate parsing and the
+   updated create/update functions.
 
 ## Open Questions
 
-1. Should the retry delay respect the `Retry-After` header from Monday 429
-   responses when present, or always use the configured backoff schedule?
-2. Should the retry count be configurable per-job, or is a hardcoded maximum
-   of 3 sufficient for the foreseeable future?
+1. Should the dashboard also show a separate "upcoming deadlines" list sorted
+   by due date, or is surfacing the date inline sufficient for now?
+2. Should `dueDate` be editable from the inline project row, or only from a
+   dedicated edit form?
 ```
 ````
 
-**Summary**: 3 files to modify, 1 file to create, 3 files to reference. 5 requirements. 2 open questions.
+**Summary**: 4 files to modify, 0 files to create, 2 files to reference. 4 requirements. 2 open questions.
